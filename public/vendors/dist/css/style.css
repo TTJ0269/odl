@@ -1,0 +1,35 @@
+body{
+    font-family: 'Open sans', sans-serif;
+    background-image: url("imagewelcome/login.jpg");
+    background-size: 100%;
+}
+.textdroit{
+    text-align: right;
+}
+.textgauche{
+    text-align: left;
+}
+.textcentre{
+    text-align: center;
+}
+.textmajuscule{
+    text-transform: uppercase;
+}
+.bordure{
+    background-color: whitesmoke; /*coleur de la forme*/
+    border-width: 5px; /*epaisseur de la forme*/
+    border-color:blue;
+    border-style: solid;
+    border-radius: 15px; /* Arondir*/
+    background-image: url("imagewelcome/login.jpg");
+    margin-top: 40px;  /*Pour laisser la marge du cadre top=haut*/
+    margin-right: 400px;
+    margin-left: 400px;
+    /*padding: 20px; Pour declaler le texte a l'interieur des bordures*/
+}
+.margin{
+    margin: 30px;
+}
+.Aroudir{
+    border-style: solid;  
+}
