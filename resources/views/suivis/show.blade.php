@@ -6,12 +6,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Suivi</h1>
+            <h1 class="m-0">Stage</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-              <li class="breadcrumb-item active">Suivi</li>
+              <li class="breadcrumb-item active">Stage</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -22,7 +22,7 @@
   <!-- cadre general -->
 <div class="card card-secondary direct-chat direct-chat-secondary">
   <div class="card-header">
-    <h3 class="card-title">Suivi</h3>
+    <h3 class="card-title">Stage</h3>
     <div class="card-tools">
       <span data-toggle="tooltip" title="user" class="nav-icon fas fa-user"></span>
     </div>
@@ -59,6 +59,7 @@
                             <p><strong>Nom Entreprise :</strong> {{$suivi->entreprise->libelleentreprise}}</p>
                             <p><strong>Tél Entreprise :</strong> {{$suivi->entreprise->telentreprise}}</p>
                             <p><strong>Email Entreprise :</strong> {{$suivi->entreprise->emailentreprise}}</p>
+                            <p><strong>Adresse Entreprise :</strong> {{$suivi->entreprise->adresseentreprise}}</p>
                     </div>
                 </div>
             </div>

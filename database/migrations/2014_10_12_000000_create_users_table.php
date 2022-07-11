@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('nomuser');
             $table->string('prenomuser')->nullable();
-            $table->integer('teluser')->unique()->nullable();
+            $table->integer('teluser')->nullable();
             $table->string('imageuser')->nullable();
             $table->integer('etat');
             $table->integer('etatconnection');

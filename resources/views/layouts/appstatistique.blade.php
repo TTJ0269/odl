@@ -145,28 +145,28 @@ $('.select2bs4').select2({
 <!-- Debut activites -->
 @foreach ($collections as $collection)
 <script type="text/javascript">
-    let labels{{$collection['competence_id']}} = [
-                      @foreach ($collection['activite'] as $activite)
-                        splitString(('{{ $activite->libelleactivite }} "{{round($activite->valeurpost,0) }}"'),3),
+    let labels{{$collection['activite_id']}} = [
+                      @foreach ($collection['taches'] as $tache)
+                        splitString(('{{ $tache->libelletache }} "{{round($tache->valeurpost,0) }}"'),3),
                       @endforeach
                   ];
-    let myChart{{$collection['competence_id']}} = document.getElementById("activite{{$collection['competence_id']}}").getContext('2d');
+    let myChart{{$collection['activite_id']}} = document.getElementById("activite{{$collection['activite_id']}}").getContext('2d');
 
-    let activite{{$collection['competence_id']}} = new Chart(myChart{{$collection['competence_id']}}, {
+    let activite{{$collection['activite_id']}} = new Chart(myChart{{$collection['activite_id']}}, {
         type: 'radar',
         data: {
-            labels: labels{{$collection['competence_id']}},
+            labels: labels{{$collection['activite_id']}},
             datasets: [
               {
-                label: '{{$collection['competence_libelle']}}',
+                label: '{{$collection['activite_libelle']}}',
                 fillColor: "rgba(25, 25, 25, 5)",
                 backgroundColor: "rgba(0, 0, 55, 0.3)", //"rgb(55, 144, 246)"
                 borderColor: "rgba(54, 162, 235, 1)",
                 pointBorderColor: "#191919",
                 pointBackgroundColor: "rgba(25, 25, 25, 5)",
                 data: [
-                           @foreach ($collection['activite'] as $activite)
-                             '{{ $activite->valeurpost }}',
+                           @foreach ($collection['taches'] as $tache)
+                             '{{ $tache->valeurpost }}',
                            @endforeach
                   ]
               }

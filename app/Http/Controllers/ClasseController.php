@@ -9,6 +9,7 @@ use App\Models\Classe;
 use App\Models\Ifad;
 use App\Models\User;
 use App\Models\Activite;
+use App\Models\Historique;
 
 class ClasseController extends Controller
 {
@@ -74,6 +75,8 @@ class ClasseController extends Controller
         {
           $classe = Classe::create($this->validator());
 
+          $this->historique(request('libelleclasse'), 'Ajout');
+
           return redirect('classes')->with('message', 'Classe bien ajoutée.');
         }
         catch(\Exception $exception)
@@ -114,7 +117,9 @@ class ClasseController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-          return view('classes.edit', compact('class'));
+          $ifads = Ifad::select('*')->get();
+
+          return view('classes.edit', compact('class','ifads'));
         }
         catch(\Exception $exception)
        {
@@ -138,6 +143,8 @@ class ClasseController extends Controller
           $classe_libelle = request('libelleclasse');
 
           $class->update($this->validator());
+
+          $this->historique($classe_libelle, 'Modification');
 
           return redirect('classes/' . $class->id);
         }
@@ -163,6 +170,8 @@ class ClasseController extends Controller
             {
               $class->delete();
 
+              $this->historique($class->libelleclasse, 'Suppression');
+
               return redirect('classes')->with('messagealert','Suppression éffectuée');
             }
 
@@ -182,4 +191,17 @@ class ClasseController extends Controller
              'ifad_id' => 'required'
          ]);
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Classe',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 }

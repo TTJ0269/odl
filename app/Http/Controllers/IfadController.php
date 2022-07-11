@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ifad;
+use App\Models\Association;
 use App\Models\User;
+use App\Models\Historique;
 
 class IfadController extends Controller
 {
@@ -68,11 +70,18 @@ class IfadController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
-          $libelle = request('libelleifad');
+        if(Ifad::where('libelleifad','=',request('libelleifad'))->select('id')->doesntExist())
+        {
+            $libelle = request('libelleifad');
 
-          $ifad = Ifad::create($this->validator());
+            $ifad = Ifad::create($this->validator());
 
-          return redirect('ifads')->with('message', 'IFAD bien ajouté.');
+            $this->historique($libelle, 'Ajout');
+
+            return redirect('ifads')->with('message', 'IFAD bien ajouté.');
+        }
+        return back()->with('messagealert',"L'IFAD existe déjà.");
+
       }
       catch(\Exception $exception)
       {
@@ -137,6 +146,8 @@ class IfadController extends Controller
 
           $ifad->update($this->validator());
 
+          $this->historique($libelle, 'Modification');
+
           return redirect('ifads/' . $ifad->id)->with('message','Modication éffectuée');
         }
         catch(\Exception $exception)
@@ -157,9 +168,18 @@ class IfadController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
+        if(Association::where('ifad_id','=',$ifad->id)->select('id')->exists())
+        {
+           return back()->with('messagealert',"Suppression pas possible. L'IFAD est référencé dans une autre table.");
+        }
+        else
+        {
             $ifad->delete();
 
+            $this->historique($ifad->libelleifad, 'Suppression');
+
             return redirect('ifads')->with('messagealert','Suppression éffectuée');
+        }
         }
         catch(\Exception $exception)
        {
@@ -173,4 +193,17 @@ class IfadController extends Controller
              'libelleifad'=>'required',
          ]);
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Ifad',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 }

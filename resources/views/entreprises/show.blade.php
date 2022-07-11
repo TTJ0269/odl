@@ -43,6 +43,11 @@
                             </form>
                             <hr>
                             <p><strong>Libelle :</strong> {{$entreprise->libelleentreprise}}</p>
+                            <p>
+                                @if($entreprise->logoentreprise)
+                                <img src="{{ asset('storage/entreprise/' .$entreprise->logoentreprise) }}" alt="entre-LogoEntreprise" class="img-thumbnail" width="400">
+                                @endif
+                            </p>
                     </div>
                 </div>
             </div>

@@ -21,7 +21,7 @@
   <div class="card-header">
     <h3 class="card-title">Activité</h3>
     <div class="card-tools">
-      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-paste"></span>
+      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-copy"></span>
     </div>
   </div>
   <!-- /fin cadre -->
@@ -34,83 +34,45 @@
 
                <div class="content">
                       <hr>
-
-            <div class="form-group row">
-                <label for="text" class="col-sm-2 col-form-label">Compétence</label>
-                <div class="col-sm-10">
-                  <div class="input-group mb-3">
-                      <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-text-height"></i></span>
-                      </div>
-                      <select class="custom-select select2bs4 @error('competence_id') is-invalid @enderror" name="competence_id">
-                        <option selected disabled> Sélectionner une compétence</option>
-                        @foreach($competences as $competence)
-                        <option value="{{ $competence->id}}"> {{ $competence->libellecompetence }}</option>
-                        @endforeach
-                      </select>
-                   </div>
-                      @error('competence_id')
-                      <div class="invalid-feedback">
-                          {{ $errors->first('competence_id')}}
-                      </div>
-                    @enderror
-                 </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="text" class="col-sm-2 col-form-label">Classe</label>
-                <div class="col-sm-10">
-                  <div class="input-group mb-3">
-                      <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-text-height"></i></span>
-                      </div>
-                      <select class="custom-select select2bs4 @error('classe_id') is-invalid @enderror" name="classe_id">
-                        <option selected disabled> Sélectionner une classe</option>
-                        @foreach($classes as $classe)
-                        <option value="{{ $classe->id}}"> ({{ $classe->ifad->libelleifad }}) {{ $classe->libelleclasse }}</option>
-                        @endforeach
-                      </select>
-                   </div>
-                      @error('classe_id')
-                      <div class="invalid-feedback">
-                          {{ $errors->first('classe_id')}}
-                      </div>
-                    @enderror
-                 </div>
-              </div>
-
                <div class="form-group row">
-                <label for="name" class="col-sm-2 col-form-label">Libelle</label>
-                  <div class="col-sm-10">
+                      <label for="text" class="col-sm-2 col-form-label">Libelle</label>
+                     <div class="col-sm-10">
+                    <input type="text" class="form-control @error('libelleactivite') is-invalid @enderror" name="libelleactivite" placeholder="Rentrez le libelle..." value="{{ old('libelleactivite') ?? $activite->libelleactivite }}" autofocus  required/>
+                    @error('libelleactivite')
+                        <div class="invalid-feedback">
+                            {{ $errors->first('libelleactivite')}}
+                        </div>
+                    @enderror
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="text" class="col-sm-2 col-form-label">Identifiant</label>
+                    <div class="col-sm-10">
                       <div class="input-group mb-3">
                           <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-tenge"></i></span>
+                            <span class="input-group-text"><i class="fas fa-audio-description"></i></span>
                           </div>
-                          <input type="text" class="form-control @error('libelleactivite') is-invalid @enderror" name="libelleactivite"  placeholder="Libelle" value="{{ old('libelleactivite') ?? $activite->libelleactivite }}" required autofocus/>
-                          @error('libelleactivite')
+                          <input type="text" class="form-control @error('identifiantactivite') is-invalid @enderror" name="identifiantactivite" placeholder="identifiant" value="{{ old('identifiantactivite') ?? $activite->identifiantactivite }}" autofocus  required/>
+                          @error('identifiantactivite')
                           <div class="invalid-feedback">
-                              {{ $errors->first('libelleactivite')}}
+                              {{ $errors->first('identifiantactivite')}}
                           </div>
                           @enderror
                       </div>
+                    </div>
                   </div>
-              </div>
 
-              <div class="form-group row">
-                <label for="text" class="col-sm-2 col-form-label">Identifiant</label>
-                <div class="col-sm-10">
-                  <div class="input-group mb-3">
-                      <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-audio-description"></i></span>
-                      </div>
-                      <input type="text" class="form-control @error('identifiantactivite') is-invalid @enderror" name="identifiantactivite" placeholder="identifiant" value="{{ old('identifiantactivite') ?? $activite->identifiantactivite }}" autofocus  required/>
-                      @error('identifiantactivite')
+                <div class="form-group row">
+                    <label for="text" class="col-sm-2 col-form-label">Catégorie</label>
+                   <div class="col-sm-10">
+                  <input type="text" class="form-control @error('categorie') is-invalid @enderror" name="categorie" placeholder="Rentrez la categorie..." value="{{ old('categorie') ?? $activite->categorie }}"/>
+                  @error('categorie')
                       <div class="invalid-feedback">
-                          {{ $errors->first('identifiantactivite')}}
+                          {{ $errors->first('categorie')}}
                       </div>
-                      @enderror
+                  @enderror
                   </div>
-                </div>
               </div>
 
                 </div>

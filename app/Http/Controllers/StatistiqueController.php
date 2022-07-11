@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Profil;
 use App\Models\User;
+use App\Models\Association;
 use App\Models\Classe;
 use App\Models\FichePositionnement;
 
@@ -59,103 +61,61 @@ class StatistiqueController extends Controller
         }
     }
 
-    public function show()
+    public function show(FichePositionnement $fiche_positionnement)
     {
-        $fiche_positionnement = request('fiche_positionnement_id');
+        $user_id = (Auth::user()->id);
+        $profil_id = (Auth::user()->profil_id);
 
-        if($fiche_positionnement == null)
+        $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+        if($profil_libelle == 'Apprenant')
         {
-            return back()->with('messagealert','Séléctionner une fiche');
+            if(Association::where('user_id','=',Auth::user()->id)->select()->exists())
+            {
+                $association = Association::where('user_id','=',Auth::user()->id)->select('*')->first();
+                if($fiche_positionnement->association_id != $association->id)
+                {
+                    return back()->with('messagealert',"Pas de droit nécessaire");
+                }
+            }
         }
-        else
+
+        $tuteur_suivi_infos = DB::table('users')
+        ->join('suivis','users.id','=','suivis.user_id')
+        ->join('entreprises','entreprises.id','=','suivis.entreprise_id')
+        ->where('suivis.tuteur_suivi_id','=',$fiche_positionnement->responsable_suivi_id)
+        ->select('users.*')->distinct('users.id')
+        ->get();
+
+        /** selection des activites classes par activites **/
+        $activites = DB::table('activites')
+        ->join('taches','activites.id','=','taches.activite_id')
+        ->join('positionnements','taches.id','=','positionnements.tache_id')
+        ->select('activites.*')->where('positionnements.fiche_positionnement_id','=',$fiche_positionnement->id)
+        ->orderBy('activites.id')->distinct('activites.id')->get();
+
+        $i = 1;
+        foreach($activites as $activite)
         {
-            $fiche_select = FichePositionnement::where('id','=',$fiche_positionnement)->select('*')->first();
+        $tab_activite_id[$i]= $activite->id;
+        $tab_activite_libelle[$i]= $activite->libelleactivite;
 
-            $fiches = FichePositionnement::where('id','=',$fiche_positionnement)->select('*')->get();
-            $classes = Classe::where('id','=',$fiche_select->classe_id)->select('*')->get();
+        $tab_tache[$i] = DB::table('fiche_positionnements')
+        ->join('positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+        ->join('taches','taches.id','=','positionnements.tache_id')
+        ->where('fiche_positionnements.id','=',$fiche_positionnement->id)
+        ->where('taches.activite_id','=',$tab_activite_id[$i])
+        ->select('positionnements.*','taches.libelletache')
+        ->orderBy('taches.id')
+        ->get();
 
-            $tuteur_suivi_infos = DB::table('users')
-            ->join('suivis','users.id','=','suivis.user_id')
-            ->join('entreprises','entreprises.id','=','suivis.entreprise_id')
-            ->where('suivis.tuteur_suivi_id','=',$fiche_select->responsable_suivi_id)
-            ->select('users.*')->distinct('users.id')
-            ->get();
+        $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
 
-            /** selection des activites classes par competences **/
-            $competences = DB::table('competences')
-            ->join('activites','competences.id','=','activites.competence_id')
-            ->join('positionnements','activites.id','=','positionnements.activite_id')
-            ->select('competences.*')->where('positionnements.fiche_positionnement_id','=',$fiche_positionnement)
-            ->orderBy('competences.id')->distinct('competences.id')->get();
-
-            $i = 1;
-            foreach($competences as $competence)
-            {
-            $tab_competence_id[$i]= $competence->id;
-            $tab_competence_libelle[$i]= $competence->libellecompetence;
-
-            $tab_activite[$i] = DB::table('fiche_positionnements')
-            ->join('positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-            ->join('activites','activites.id','=','positionnements.activite_id')
-            ->where('fiche_positionnements.id','=',$fiche_positionnement)
-            ->where('activites.competence_id','=',$tab_competence_id[$i])
-            ->select('positionnements.*','activites.libelleactivite')
-            ->orderBy('activites.id')
-            ->get();
-
-            $collections[$i] = collect(['competence_id' => $tab_competence_id[$i], 'competence_libelle' => $tab_competence_libelle[$i], 'activite' => $tab_activite[$i]])->all();
-
-            $i++;
-            }
-
-            //dd($collections);
-
-            return view('statistiques.show', compact('collections','fiches','classes'));
-
+        $i++;
         }
-    }
 
-    public function fiche_longue_show(FichePositionnement $fiche_positionnement)
-    {
+        //dd($collections);
 
-            $classes = Classe::where('id','=',$fiche_positionnement->classe_id)->select('*')->get();
+        return view('statistiques.show', compact('collections','fiche_positionnement'));
 
-            $tuteur_suivi_infos = DB::table('users')
-            ->join('suivis','users.id','=','suivis.user_id')
-            ->join('entreprises','entreprises.id','=','suivis.entreprise_id')
-            ->where('suivis.tuteur_suivi_id','=',$fiche_positionnement->responsable_suivi_id)
-            ->select('users.*')->distinct('users.id')
-            ->get();
-
-            /** selection des activites classes par competences **/
-            $competences = DB::table('competences')
-            ->join('activites','competences.id','=','activites.competence_id')
-            ->join('positionnements','activites.id','=','positionnements.activite_id')
-            ->select('competences.*')->where('positionnements.fiche_positionnement_id','=',$fiche_positionnement->id)
-            ->orderBy('competences.id')->distinct('competences.id')->get();
-
-            $i = 1;
-            foreach($competences as $competence)
-            {
-            $tab_competence_id[$i]= $competence->id;
-            $tab_competence_libelle[$i]= $competence->libellecompetence;
-
-            $tab_activite[$i] = DB::table('fiche_positionnements')
-            ->join('positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-            ->join('activites','activites.id','=','positionnements.activite_id')
-            ->where('fiche_positionnements.id','=',$fiche_positionnement->id)
-            ->where('activites.competence_id','=',$tab_competence_id[$i])
-            ->select('positionnements.*','activites.libelleactivite')
-            ->orderBy('activites.id')
-            ->get();
-
-            $collections[$i] = collect(['competence_id' => $tab_competence_id[$i], 'competence_libelle' => $tab_competence_libelle[$i], 'activite' => $tab_activite[$i]])->all();
-
-            $i++;
-            }
-
-            //dd($collections);
-
-            return view('statistiques.fiche_longue_show', compact('collections','fiche_positionnement','classes'));
     }
 }

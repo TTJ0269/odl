@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\FichePositionnement;
 use App\Models\Positionnement;
 use App\Models\Classe;
+use App\Models\Profil;
+use App\Models\User;
+use App\Models\Association;
+use App\Models\Entreprise;
+use App\Models\Historique;
 
 class FichePositionnementController extends Controller
 {
@@ -32,13 +37,34 @@ class FichePositionnementController extends Controller
 
            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
            {
-             $fiche_positionnements = FichePositionnement::select('*')->orderBy('id','DESC')->get();
+                $fiche_positionnements = DB::table('users')
+                ->join('associations','users.id','=','associations.user_id')
+                ->join('ifads','ifads.id','=','associations.ifad_id')
+                ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
+                ->select('fiche_positionnements.*','ifads.libelleifad')
+                ->distinct('fiche_positionnements.id')
+                ->orderBy('fiche_positionnements.id','DESC')
+                ->get();
 
-             return view('fiche_positionnements.index', compact('fiche_positionnements'));
+                return view('fiche_positionnements.index', compact('fiche_positionnements'));
            }
-           else
+           elseif($profil_libelle == 'Chargé du suivi')
            {
-            if(DB::table('associations')->where('associations.user_id','=',Auth::user()->id)->select('associations.id')->doesntExist())
+                $fiche_positionnements = DB::table('users')
+                ->join('associations','users.id','=','associations.user_id')
+                ->join('ifads','ifads.id','=','associations.ifad_id')
+                ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
+                ->where('fiche_positionnements.responsable_suivi_id','=',$user_id)
+                ->select('fiche_positionnements.*','ifads.libelleifad')
+                ->distinct('fiche_positionnements.id')
+                ->orderBy('fiche_positionnements.id','DESC')
+                ->get();
+
+                return view('fiche_positionnements.index', compact('fiche_positionnements'));
+           }
+           elseif($profil_libelle == 'DG_IFAD')
+           {
+              if(DB::table('associations')->where('associations.user_id','=',Auth::user()->id)->select('associations.id')->doesntExist())
                 {
                     return back()->with('messagealert',"Vous n'est pas associé à un IFAD");
                 }
@@ -53,11 +79,38 @@ class FichePositionnementController extends Controller
                     ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
                     ->where('associations.ifad_id','=',$ifad_id)
                     ->select('fiche_positionnements.*','ifads.libelleifad')
+                    ->distinct('fiche_positionnements.id')
                     ->orderBy('fiche_positionnements.id','DESC')
                     ->get();
 
                     return view('fiche_positionnements.index', compact('fiche_positionnements'));
                 }
+           }
+           else
+           {
+                if(DB::table('associations')->where('associations.user_id','=',Auth::user()->id)->select('associations.id')->doesntExist())
+                {
+                    return back()->with('messagealert',"Vous n'est pas associé à un IFAD");
+                }
+                else
+                {
+                    $ifad_id = DB::table('associations')->where('associations.user_id','=',Auth::user()->id)
+                    ->select('ifad_id')->get()->last()->ifad_id;
+
+                    $fiche_positionnements = DB::table('users')
+                    ->join('associations','users.id','=','associations.user_id')
+                    ->join('ifads','ifads.id','=','associations.ifad_id')
+                    ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
+                    ->where('associations.ifad_id','=',$ifad_id)
+                    ->where('associations.user_id','=',Auth::user()->id)
+                    ->select('fiche_positionnements.*','ifads.libelleifad')
+                    ->distinct('fiche_positionnements.id')
+                    ->orderBy('fiche_positionnements.id','DESC')
+                    ->get();
+
+                    return view('fiche_positionnements.index', compact('fiche_positionnements'));
+                }
+
             }
 
       }
@@ -106,29 +159,42 @@ class FichePositionnementController extends Controller
             $user_id = (Auth::user()->id);
             $profil_id = (Auth::user()->profil_id);
 
-            /** selection des activites classes par competences **/
-            $competences = DB::table('competences')
-            ->join('activites','competences.id','=','activites.competence_id')
-            ->join('positionnements','activites.id','=','positionnements.activite_id')
-            ->select('competences.*')->where('positionnements.fiche_positionnement_id','=',$fiche_positionnement->id)
-            ->orderBy('competences.id')->distinct('competences.id')->get();
+            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+            if($profil_libelle == 'Apprenant')
+            {
+                if(Association::where('user_id','=',Auth::user()->id)->select()->exists())
+                {
+                    $association = Association::where('user_id','=',Auth::user()->id)->select('*')->first();
+                    if($fiche_positionnement->association_id != $association->id)
+                    {
+                      return back()->with('messagealert',"Pas de droit nécessaire");
+                    }
+                }
+            }
+
+            /** selection des activites classes par activites **/
+            $activites = DB::table('activites')
+            ->join('taches','activites.id','=','taches.activite_id')
+            ->join('positionnements','taches.id','=','positionnements.tache_id')
+            ->select('activites.*')->where('positionnements.fiche_positionnement_id','=',$fiche_positionnement->id)
+            ->orderBy('activites.id')->distinct('activites.id')->get();
 
             $i = 1;
-            foreach($competences as $competence)
+            foreach($activites as $activite)
             {
-            $tab_competence_id[$i]= $competence->id;
-            $tab_competence_libelle[$i]= $competence->libellecompetence;
+            $tab_activite_id[$i]= $activite->id;
+            $tab_activite_libelle[$i]= $activite->libelleactivite;
 
-            $tab_activite[$i] = DB::table('fiche_positionnements')
+            $tab_tache[$i] = DB::table('fiche_positionnements')
             ->join('positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-            ->join('activites','activites.id','=','positionnements.activite_id')
+            ->join('taches','taches.id','=','positionnements.tache_id')
             ->where('fiche_positionnements.id','=',$fiche_positionnement->id)
-            ->where('activites.competence_id','=',$tab_competence_id[$i])
-            ->select('positionnements.*','activites.libelleactivite')
-            ->orderBy('activites.id')
+            ->where('taches.activite_id','=',$tab_activite_id[$i])
+            ->select('positionnements.*','taches.libelletache')
+            ->orderBy('taches.id')
             ->get();
 
-            $collections[$i] = collect([$tab_competence_id[$i],$tab_competence_libelle[$i],$tab_activite[$i]])->all();
+            $collections[$i] = collect(['activite_id' => $tab_activite_id[$i],'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
 
             $i++;
             }
@@ -153,34 +219,35 @@ class FichePositionnementController extends Controller
 
      public function edit(FichePositionnement $fiche_positionnement)
      {
+        $this->authorize('ad_re_su_ch', User::class);
         try
         {
             $user_id = (Auth::user()->id);
             $profil_id = (Auth::user()->profil_id);
 
-            /** selection des activites classes par competences **/
-            $competences = DB::table('competences')
-            ->join('activites','competences.id','=','activites.competence_id')
-            ->join('positionnements','activites.id','=','positionnements.activite_id')
-            ->select('competences.*')->where('positionnements.fiche_positionnement_id','=',$fiche_positionnement->id)
-            ->orderBy('competences.id')->distinct('competences.id')->get();
+            /** selection des activites classes par activites **/
+            $activites = DB::table('activites')
+            ->join('taches','activites.id','=','taches.activite_id')
+            ->join('positionnements','taches.id','=','positionnements.tache_id')
+            ->select('activites.*')->where('positionnements.fiche_positionnement_id','=',$fiche_positionnement->id)
+            ->orderBy('activites.id')->distinct('activites.id')->get();
 
             $i = 1;
-            foreach($competences as $competence)
+            foreach($activites as $activite)
             {
-            $tab_competence_id[$i]= $competence->id;
-            $tab_competence_libelle[$i]= $competence->libellecompetence;
+            $tab_activite_id[$i]= $activite->id;
+            $tab_activite_libelle[$i]= $activite->libelleactivite;
 
-            $tab_activite[$i] = DB::table('fiche_positionnements')
+            $tab_tache[$i] = DB::table('fiche_positionnements')
             ->join('positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-            ->join('activites','activites.id','=','positionnements.activite_id')
+            ->join('taches','taches.id','=','positionnements.tache_id')
             ->where('fiche_positionnements.id','=',$fiche_positionnement->id)
-            ->where('activites.competence_id','=',$tab_competence_id[$i])
-            ->select('positionnements.*','activites.libelleactivite')
-            ->orderBy('activites.id')
+            ->where('taches.activite_id','=',$tab_activite_id[$i])
+            ->select('positionnements.*','taches.libelletache')
+            ->orderBy('taches.id')
             ->get();
 
-            $collections[$i] = collect([$tab_competence_id[$i],$tab_competence_libelle[$i],$tab_activite[$i]])->all();
+            $collections[$i] = collect(['activite_id' => $tab_activite_id[$i],'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
 
             $i++;
             }
@@ -205,9 +272,9 @@ class FichePositionnementController extends Controller
 
      public function update(FichePositionnement $fiche_positionnement)
      {
+        $this->authorize('ad_re_su_ch', User::class);
          try
          {
-             $classe = request('classe');
             /** Recuperation des valeurs **/
             $positionnement_values = Positionnement::where('fiche_positionnement_id','=',$fiche_positionnement->id)->select('*')->get();
             $i = 1;
@@ -221,7 +288,9 @@ class FichePositionnementController extends Controller
                     $i++;
             }
 
-                return redirect('fiche_positionnements/show/'.$fiche_positionnement->id.'/'.$classe)->with('message', "Fiche de positionnement bien mise à jour");
+                $this->historique($fiche_positionnement->libellefiche, 'Modification');
+
+                return redirect('fiche_positionnements/show/'.$fiche_positionnement->id)->with('message', "Fiche de positionnement bien mise à jour");
             }
             catch(\Exception $exception)
            {
@@ -238,8 +307,23 @@ class FichePositionnementController extends Controller
 
      public function destroy(FichePositionnement $fiche_positionnement)
      {
-         /* $fiche_positionnement->delete();
+        $this->authorize('admin', User::class);
 
-          return redirect('fiche_positionnements');  */
+         $fiche_positionnement->delete();
+
+         return redirect('fiche_positionnements');
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Fiche de positionnement',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 }

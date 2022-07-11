@@ -24,7 +24,7 @@ class CreateSuivisTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('entreprise_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('entreprise_id')->references('id')->on('entreprises');
+            $table->foreign('entreprise_id')->references('id')->on('entreprises')->onDelete('cascade');
         });
     }
 

@@ -46,7 +46,7 @@ class ChartController extends Controller
             'etatsup' => 0,
         ]);
 
-        DB::table('users')->insert([
+        /*DB::table('users')->insert([
             'name' => 'Suivi AQUACULTURE',
             'email' => 'suivi-aquaculture@gmail.com',
             'email_verified_at' => now(),
@@ -98,7 +98,7 @@ class ChartController extends Controller
             'etat' => 1,
             'etatconnection' => 1,
             'etatsup' => 0,
-        ]);
+        ]);*/
     }
 
 

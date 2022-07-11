@@ -90,6 +90,24 @@ class ProfilPolicy
         }
     }
 
+    public function ad_re_su_ch(User $user)
+    {
+        //ad_re_su = administrateur,responsable,suivi aed et chargé du suivi;
+        try
+        {
+            if(Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Administrateur')->exists() ||
+               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Responsable pédagogique')->exists() ||
+               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Suivi_AED')->exists() ||
+               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Chargé du suivi')->exists())
+           {return true;}
+            return false;
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }
+
     public function ad_re_su(User $user)
     {
         //ad_re_su = administrateur,responsable et suivi aed;
@@ -97,7 +115,7 @@ class ProfilPolicy
         {
             if(Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Administrateur')->exists() ||
                Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Responsable pédagogique')->exists() ||
-               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','suivi_aed')->exists())
+               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Suivi_AED')->exists())
            {return true;}
             return false;
         }

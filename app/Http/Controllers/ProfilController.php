@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Profil;
 use App\Models\User;
+use App\Models\Historique;
 
 class ProfilController extends Controller
 {
@@ -73,6 +74,8 @@ class ProfilController extends Controller
 
           $profil = Profil::create($this->validator());
 
+          $this->historique($profil_libelle, 'Ajout');
+
           return redirect('profils')->with('message', 'Profil bien ajouté.');
       }
         catch(\Exception $exception)
@@ -138,6 +141,8 @@ class ProfilController extends Controller
 
           $profil->update($this->validator());
 
+          $this->historique($profil->libelleprofil, 'Modification');
+
           return redirect('profils/' . $profil->id);
         }
         catch(\Exception $exception)
@@ -162,10 +167,12 @@ class ProfilController extends Controller
             {
               $profil->delete();
 
+              $this->historique($profil->libelleprofil, 'Suppression');
+
               return redirect('profils')->with('messagealert','Suppression éffectuée');
             }
 
-            return redirect('profils')->with('messagealert','Ce type est referencé dans une autre table');
+            return redirect('profils')->with('messagealert','Ce profil est référencé dans une autre table');
         }
           catch(\Exception $exception)
         {
@@ -180,4 +187,17 @@ class ProfilController extends Controller
              'libelleprofil'=>'required|min:2'
          ]);
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Profil',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 }

@@ -6,13 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Profil;
 use App\Models\User;
 use App\Models\Positionnement;
 use App\Models\FichePositionnement;
-use App\Models\Competence;
 use App\Models\Activite;
+use App\Models\Tache;
 use App\Models\Classe;
 use App\Models\Ifad;
+use App\Models\Suivi;
+use App\Models\Entreprise;
+use App\Models\Historique;
 
 class PositionnementController extends Controller
 {
@@ -23,14 +27,82 @@ class PositionnementController extends Controller
 
     public function index()
     {
+        $this->authorize('ad_re_su_ch', User::class);
+        try
+        {
+            $user_email = (Auth::user()->email);
+            $profil_id = (Auth::user()->profil_id);
+
+            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+
+            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
+           {
+                $suivis = Suivi::select('*')->orderBy('id','DESC')->get();
+
+                return view('positionnements.index', compact('suivis'));
+           }
+           else
+           {
+               if(Entreprise::where('emailentreprise','=',$user_email)->select('id')->exists())
+               {
+                    $entreprise = Entreprise::where('emailentreprise','=',$user_email)->select('*')->first();
+
+                    $suivis = Suivi::where('entreprise_id','=',$entreprise->id)->select('*')->orderBy('id','DESC')->get();
+
+                    return view('positionnements.index', compact('suivis'));
+               }
+               else
+               {
+                   return back()->with('messagealert', "Pas de droit nécessaire.");
+               }
+           }
+
+        }
+        catch(\Exception $exception)
+        {
+        return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }
+
+    public function recup(User $user)
+    {
+        $this->authorize('ad_re_su_ch', User::class);
       try
       {
         $user_id = (Auth::user()->id);
         $profil = (Auth::user()->profil_id);
 
-        $ifads = Ifad::select('*')->get();
+        if(Tache::select('*')->doesntExist())
+        {
+           return back()->with('messagealert', "Ajouter au moins une tâche.");
+        }
+        else
+        {
+            /** selection des activites classes par activites **/
+            $activites = Activite::select('*')->orderBy('id')->distinct('id')->get();
 
-        return view('positionnements.index',compact('ifads'));
+            $i = 0;
+            foreach($activites as $activite)
+            {
+                $tab_activite_id[$i] = $activite->id;
+                $tab_activite_libelle[$i] = $activite->libelleactivite;
+
+
+                $tab_tache[$i] = DB::table('activites')
+                ->join('taches','activites.id','=','taches.activite_id')
+                ->select('taches.*','activites.id as id_activite')
+                ->where('activites.id','=',$tab_activite_id[$i])
+                ->orderBy('activites.id')
+                ->distinct('activites.id')
+                ->get();
+
+                $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
+
+                $i++;
+            }
+
+            return view('positionnements.recup',compact('collections','user'));
+        }
 
       }
       catch(\Exception $exception)
@@ -75,26 +147,14 @@ class PositionnementController extends Controller
 
     public function create()
     {
+        $this->authorize('ad_re_su_ch', User::class);
         try
         {
-            $classe_id = request('classe_id');
             $user_id = request('user_id');
 
             if($user_id == null)
             {
                 return back()->with('messagealert', "Sélectionner un(e) apprenant(e).");
-            }
-            elseif($classe_id == null)
-            {
-                return back()->with('messagealert', "Sélectionner une classe.");
-            }
-            elseif(Competence::select('*')->doesntExist())
-            {
-               return back()->with('messagealert', "Ajouter au moins une compétence.");
-            }
-            elseif(Activite::select('*')->doesntExist())
-            {
-               return back()->with('messagealert', "Ajouter au moins une activité.");
             }
             else
             {
@@ -108,45 +168,41 @@ class PositionnementController extends Controller
                 }
                 else
                 {
-                    // dd($classe_id, $user_id);
 
                     $positionnement = new Positionnement();
+                    $taches = Tache::select('*')->get();
 
-                    /** selection des activites classes par competences **/
-                    $competences = DB::table('competences')
-                    ->join('activites','competences.id','=','activites.competence_id')
-                    ->select('competences.*')->where('activites.classe_id','=',$classe_id)
-                    ->orderBy('competences.id')->distinct('competences.id')->get();
-
-                    $i = 0;
-                    foreach($competences as $competence)
+                    $nombre_tache_select = 0;
+                    $i = 1;
+                    foreach($taches as $tache_value)
                     {
-                        $tab_competence_id[$i] = $competence->id;
-                        $tab_competence_libelle[$i] = $competence->libellecompetence;
+                       $value_id[$i]= request('tache_id_'.$tache_value->id);
+                       $value_libelle[$i]= request('tache_libelle_'.$tache_value->id);
 
+                       if($value_id[$i] != null)
+                       {
+                           $collections[$i] = collect(['tache_id' => $value_id[$i],'tache_libelle' => $value_libelle[$i]])->all();
+                           $nombre_tache_select = $nombre_tache_select + 1;
+                       }
 
-                        $tab_activite[$i] = DB::table('competences')
-                        ->join('activites','competences.id','=','activites.competence_id')
-                        ->select('competences.id','activites.id','activites.libelleactivite')
-                        ->where('competences.id','=',$tab_competence_id[$i])
-                        ->where('activites.classe_id','=',$classe_id)
-                        ->orderBy('competences.id')
-                        ->distinct('competences.id')
-                        ->get();
-
-                        $collections[$i] = collect([$tab_competence_id[$i],$tab_competence_libelle[$i],$tab_activite[$i]])->all();
-
-                        $i++;
+                       $i++;
                     }
 
-                    return view('positionnements.create',compact('collections','classe_id','user_id'));
+                    if($nombre_tache_select == 0)
+                    {
+                        return back()->with('messagealert', "Sélectionner au moins une tâche.");
+                    }
+                    else
+                    {
+                        // dd($collections);
+                        return view('positionnements.create',compact('collections','users'));
+                    }
                 }
 
             }
 
 
         }
-
         catch(\Exception $exception)
         {
            return redirect('erreur')->with('messageerreur',$exception->getMessage());
@@ -155,16 +211,55 @@ class PositionnementController extends Controller
 
     public function store()
     {
+        $this->authorize('ad_re_su_ch', User::class);
       try
       {
-        $classe_id = request('classe_id');
-        $user_id = request('user_id');
+            $auth = Auth::user()->id;
+            $auth_email = Auth::user()->email;
+            $tel_entreprise = request('tel_entreprise');
+            $adresse_entreprise = request('adresse_entreprise');
+            $nom_tuteur = request('nom_tuteur');
+            $prenom_tuteur = request('prenom_tuteur');
+            $tel_tuteur = request('tel_tuteur');
+            $user_id = request('user_id');
 
-        $classe = Classe::select('*')->where('id','=',$classe_id)->first();
+        if(Entreprise::where('emailentreprise','=',$auth_email)->select('id')->exists())
+        {
+            $entreprise_recup = Entreprise::where('emailentreprise','=',$auth_email)->select('*')->first();
+
+            $entreprise = Entreprise::where('emailentreprise','=',$entreprise_recup->emailentreprise)->select('*')->first();
+
+            $nom_entreprise      = $entreprise->libelleentreprise;
+            $mail_entreprise     = $entreprise->emailentreprise;
+            $tel_entreprise      = request('tel_entreprise');
+            $adresse_entreprise  = request('adresse_entreprise');
+
+            if($tel_entreprise == null)
+            {
+                $tel_entreprise = $entreprise->telentreprise;
+            }
+            if($adresse_entreprise == null)
+            {
+                $adresse_entreprise = $entreprise->adresseentreprise;
+            }
+
+            $user = DB::table('entreprises')
+                   ->where('entreprises.id','=',$entreprise->id)
+                   ->update(['entreprises.telentreprise' => $tel_entreprise,
+                             'entreprises.adresseentreprise' => $adresse_entreprise
+                    ]);
+        }
+        else
+        {
+            $tel_entreprise = request('tel_entreprise');
+            $adresse_entreprise = request('adresse_entreprise');
+            $nom_entreprise = null;
+            $mail_entreprise = null;
+        }
+
         $users = User::select('*')->where('id','=',$user_id)->first();
 
         $association = DB::table('associations')
-        ->where('associations.ifad_id','=',$classe->ifad_id)
         ->where('associations.user_id','=',$user_id)
         ->select('associations.id')->get()->last();
 
@@ -174,27 +269,42 @@ class PositionnementController extends Controller
            /** Enregistrement du livret de positionnement et recuperation de id **/
             $fiche = FichePositionnement::insertGetId([
              'libellefiche'=> $fiche_positionnement,
+             'nom_entreprise'=> $nom_entreprise,
+             'tel_entreprise'=> $tel_entreprise,
+             'email_entreprise'=> $mail_entreprise,
+             'adresse_entreprise'=> $adresse_entreprise,
+             'nom_tuteur'=> $nom_tuteur,
+             'prenom_tuteur'=> $prenom_tuteur,
+             'tel_tuteur'=> $tel_tuteur,
+             'classe_apprenant'=> null,
              'dateenregistrement'=>now(),
              'association_id'=> $association->id,
              'responsable_suivi_id'=> $responsable_suivi_id,
-             'classe_id'=> $classe_id,
              'etatsup'=> 0]);
 
             /** Recuperation des valeurs **/
-             $activite_values = DB::table('activites')->select('id')->where('classe_id','=',$classe_id)->get();
-             $i = 1;
-             foreach($activite_values as $activite_value)
-             {
-               $value[$i]= request('valeurpost_'.$activite_value->id);
-               /** enregistrement des positionnements **/
-               $positionnement = Positionnement::create([
-                 'valeurpost'=> $value[$i],
-                 'fiche_positionnement_id'=> $fiche,
-                 'activite_id'=> $activite_value->id,]);
-                 $i++;
-             }
+            $taches = Tache::select('*')->get();
 
-             return redirect('fiche_positionnements')->with('message', "Fiche de positionnement bien enregistrée.");
+            $i = 1;
+            foreach($taches as $tache_value)
+            {
+               $value_id[$i]= request('valeurpost_'.$tache_value->id);
+
+               if($value_id[$i] != null)
+               {
+                   /** enregistrement des positionnements **/
+                    $positionnement = Positionnement::create([
+                        'valeurpost'=> $value_id[$i],
+                        'fiche_positionnement_id'=> $fiche,
+                        'tache_id'=> $tache_value->id,]);
+               }
+
+               $i++;
+            }
+
+             $this->historique($fiche_positionnement, 'Ajout');
+
+             return redirect('fiche_positionnements/show/'.$fiche)->with('message', "Fiche de positionnement bien enregistrée.");
 
       }
       catch(\Exception $exception)
@@ -206,6 +316,7 @@ class PositionnementController extends Controller
 
     public function edit(Positionnement $positionnement)
     {
+        $this->authorize('ad_re_su_ch', User::class);
       try
       {
         $activites = DB::table('activites')
@@ -224,6 +335,7 @@ class PositionnementController extends Controller
 
     public function update(Positionnement $positionnement)
      {
+        $this->authorize('ad_re_su_ch', User::class);
        try
        {
           $fiche_id = request('fiche_id');
@@ -237,5 +349,18 @@ class PositionnementController extends Controller
            return redirect('erreur')->with('messageerreur',$exception->getMessage());
        }
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Positionnement',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 
 }

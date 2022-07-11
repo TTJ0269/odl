@@ -7,26 +7,29 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Fiche de positionnement</h1>
+            <h1 class="m-0">Tâche</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-              <li class="breadcrumb-item active">Fiche de positionnement</li>
+              <li class="breadcrumb-item active">Tâche</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-   <!-- <a href="{{ route('fiche_positionnements.create') }}" class="btn btn-primary my-3">Nouveau livret</a> -->
+
+    <a href="{{ route('taches.create') }}" class="btn btn-primary my-3"><i class="fas fa-plus-circle"></i><span> Nouvelle tâche </span></a>
+
+
 
     <!-- cadre general -->
 <div class="card card-secondary direct-chat direct-chat-secondary">
   <div class="card-header">
-    <h3 class="card-title">Liste des fiches</h3>
+    <h3 class="card-title">Liste des tâches</h3>
     <div class="card-tools">
-      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-book-open"></span>
+      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-paste"></span>
     </div>
   </div>
   <!-- /fin cadre -->
@@ -41,16 +44,18 @@
                                   <hr>
                                 <thead>
                                     <th scope="col">Numero</th>
+                                    <th scope="col">Identifiant</th>
                                     <th scope="col">Libelle</th>
-                                    <th scope="col">IFAD</th>
+                                    <th scope="col">Activité</th>
                                 </thead>
 
                                     <tbody>
-                                    @foreach($fiche_positionnements as $key=>$fiche_positionnement)
+                                    @foreach($taches as $key=>$tach)
                                     <tr>
                                     <th scope="row"> {{++$key}} </th>
-                                    <td> <a href="{{ route('fiche_apprenant_show', ['fiche_positionnement' => $fiche_positionnement->id]) }}" style="color:rgb(55, 144, 246);"> {{$fiche_positionnement->libellefiche}} </a></td>
-                                    <th scope="row"> {{$fiche_positionnement->libelleifad}} </th>
+                                    <th scope="row"> {{$tach->identifianttache}} </th>
+                                    <td> <a href="{{ route('taches.show', ['tach' => $tach->id]) }}" style="color:rgb(55, 144, 246);"> {{$tach->libelletache}} </a></td>
+                                    <th scope="row"> {{$tach->activite->libelleactivite}} </th>
                                     </tr>
                                     @endforeach
                                     </tbody>

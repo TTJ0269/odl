@@ -24,7 +24,7 @@
   <div class="card-header">
     <h4 class="card-title">{{$activite->libelleactivite}}</h4>
     <div class="card-tools">
-      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-paste"></span>
+      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-copy"></span>
     </div>
   </div>
   <!-- /fin cadre -->
@@ -42,10 +42,7 @@
                             <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i><span> Supprimer </span></button>
                             </form>
                             <hr>
-                            @can('admin', 'App\Models\User')
-                            <p><strong>Identifiant :</strong> {{$activite->identifiantactivite}}</p>
                             <p><strong>Libelle :</strong> {{$activite->libelleactivite}}</p>
-                            @endcan
                     </div>
                 </div>
             </div>

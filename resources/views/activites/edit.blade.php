@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h4>Modifier l'activité: {{ $activite->libelleactivite }}</h4>
+<h4>Modification</h4>
 <form action="{{ route('activites.update', ['activite' => $activite->id]) }}" method="POST" enctype="multipart/form-data">
   @method('PATCH')
   @include('activites.form')

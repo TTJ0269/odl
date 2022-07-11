@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Models\Suivi;
 use App\Models\User;
-use App\Models\Ifad;
 use App\Models\Entreprise;
 use App\Models\Association;
 
@@ -31,7 +31,7 @@ class SuiviController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-            $suivis = Suivi::select('*')->get();
+            $suivis = Suivi::select('*')->orderBy('id','DESC')->get();
 
             return view('suivis.index', compact('suivis'));
         }
@@ -53,17 +53,16 @@ class SuiviController extends Controller
    try
    {
       $suivi = new Suivi();
-      $ifads = Ifad::select('*')->get();
       $entreprises = Entreprise::select('*')->get();
 
-      /** Liste des tuteurs**/
-      $users = DB::table('profils')
+      /** Liste des apprenants**/
+      $apprenants = DB::table('profils')
       ->join('users','profils.id','=','users.profil_id')
-      ->where('profils.libelleprofil','=','Chargé du suivi')
+      ->where('profils.libelleprofil','=','Apprenant')
       ->select('users.*')
       ->get();
 
-      return view('suivis.create',compact('ifads','entreprises','users','suivi'));
+      return view('suivis.create',compact('apprenants','entreprises','suivi'));
 
     }
     catch(\Exception $exception)
@@ -82,20 +81,31 @@ class SuiviController extends Controller
  public function store(Request  $request)
  {
     $this->authorize('ad_re_su', User::class);
+    $this->validator();
    try
    {
       $entreprise_id = request('entreprise_id');
       $user_id = request('user_id');
-      $tuteur_suivi_id = request('tuteur_suivi_id');
+      $datedebut = request('datedebut');
+      $datefin = request('datefin');
 
+      if(Date::make($datedebut) > Date::make($datefin))
+      {
+        return back()->with('messagealert', "Date début supérieure à la date de fin ");
+      }
+      else
+      {
         if(Suivi::where('user_id','=',$user_id)->where('entreprise_id','=',$entreprise_id)->select('*')->exists())
-         {
+        {
             $suivi_verification = Suivi::where('user_id','=',$user_id)
             ->where('entreprise_id','=',$entreprise_id)->select('*')->get()->last();
 
-            if($suivi_verification->datefin == null)
+            $date_fin_now = Date::make($datefin);
+            $date_fin_avant = Date::make($suivi_verification->datefin);
+
+            if($date_fin_avant > $date_fin_now)
             {
-              return back()->with('messagealert', "Veuillez définir la fin du suivi de cet utilisateur");
+                return back()->with('messagealert', "L'apprenant(e) est toujours en stage .Veuillez définir sa fin de stage ");
             }
             else
             {
@@ -111,13 +121,14 @@ class SuiviController extends Controller
             return redirect('suivis/create')->with('message', 'Informations bien enregistrées.');
         }
 
-      //dd($entreprise_id,$user_id,$tuteur_suivi_id);
+        //dd($entreprise_id,$user_id,$tuteur_suivi_id);
 
-      //$sendemail = ['email' => $emailuser , 'nomutilisateur' => $username , 'prenomutilisateur' => $userprenom, 'password' => $a];
+        //$sendemail = ['email' => $emailuser , 'nomutilisateur' => $username , 'prenomutilisateur' => $userprenom, 'password' => $a];
 
-      //Mail::to($sendemail['email'])->send(new UserMail($sendemail));
+        //Mail::to($sendemail['email'])->send(new UserMail($sendemail));
 
-      return redirect('suivis/create')->with('message', 'Informations bien entregistrées.');
+        return redirect('suivis/create')->with('message', 'Informations bien entregistrées.');
+      }
 
   }
   catch(\Exception $exception)
@@ -225,17 +236,30 @@ class SuiviController extends Controller
         }
     }
 
+    private  function validator()
+    {
+        return request()->validate([
+            'entreprise_id'=>'required|integer',
+            'user_id'=>'required|integer',
+        ]);
+    }
+
     private function creation()
     {
         $entreprise_id = request('entreprise_id');
         $user_id = request('user_id');
-        $tuteur_suivi_id = request('tuteur_suivi_id');
+        $datedebut = request('datedebut');
+        $datefin = request('datefin');
+
+        $entreprise = Entreprise::where('id','=',$entreprise_id)->select('*')->first();
+        $tuteur_suivi = User::where('email','=',$entreprise->emailentreprise)->select('*')->first();
 
         $suivi = Suivi::create([
             'entreprise_id'=> $entreprise_id,
             'user_id'=> $user_id,
-            'tuteur_suivi_id' => $tuteur_suivi_id,
-            'datedebut'=> now()
+            'tuteur_suivi_id' => $tuteur_suivi->id,
+            'datedebut'=> $datedebut,
+            'datefin'=> $datefin,
           ]);
     }
 

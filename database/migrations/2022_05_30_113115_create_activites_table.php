@@ -15,15 +15,11 @@ class CreateActivitesTable extends Migration
     {
         Schema::create('activites', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('identifiantactivite',10)->nullable();
+            $table->string('identifiantactivite', 10)->nullable();
             $table->string('libelleactivite')->unique();
+            $table->string('categorie')->nullable();
             $table->integer('etatsup');
             $table->timestamps();
-
-            $table->unsignedBigInteger('competence_id');
-            $table->unsignedBigInteger('classe_id');
-            $table->foreign('competence_id')->references('id')->on('competences')->onDelete('cascade');
-            $table->foreign('classe_id')->references('id')->on('classes')->onDelete('cascade');
         });
     }
 

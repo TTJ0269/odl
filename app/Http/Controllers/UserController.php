@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\NotificationMail;
 use App\Models\User;
 use App\Models\Profil;
+use App\Models\Historique;
 
 class UserController extends Controller
 {
@@ -35,7 +36,7 @@ class UserController extends Controller
         {
             /** $users = User::with('type_utilisateur')->paginate(5); **/
 
-            $users = User::select('*')->get();
+            $users = User::select('*')->orderBy('id','DESC')->get();
             //$profils = Profil::all();
 
             return view('users.index', compact('users'));
@@ -104,6 +105,8 @@ class UserController extends Controller
           $users->imageuser=$filename;
       }
       $users->save();
+
+      $this->historique(request('nomuser').' '.request('prenomuser'), 'Ajout');
 
       $message = "Votre mot de passe est : ";
 
@@ -183,7 +186,10 @@ class UserController extends Controller
             'email'=> request('email'),
             'profil_id'=> request('profil_id'),
             'teluser'=> request('teluser'),
+            //'password'=> Hash::make(135792468),
             ]);
+
+        $this->historique(request('nomuser').' '.request('prenomuser'), 'Modification');
 
         return redirect('users/' . $user->id);
 
@@ -279,6 +285,8 @@ class UserController extends Controller
 
     $user = DB::table('users')->where('users.id','=',$user_id)->update(['users.etat' => 1]);
 
+    $this->historique('Compte '.$user_id, 'Débloquer');
+
     return redirect('users/' . $user_id)->with('message', 'Compte bien activé.');
 
    }
@@ -296,6 +304,8 @@ class UserController extends Controller
 
     $user = DB::table('users')->where('users.id','=',$user_id)->update(['users.etat' => 0]);
 
+    $this->historique('Compte '.$user_id, 'Bloquer');
+
     return redirect('users/' . $user_id)->with('message', 'Compte bien bloqué.');
 
    }
@@ -305,8 +315,16 @@ class UserController extends Controller
   }
  }
 
- private function historique()
+ private function historique($attribute, $action)
  {
-    
+    $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+    /** historiques des actions sur le systeme **/
+     $historique = Historique::create([
+      'user_action'=> $auth_user,
+      'table'=> 'User',
+      'attribute' => $attribute,
+      'action'=> $action
+    ]);
  }
 }

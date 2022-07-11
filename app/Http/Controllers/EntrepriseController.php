@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Entreprise;
+use App\Models\Suivi;
+use App\Models\Profil;
 use App\Models\User;
+use App\Models\Historique;
 
 class EntrepriseController extends Controller
 {
@@ -23,9 +27,9 @@ class EntrepriseController extends Controller
      public function index()
      {
         $this->authorize('ad_re_su', User::class);
-       try
-       {
-            $entreprises = Entreprise::select('*')->get();
+        try
+        {
+            $entreprises = Entreprise::select('*')->orderBy('id','DESC')->get();
 
             return view('entreprises.index', compact('entreprises'));
         }
@@ -44,17 +48,24 @@ class EntrepriseController extends Controller
      public function create()
      {
         $this->authorize('ad_re_su', User::class);
-       try
-       {
+        try
+        {
+            if(Profil::where('libelleprofil','Chargé du suivi')->exists())
+            {
+                $entreprise = new Entreprise();
 
-          $entreprise = new Entreprise();
-
-          return view('entreprises.create',compact('entreprise'));
+                return view('entreprises.create',compact('entreprise'));
+            }
+            else
+            {
+                //profil entreprise = chargé du suivi.
+                return back()->with('messagealert', "Le profil Entreprise n'existe pas encore.");
+            }
         }
         catch(\Exception $exception)
-       {
+        {
            return redirect('erreur')->with('messageerreur',$exception->getMessage());
-       }
+        }
      }
 
        /**
@@ -64,26 +75,79 @@ class EntrepriseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function store()
+     public function store(Request  $request)
      {
         $this->authorize('ad_re_su', User::class);
+        $this->validator();
        try
        {
-          $this->validator();
+         if(Profil::where('libelleprofil','Chargé du suivi')->exists())
+         {
+            $profil_id = Profil::where('libelleprofil','Chargé du suivi')->select('id')->first()->id;
+            $entreprise_libelle = request('libelleentreprise');
+            $entreprise_email = request('emailentreprise');
+            $entreprise_tel = request('telentreprise');
+            $entreprise_adresse = request('adresseentreprise');
+            $password = strtotime(now());  //request('password')
+            //$entreprise_logo = request('logoentreprise');
 
-          $entreprise_libelle = request('libelleentreprise');
-          $entreprise_email = request('emailentreprise');
-          $entreprise_tel = request('telentreprise');
+            //dd($entreprise_libelle, $entreprise_email, $entreprise_tel);
 
-          //dd($entreprise_libelle, $entreprise_email, $entreprise_tel);
+              $entreprise_logo = null;
 
-          $entreprise = Entreprise::create([
-            'libelleentreprise'=> request('libelleentreprise'),
-            'emailentreprise'=> request('emailentreprise'),
-            'telentreprise'=> request('telentreprise'),
-            ]);
+              if($request->file('logoentreprise'))
+              {
+                  $file=$request->file('logoentreprise');
+                  $filename=time().'.'.$file->getClientOriginalExtension();
+                  $request->logoentreprise->move('storage/entreprise/', $filename);
 
-          return redirect('entreprises')->with('message', 'Entreprise bien ajoutée.');
+                  $entreprise_logo = $filename;
+              }
+
+              $users = User::select('*')->get();
+              foreach($users as $user)
+              {
+                  if($user->email == $entreprise_email)
+                  {
+                    return back()->with('messagealert', "Le mail existe déjà.");
+                  }
+              }
+
+              if(Entreprise::where('libelleentreprise','=',request('libelleentreprise'))->select('id')->doesntExist())
+              {
+                    $entreprise = Entreprise::create([
+                    'libelleentreprise'=> request('libelleentreprise'),
+                    'emailentreprise'=> request('emailentreprise'),
+                    'telentreprise'=> request('telentreprise'),
+                    'adresseentreprise'=> request('adresseentreprise'),
+                    'logoentreprise'=> $entreprise_logo,
+                    ]);
+
+                /** Création info connection entreprise **/
+                    $entrep = User::create([
+                        'name'=> request('libelleentreprise'),
+                        'email'=> request('emailentreprise'),
+                        'password' => Hash::make($password),
+                        'profil_id'=> $profil_id,
+                        'nomuser'=> request('libelleentreprise'),
+                        'prenomuser'=> null,
+                        'teluser'=> request('telentreprise'),
+                        'imageuser'=> $entreprise_logo,
+                    ]);
+
+                    $this->historique(request('libelleentreprise'), 'Ajout');
+
+                    return redirect('entreprises')->with('message', 'Entreprise bien ajoutée.');
+                }
+
+                return back()->with('messagealert',"Cette entreprise existe déjà.");
+         }
+         else
+         {
+            //profil entreprise = chargé du suivi.
+            return back()->with('messagealert', "Le profil Entreprise n'existe pas encore.");
+         }
+
       }
         catch(\Exception $exception)
       {
@@ -139,7 +203,7 @@ class EntrepriseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function update(Entreprise $entreprise)
+     public function update(Entreprise $entreprise, Request  $request)
      {
         $this->authorize('ad_re_su', User::class);
        try
@@ -147,12 +211,35 @@ class EntrepriseController extends Controller
           $this->validator();
 
           $entreprise_libelle = request('libelleentreprise');
+          $entreprise_logo = null;
 
-          $entreprise->update([
-            'libelleentreprise'=> request('libelleentreprise'),
-            'emailentreprise'=> request('emailentreprise'),
-            'telentreprise'=> request('telentreprise'),
-            ]);
+           if($request->file('logoentreprise'))
+            {
+                $file=$request->file('logoentreprise');
+                $filename=time().'.'.$file->getClientOriginalExtension();
+                $request->logoentreprise->move('storage/entreprise/', $filename);
+
+                $entreprise_logo = $filename;
+
+                $entreprise->update([
+                    'libelleentreprise'=> request('libelleentreprise'),
+                    'emailentreprise'=> request('emailentreprise'),
+                    'telentreprise'=> request('telentreprise'),
+                    'adresseentreprise'=> request('adresseentreprise'),
+                    'logoentreprise'=> $entreprise_logo,
+                ]);
+            }
+            else
+            {
+                $entreprise->update([
+                    'libelleentreprise'=> request('libelleentreprise'),
+                    'emailentreprise'=> request('emailentreprise'),
+                    'telentreprise'=> request('telentreprise'),
+                    'adresseentreprise'=> request('adresseentreprise'),
+                ]);
+            }
+
+          $this->historique(request('libelleentreprise'), 'Modification');
 
           return redirect('entreprises/' . $entreprise->id);
         }
@@ -174,9 +261,18 @@ class EntrepriseController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-              $entreprise->delete();
+            if(Suivi::where('entreprise_id','=',$entreprise->id)->select('id')->exists())
+            {
+               return back()->with('messagealert',"Suppression pas possible. Cette Entreprise est référencée dans une autre table.");
+            }
+            else
+            {
+                $entreprise->delete();
 
-              return redirect('entreprises')->with('messagealert','Suppression éffectuée');
+                $this->historique($entreprise->libelleentreprise, 'Suppression');
+
+                return redirect('entreprises')->with('messagealert','Suppression éffectuée');
+            }
         }
           catch(\Exception $exception)
         {
@@ -190,7 +286,22 @@ class EntrepriseController extends Controller
          return request()->validate([
              'libelleentreprise'=>'required|min:2',
              'telentreprise',
-             'emailentreprise'
+             'emailentreprise'=>'required|email',
+             'adresseentreprise',
+             'logoentreprise'
          ]);
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Entreprise',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 }

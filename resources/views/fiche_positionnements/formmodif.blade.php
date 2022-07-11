@@ -68,26 +68,26 @@
                                     @foreach ($collections as $key=>$collection)
                                     <tr>
                                     <th scope="row"> {{$key++}} </th>
-                                    <th scope="row"> {{$collection[1]}}</th>
+                                    <th scope="row"> {{$collection['activite_libelle']}}</th>
                                     <th scope="row">
                                             <table id="#" class="table table-bordered table-hover">
                                               <thead>
-                                                  <th scope="col" style="color:rgb(55, 144, 246);">Activité</th>
-                                                  <th scope="col" style="color:rgb(55, 144, 246);">Position</th>
+                                                  <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-10">Activité</th>
+                                                  <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-2">Position</th>
                                               </thead>
 
                                               <tbody>
-                                                 @foreach ($collection[2] as $activite_positionnement)
+                                                 @foreach ($collection['taches'] as $tache_positionnement)
                                                   <tr>
-                                                    <th scope="row"> {{$activite_positionnement->libelleactivite}} </th>
+                                                    <th scope="row"> {{$tache_positionnement->libelletache}} </th>
                                                     <th scope="row">
                                                       <div class="col-12">
-                                                        <select class="form-control" name="positionnement_{{$activite_positionnement->id}}" id="activite_positionnement">
-                                                            <option value="0" {{ $activite_positionnement->valeurpost == "0" ? 'selected' : '' }}> 0 </option>
-                                                            <option value="1" {{ $activite_positionnement->valeurpost == "1" ? 'selected' : '' }}> 1 </option>
-                                                            <option value="2" {{ $activite_positionnement->valeurpost == "2" ? 'selected' : '' }}> 2 </option>
-                                                            <option value="3" {{ $activite_positionnement->valeurpost == "3" ? 'selected' : '' }}> 3 </option>
-                                                            <option value="4" {{ $activite_positionnement->valeurpost == "4" ? 'selected' : '' }}> 4 </option>
+                                                        <select class="form-control" name="positionnement_{{$tache_positionnement->id}}" id="tache_positionnement">
+                                                            <option value="0" {{ $tache_positionnement->valeurpost == "0" ? 'selected' : '' }}> 0 </option>
+                                                            <option value="1" {{ $tache_positionnement->valeurpost == "1" ? 'selected' : '' }}> 1 </option>
+                                                            <option value="2" {{ $tache_positionnement->valeurpost == "2" ? 'selected' : '' }}> 2 </option>
+                                                            <option value="3" {{ $tache_positionnement->valeurpost == "3" ? 'selected' : '' }}> 3 </option>
+                                                            <option value="4" {{ $tache_positionnement->valeurpost == "4" ? 'selected' : '' }}> 4 </option>
                                                           </select>
                                                       </div>
                                                     </th>

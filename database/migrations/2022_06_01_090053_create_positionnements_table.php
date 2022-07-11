@@ -19,10 +19,10 @@ class CreatePositionnementsTable extends Migration
             $table->integer('etatsup');
             $table->timestamps();
 
-            $table->unsignedBigInteger('activite_id');
+            $table->unsignedBigInteger('tache_id');
             $table->unsignedBigInteger('fiche_positionnement_id');
-            $table->foreign('activite_id')->references('id')->on('activites')->onDelete('cascade');
-            $table->foreign('fiche_positionnement_id')->references('id')->on('fiche_positionnements');
+            $table->foreign('tache_id')->references('id')->on('taches')->onDelete('cascade');
+            $table->foreign('fiche_positionnement_id')->references('id')->on('fiche_positionnements')->onDelete('cascade');
         });
     }
 

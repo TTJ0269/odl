@@ -1,6 +1,6 @@
 @can('dg_ifad','App\Models\User')
     <li class="nav-item">
-        <a href="{{ route('fiche_apprenant_index') }}" class="nav-link">
+        <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
         <i class="nav-icon fas fa-book-open"></i>
         <p>
             Fiche Positionnement

@@ -9,6 +9,7 @@ use App\Models\Observation;
 use App\Models\FichePositionnement;
 use App\Models\Profil;
 use App\Models\User;
+use App\Models\Historique;
 
 class ObservationController extends Controller
 {
@@ -36,14 +37,28 @@ class ObservationController extends Controller
                 $observations = DB::table('fiche_positionnements')
                 ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
                 ->select('observations.*','fiche_positionnements.libellefiche')
+                ->distinct('observations.id')
                 ->orderBy('observations.id','DESC')
                 ->get();
 
                 return view('observations.index', compact('observations'));
            }
-           else
+           elseif($profil_libelle == 'Chargé du suivi')
            {
-               if(DB::table('associations')->where('associations.user_id','=',Auth::user()->id)->select('associations.id')->doesntExist())
+
+                $observations = DB::table('fiche_positionnements')
+                ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
+                ->select('observations.*','fiche_positionnements.libellefiche')
+                ->where('fiche_positionnements.responsable_suivi_id','=',$user_id)
+                ->distinct('observations.id')
+                ->orderBy('observations.id','DESC')
+                ->get();
+
+                return view('observations.index', compact('observations'));
+           }
+           elseif($profil_libelle == 'DG_IFAD')
+           {
+                if(DB::table('associations')->where('associations.user_id','=',Auth::user()->id)->select('associations.id')->doesntExist())
                 {
                     return back()->with('messagealert',"Vous n'est pas associé à un IFAD");
                 }
@@ -57,6 +72,31 @@ class ObservationController extends Controller
                     ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
                     ->where('associations.ifad_id','=',$ifad_id)
                     ->select('observations.*','fiche_positionnements.libellefiche')
+                    ->distinct('observations.id')
+                    ->orderBy('observations.id','DESC')
+                    ->get();
+
+                    return view('observations.index', compact('observations'));
+                }
+           }
+           else
+           {
+                if(DB::table('associations')->where('associations.user_id','=',Auth::user()->id)->select('associations.id')->doesntExist())
+                {
+                    return back()->with('messagealert',"Vous n'est pas associé à un IFAD");
+                }
+                else
+                {
+                    $ifad_id = DB::table('associations')->where('associations.user_id','=',Auth::user()->id)
+                    ->select('ifad_id')->get()->last()->ifad_id;
+
+                    $observations = DB::table('associations')
+                    ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
+                    ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
+                    ->where('associations.ifad_id','=',$ifad_id)
+                    ->where('associations.user_id','=',Auth::user()->id)
+                    ->select('observations.*','fiche_positionnements.libellefiche')
+                    ->distinct('observations.id')
                     ->orderBy('observations.id','DESC')
                     ->get();
 
@@ -80,6 +120,7 @@ class ObservationController extends Controller
 
      public function create(FichePositionnement $fiche_positionnement)
      {
+        $this->authorize('ad_re_su_ch', User::class);
          try
          {
 
@@ -103,6 +144,7 @@ class ObservationController extends Controller
 
      public function store()
      {
+        $this->authorize('ad_re_su_ch', User::class);
          try
          {
             $users_id = (Auth::user())->id;
@@ -114,8 +156,9 @@ class ObservationController extends Controller
                     'dateobservation'=> now(),
             ]);
 
+            $this->historique(request('descriptionobservation'), 'Ajout');
 
-            return redirect('fiche_positionnements-apprenant/'.$fiche_positionnement_id)->with('message', 'Observation bien envoyé.');
+            return redirect('fiche_positionnements/show/'.$fiche_positionnement_id)->with('message', 'Observation bien envoyé.');
         }
         catch(\Exception $exception)
         {
@@ -132,6 +175,7 @@ class ObservationController extends Controller
 
      public function show(Observation $observation)
      {
+        $this->authorize('ad_re_su_ch', User::class);
          try
          {
           return view('observations.show',compact('observation'));
@@ -152,6 +196,7 @@ class ObservationController extends Controller
 
      public function edit(observation $observation)
      {
+        $this->authorize('ad_re_su_ch', User::class);
          try
          {
             $fiche_positionnements = FichePositionnement::all();
@@ -173,11 +218,14 @@ class ObservationController extends Controller
 
      public function update(observation $observation)
      {
+        $this->authorize('ad_re_su_ch', User::class);
          try
          {
             $observation->update([
                 'descriptionobservation'=> request('descriptionobservation'),
             ]);
+
+            $this->historique($observation->descriptionobservation, 'Modification');
 
             return redirect('observations/' . $observation->id);
         }
@@ -196,9 +244,12 @@ class ObservationController extends Controller
 
      public function destroy(observation $observation)
      {
+        $this->authorize('ad_re_su_ch', User::class);
          try
          {
             $observation->delete();
+
+            $this->historique($observation->descriptionobservation, 'Suppression');
 
             return redirect('observations');
          }
@@ -207,5 +258,18 @@ class ObservationController extends Controller
            return redirect('erreur')->with('messageerreur',$exception->getMessage());
        }
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Observation',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 
 }

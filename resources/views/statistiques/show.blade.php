@@ -21,23 +21,30 @@
 
    <!-- Main content -->
        <div class="container">
+
+        <div class="text-center">
+            <img src="{{ asset('storage/imageifad/aedsuivi.png') }}" class="img elevation" style="width: 400px; height: 200px;" alt="AED Image">
+        </div>
+
             <br>
             <div class="row">
                 <div class="col-12 col-sm-6">
                   <div class="form-group">
-                    @foreach ($fiches as $fiche)
-                       <h5> {{$fiche->libellefiche}} </h5>
-                       <h5> IFAD: {{$fiche->association->ifad->libelleifad}} </h5>
-                    @endforeach
-
-                    @foreach ($classes as $classe)
-                       <h5> Classe: {{$classe->libelleclasse}} </h5>
-                    @endforeach
+                    <h5> Fiche de positionnement </h5>
+                    <h5> {{$fiche_positionnement->association->ifad->libelleifad}} </h5>
+                    <h5> Apprenant(e): {{$fiche_positionnement->association->user->nomuser}} {{$fiche_positionnement->association->user->prenomuser}} </h5>
+                    <h5>Date de l'évaluation: {{$fiche_positionnement->dateenregistrement}} </h5>
                   </div>
                 </div>
 
                   <div class="col-12 col-sm-6">
-                    <div class="form-group">
+                    <div class="form-group float-right">
+                        <h5> Entreprise: {{$fiche_positionnement->nom_entreprise}} </h5>
+                        <h5> Tél-Entreprise: {{$fiche_positionnement->tel_entreprise}} </h5>
+                        <h5> Mail-Entreprise: {{$fiche_positionnement->email_entreprise}} </h5>
+                        <h5> Adresse-Entreprise: {{$fiche_positionnement->adresse_entreprise}} </h5>
+                        <h5> Tuteur: {{$fiche_positionnement->nom_tuteur}} {{$fiche_positionnement->prenom_tuteur}}</h5>
+                        <h5> Tél-Tuteur: {{$fiche_positionnement->tel_tuteur}} </h5>
                     </div>
                   </div>
            </div>
@@ -45,7 +52,7 @@
             @foreach ($collections as $collection)
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">{{$collection['competence_libelle']}}</h3>
+                        <h3 class="card-title">{{$collection['activite_libelle']}}</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -56,7 +63,7 @@
                     <div class="card-body">
                         <div class="chart">
                         <a href="#"> </a>
-                            <canvas id="activite{{$collection['competence_id']}}"></canvas>
+                            <canvas id="activite{{$collection['activite_id']}}"></canvas>
                         </div>
                     </div>
                 </div>
@@ -65,6 +72,7 @@
 
       <div class="row no-print">
           <div class="col-12">
+            <a href="javascript:history.back();" class="btn btn-primary"><i class="fas fa-angle-left"></i> Retour</a>
             <button onclick="window.print()" class="btn btn-success my-2"><i class="far fa-credit-card"></i>Imprimer</button>
           </div>
       </div>

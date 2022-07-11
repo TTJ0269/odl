@@ -30,7 +30,9 @@
 <div class="content">
     <div class="container-fluid">
        <hr>
-        <div class="form-group row">
+       <div class="row">
+
+        <div class="col-12 col-sm-6">
             <label for="text" class="col-sm-2 col-form-label">Libelle</label>
                 <div class="col-sm-10">
             <input type="text" class="form-control @error('libelleentreprise') is-invalid @enderror" name="libelleentreprise" placeholder="Rentrez le libelle..." value="{{ old('libelleentreprise') ?? $entreprise->libelleentreprise }}" autofocus  required/>
@@ -42,10 +44,10 @@
             </div>
         </div>
 
-        <div class="form-group row">
+        <div class="col-12 col-sm-6">
             <label for="text" class="col-sm-2 col-form-label">Email</label>
                 <div class="col-sm-10">
-                <input type="email" class="form-control @error('emailentreprise') is-invalid @enderror" name="emailentreprise" placeholder="Rentrez email de l'entreprise..." value="{{ old('emailentreprise') ?? $entreprise->emailentreprise }}"/>
+                <input type="email" class="form-control @error('emailentreprise') is-invalid @enderror" name="emailentreprise" placeholder="Rentrez email de l'entreprise..." value="{{ old('emailentreprise') ?? $entreprise->emailentreprise }}" required/>
                 @error('emailentreprise')
                     <div class="invalid-feedback">
                         {{ $errors->first('emailentreprise')}}
@@ -54,7 +56,7 @@
                 </div>
         </div>
 
-        <div class="form-group row">
+        <div class="col-12 col-sm-6">
             <label for="text" class="col-sm-2 col-form-label">Téléphone</label>
                 <div class="col-sm-10">
                 <input type="number" class="form-control @error('telentreprise') is-invalid @enderror" name="telentreprise" placeholder="Rentrez le tél de l'entreprise..." value="{{ old('telentreprise') ?? $entreprise->telentreprise }}"/>
@@ -65,5 +67,34 @@
                 @enderror
                 </div>
         </div>
+
+        <div class="col-12 col-sm-6">
+            <label for="text" class="col-sm-2 col-form-label">Adresse</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control @error('adresseentreprise') is-invalid @enderror" name="adresseentreprise" placeholder="Rentrez l'adresse de l'entreprise..." value="{{ old('adresseentreprise') ?? $entreprise->adresseentreprise }}"/>
+                @error('adresseentreprise')
+                    <div class="invalid-feedback">
+                        {{ $errors->first('adresseentreprise')}}
+                    </div>
+                @enderror
+                </div>
+        </div>
+
+        <div class="col-12 col-sm-6">
+            <label for="text" class="col-sm-4 col-form-label">Logo</label>
+                <div class="col-sm-8">
+                    <div class="custom-file">
+                        <input type="file" name="logoentreprise" class="@error('logoentreprise') is-invalid @enderror" id="validatedCustomFile" value="{{ old('logoentreprise') ?? $entreprise->logoentreprise }}">
+                        @error('logoentreprise')
+                    <div class="invalid-feedback">
+                        {{ $errors->first('logoentreprise')}}
+                    </div>
+                    @enderror
+                    </div>
+                </div>
+        </div>
+
+    </div>
+
     </div>
 </div>

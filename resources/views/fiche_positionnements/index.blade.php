@@ -42,6 +42,7 @@
                                 <thead>
                                     <th scope="col">Numero</th>
                                     <th scope="col">Libelle</th>
+                                    <th scope="col">Entreprise</th>
                                     <th scope="col">IFAD</th>
                                 </thead>
 
@@ -50,7 +51,12 @@
                                     <tr>
                                     <th scope="row"> {{++$key}} </th>
                                     <td> <a href="{{ route('fiche_show', ['fiche_positionnement' => $fiche_positionnement->id]) }}" style="color:rgb(55, 144, 246);"> {{$fiche_positionnement->libellefiche}} </a></td>
-                                    <th scope="row"> {{$fiche_positionnement->association->ifad->libelleifad}} </th>
+                                      @if ($fiche_positionnement->nom_entreprise)
+                                    <th scope="row"> {{$fiche_positionnement->nom_entreprise}} </th>
+                                      @else
+                                    <th scope="row"> -- Aucune valeur trouvée -- </th>
+                                      @endif
+                                    <th scope="row"> {{$fiche_positionnement->libelleifad}} </th>
                                     </tr>
                                     @endforeach
                                     </tbody>

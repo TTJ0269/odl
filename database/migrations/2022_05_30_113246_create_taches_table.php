@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompetencesTable extends Migration
+class CreateTachesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateCompetencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('competences', function (Blueprint $table) {
+        Schema::create('taches', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('identifiantcompetence', 10)->nullable();
-            $table->string('libellecompetence')->unique();
-            $table->string('categorie')->nullable();
+            $table->string('identifianttache',10)->nullable();
+            $table->string('libelletache')->unique();
             $table->integer('etatsup');
             $table->timestamps();
+
+            $table->unsignedBigInteger('activite_id');
+            $table->foreign('activite_id')->references('id')->on('activites')->onDelete('cascade');
         });
     }
 
@@ -30,6 +32,6 @@ class CreateCompetencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('competences');
+        Schema::dropIfExists('taches');
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Models\Historique;
 
 class ProfilUserController extends Controller
 {
@@ -43,6 +44,8 @@ class ProfilUserController extends Controller
           /** Actualisation ou mise a jour de donnes name et email **/
           $user = DB::table('users')->where('users.id','=',$id)->update(['users.name' => $name, 'users.email' =>$email]);
 
+          $this->historique($email, 'Modification');
+
           return redirect('profiluser')->with('message','Informations bien mise à jour');
       }
       catch(\Exception $exception)
@@ -75,6 +78,8 @@ class ProfilUserController extends Controller
           {
               $user = DB::table('users')->where('users.id','=',$id)->update(['users.password' => Hash::make($password)]);
 
+              $this->historique(Hash::make($password), 'Modification');
+
               return redirect('profiluser')->with('message','Informations bien mise à jour');
           }
       }
@@ -103,6 +108,8 @@ class ProfilUserController extends Controller
             /** Actualisation ou mise a jour de donnes name et email **/
             $user = DB::table('users')->where('users.id','=',$id)->update(['users.imageuser' => $filename]);
 
+            $this->historique($id, 'Modification');
+
             return redirect('profiluser')->with('message','Informations bien mise à jour');
         }
         elseif($image==null)
@@ -122,6 +129,19 @@ class ProfilUserController extends Controller
         return request()->validate([
             'password'=>'required|min:8',
             'confirmepassword'=>'required|min:8',
+        ]);
+    }
+
+    private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'User',
+        'attribute' => $attribute,
+        'action'=> $action
         ]);
     }
 }

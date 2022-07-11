@@ -44,6 +44,7 @@
                                     <th scope="col">Libelle</th>
                                     <th scope="col">Téléphone</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Adresse</th>
                                 </thead>
 
                                     <tbody>
@@ -58,6 +59,11 @@
                                     @endif
                                     @if ($entreprise->emailentreprise)
                                     <th scope="row"> {{$entreprise->emailentreprise}} </th>
+                                    @else
+                                    <th scope="row"> -- Aucune valeur trouvée -- </th>
+                                    @endif
+                                    @if ($entreprise->adresseentreprise)
+                                    <th scope="row"> {{$entreprise->adresseentreprise}} </th>
                                     @else
                                     <th scope="row"> -- Aucune valeur trouvée -- </th>
                                     @endif

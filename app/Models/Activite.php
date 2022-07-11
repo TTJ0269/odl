@@ -13,14 +13,9 @@ class Activite extends Model
 
     protected $attributes=['etatsup'=> 0];
 
-     //Pour recuperer les competences
-     public function competence()
+     //Pour recuperer les activites qui appartient à une activite
+     public function taches()
      {
-         return $this->belongsTo('App\Models\Competence');
+         return $this->hasMany('App\Models\Tache');
      }
-
-     public function classe()
-    {
-        return $this->belongsTo('App\Models\Classe');
-    }
 }

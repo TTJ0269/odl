@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CompetenceController;
-use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\IfadController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\EntrepriseController;
@@ -19,6 +17,10 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfilUserController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\FicheLongueController;
+use App\Http\Controllers\HistoriqueController;
+use App\Http\Controllers\ActiviteController;
+use App\Http\Controllers\TacheController;
+use App\Http\Controllers\ApprenantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,9 +37,11 @@ Route::get('/', function () {
     return view('auth.login'); //view('welcome')
 });
 
-Route::get('/dashboard', function () {
+/*Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');*/
+
+Route::get('/dashboard', [MessageController::class, 'accueil'])->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
 
@@ -62,11 +66,11 @@ Route::post('/bloquercompte', [UserController::class, 'BloquerCompte'])->name('b
 /*** routes generales pour Entreprise ***/
 Route::resource('/entreprises', EntrepriseController::class);
 
-/*** routes generales pour competence ***/
-Route::resource('/competences', CompetenceController::class);
-
-/*** routes generales pour activite ***/
+/*** routes generales pour Activite ***/
 Route::resource('/activites', ActiviteController::class);
+
+/*** routes generales pour Tache ***/
+Route::resource('/taches', TacheController::class);
 
 /*** routes generales pour IFAD ***/
 Route::resource('/ifads', IfadController::class);
@@ -98,7 +102,9 @@ Route::get('/fiche_positionnements/edit/{fiche_positionnement}', [FichePositionn
 
 /*** routes generales pour Positionnement ***/
 Route::resource('/positionnements', PositionnementController::class);
+Route::get('/positionnement/create', [PositionnementController::class, 'index'])->name('positionnement_index');
 Route::post('/positionnement/create', [PositionnementController::class, 'create'])->name('positionnement_create');
+Route::get('/positionnement/recup/{user}', [PositionnementController::class, 'recup'])->name('positionnement_recup');
 Route::get('/get_index', [PositionnementController::class, 'getUser'])->name('get_index');
 
 /*** routes generales pour Observation ***/
@@ -107,7 +113,7 @@ Route::get('/observations/create/{fiche_positionnement}', [ObservationController
 
 /*** routes statistiques ***/
 Route::get('/statistique', [StatistiqueController::class, 'index'])->name('statistique_index');
-Route::post('/statistique', [StatistiqueController::class, 'show'])->name('statistique_show');
+Route::get('/statistique/{fiche_positionnement}', [StatistiqueController::class, 'show'])->name('statistique_show');
 Route::get('/getfichepositionnement', [StatistiqueController::class, 'getfichepositionnement'])->name('getfichepositionnement');
 
 /*** routes preferences ***/
@@ -118,7 +124,7 @@ Route::post('/preference_center', [PreferenceController::class, 'center'])->name
 Route::post('/preference_right', [PreferenceController::class, 'right'])->name('preference_right');
 
 /*** routes generales pour Fiche_positionnement all regroupe l'apprenant le tuteur l'entreprise l'ifad et la classe (temporaire)***/
-Route::get('/positionnement-apprenant', [FicheLongueController::class,'index'])->name('positionnement_apprenant_index');
+/*Route::get('/positionnement-apprenant', [FicheLongueController::class,'index'])->name('positionnement_apprenant_index');
 Route::get('/fiche_positionnement-apprenant/create', [FicheLongueController::class, 'index'])->name('fiche_apprenant_get_create');
 Route::post('/fiche_positionnement-apprenant/create', [FicheLongueController::class, 'create'])->name('fiche_apprenant_create');
 Route::post('/positionnement-apprenant', [FicheLongueController::class, 'store'])->name('fiche_apprenant_store');
@@ -126,7 +132,13 @@ Route::get('/fiche_positionnements-apprenant', [FicheLongueController::class, 'f
 Route::get('/fiche_positionnements-apprenant/{fiche_positionnement}', [FicheLongueController::class, 'show'])->name('fiche_apprenant_show');
 Route::get('/fiche_positionnements-apprenant/{fiche_positionnement}/edit', [FicheLongueController::class, 'edit'])->name('fiche_apprenant_edit');
 Route::patch('/fiche_positionnements-apprenant/{fiche_positionnement}', [FicheLongueController::class, 'update'])->name('fiche_apprenant_update');
-Route::get('/statistique/{fiche_positionnement}', [StatistiqueController::class, 'fiche_longue_show'])->name('statistique_fiche_longue_show');
+Route::get('/statistique/{fiche_positionnement}', [StatistiqueController::class, 'fiche_longue_show'])->name('statistique_fiche_longue_show');*/
+
+/** Historique **/
+Route::get('/historiques', [HistoriqueController::class, 'index'])->name('historique_index');
+
+/*** routes generales pour apprenant ***/
+Route::resource('/apprenants', ApprenantController::class);
 
 
 Route::get('/hoho', function () {
@@ -135,4 +147,4 @@ Route::get('/hoho', function () {
 
 Route::get('/pie', [ChartController::class, 'pie'])->name('chart.pie');
 
-//Route::get('/first', [ChartController::class, 'first'])->name('first');
+Route::get('/first', [ChartController::class, 'first'])->name('first');

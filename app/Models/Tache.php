@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Classe extends Model
+class Tache extends Model
 {
     use HasFactory;
 
@@ -13,8 +13,9 @@ class Classe extends Model
 
     protected $attributes=['etatsup'=> 0];
 
-     public function ifad()
-    {
-        return $this->belongsTo('App\Models\Ifad');
-    }
+     //Pour recuperer les activites
+     public function activite()
+     {
+         return $this->belongsTo('App\Models\Activite');
+     }
 }
