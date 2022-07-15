@@ -18,4 +18,9 @@ class Activite extends Model
      {
          return $this->hasMany('App\Models\Tache');
      }
+
+     public function metier()
+    {
+        return $this->belongsTo('App\Models\Metier');
+    }
 }

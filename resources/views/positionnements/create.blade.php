@@ -7,7 +7,7 @@
             <form action="{{ route('positionnements.store') }}" method="POST" enctype="multipart/form-data">
             @include('positionnements.form')
               <div class="text-center">
-                <button type="submit" class="btn btn-primary col start"> Valider </button>
+                <button type="submit" class="btn btn-primary my-5"> Valider </button>
               </div>
             </form>
 </div>

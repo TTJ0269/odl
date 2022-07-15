@@ -325,7 +325,7 @@
             disable: false,
             block: false,
 
-            extra_classes: "",
+            extra_metiers: "",
 
             scope: null,
             onStart: null,
@@ -394,7 +394,7 @@
             disable: $inp.data("disable"),
             block: $inp.data("block"),
 
-            extra_classes: $inp.data("extraClasses"),
+            extra_metiers: $inp.data("extrametiers"),
         };
         config_from_data.values = config_from_data.values && config_from_data.values.split(",");
 
@@ -505,7 +505,7 @@
          * Appends slider template to a DOM
          */
         append: function () {
-            var container_html = '<span class="irs irs--' + this.options.skin + ' js-irs-' + this.plugin_count + ' ' + this.options.extra_classes + '"></span>';
+            var container_html = '<span class="irs irs--' + this.options.skin + ' js-irs-' + this.plugin_count + ' ' + this.options.extra_metiers + '"></span>';
             this.$cache.input.before(container_html);
             this.$cache.input.prop("readonly", true);
             this.$cache.cont = this.$cache.input.prev();

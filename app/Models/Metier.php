@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Classe extends Model
+class metier extends Model
 {
     use HasFactory;
 
@@ -17,4 +17,9 @@ class Classe extends Model
     {
         return $this->belongsTo('App\Models\Ifad');
     }
+
+    public function activites()
+     {
+         return $this->hasMany('App\Models\Activites');
+     }
 }

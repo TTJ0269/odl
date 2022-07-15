@@ -14,8 +14,8 @@ class Observation extends Model
     protected $attributes=['etatsup'=> 0];
 
 
-     public function fiche_positionnement()
+     public function association()
     {
-        return $this->belongsTo('App\Models\FichePositionnement');
+        return $this->belongsTo('App\Models\Association');
     }
 }

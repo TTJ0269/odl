@@ -57,6 +57,7 @@
                                     <th scope="col">Numero</th>
                                     <th scope="col">Identifiant</th>
                                     <th scope="col">Libelle</th>
+                                    <th scope="col">Métier</th>
                                     <th scope="col">Catégorie</th>
                                 </thead>
 
@@ -66,7 +67,12 @@
                                     <th scope="row"> {{++$key}} </th>
                                     <th scope="row"> {{$activite->identifiantactivite}} </th>
                                     <td> <a href="{{ route('activites.show', ['activite' => $activite->id]) }}" style="color:rgb(55, 144, 246);"> {{$activite->libelleactivite}} </a></td>
+                                    <th scope="row"> {{$activite->metier->libellemetier}} </th>
+                                    @if ($activite->categorie)
                                     <th scope="row"> {{$activite->categorie}} </th>
+                                    @else
+                                    <th scope="row"> Aucune valeur trouvée </th>
+                                    @endif
                                     </tr>
                                     @endforeach
                                     </tbody>

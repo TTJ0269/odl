@@ -31,8 +31,8 @@
                        <h5> IFAD: {{$fiche_positionnement->association->ifad->libelleifad}} </h5>
                        <h5> Apprenant(e): {{$fiche_positionnement->nom_apprenant}} {{$fiche_positionnement->prenom_apprenant}} </h5>
 
-                    @foreach ($classes as $classe)
-                       <h5> Classe: {{$classe->libelleclasse}} </h5>
+                    @foreach ($metiers as $metier)
+                       <h5> metier: {{$metier->libellemetier}} </h5>
                     @endforeach
                        <h5>Date de l'évaluation: {{$fiche_positionnement->dateenregistrement}} </h5>
                   </div>

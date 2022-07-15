@@ -628,7 +628,7 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 			}
 
 			if (updateSlider === true) {
-				// Reset classes
+				// Reset metiers
 				this._removeClass(this.sliderElem, 'slider-horizontal');
 				this._removeClass(this.sliderElem, 'slider-vertical');
 				this._removeClass(this.sliderElem, 'slider-rtl');
@@ -650,7 +650,7 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 					this._removeProperty(handle, 'top');
 				}, this);
 
-				// Undo inline styles and classes on tooltips
+				// Undo inline styles and metiers on tooltips
 				[this.tooltip, this.tooltip_min, this.tooltip_max].forEach(function (tooltip) {
 					this._removeProperty(tooltip, 'bs-tooltip-left');
 					this._removeProperty(tooltip, 'bs-tooltip-right');
@@ -722,7 +722,7 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 			this.handle2 = sliderMaxHandle || this.handle2;
 
 			if (updateSlider === true) {
-				// Reset classes
+				// Reset metiers
 				this._removeClass(this.handle1, 'round triangle');
 				this._removeClass(this.handle2, 'round triangle hide');
 
@@ -1916,32 +1916,32 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 				}
 			},
 			_removeClass: function _removeClass(element, classString) {
-				var classes = classString.split(" ");
-				var newClasses = element.className;
+				var metiers = classString.split(" ");
+				var newmetiers = element.className;
 
-				for (var i = 0; i < classes.length; i++) {
-					var classTag = classes[i];
+				for (var i = 0; i < metiers.length; i++) {
+					var classTag = metiers[i];
 					var regex = new RegExp("(?:\\s|^)" + classTag + "(?:\\s|$)");
-					newClasses = newClasses.replace(regex, " ");
+					newmetiers = newmetiers.replace(regex, " ");
 				}
 
-				element.className = newClasses.trim();
+				element.className = newmetiers.trim();
 			},
 			_addClass: function _addClass(element, classString) {
-				var classes = classString.split(" ");
-				var newClasses = element.className;
+				var metiers = classString.split(" ");
+				var newmetiers = element.className;
 
-				for (var i = 0; i < classes.length; i++) {
-					var classTag = classes[i];
+				for (var i = 0; i < metiers.length; i++) {
+					var classTag = metiers[i];
 					var regex = new RegExp("(?:\\s|^)" + classTag + "(?:\\s|$)");
-					var ifClassExists = regex.test(newClasses);
+					var ifmetierxists = regex.test(newmetiers);
 
-					if (!ifClassExists) {
-						newClasses += " " + classTag;
+					if (!ifmetierxists) {
+						newmetiers += " " + classTag;
 					}
 				}
 
-				element.className = newClasses.trim();
+				element.className = newmetiers.trim();
 			},
 			_offsetLeft: function _offsetLeft(obj) {
 				return obj.getBoundingClientRect().left;

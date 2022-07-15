@@ -25,7 +25,7 @@ API.txt for details.
 
     var floorInBase = $.plot.saturated.floorInBase;
 
-    // Method to provide microsecond support to Date like classes.
+    // Method to provide microsecond support to Date like metiers.
     var CreateMicroSecondDate = function(DateType, microEpoch) {
         var newDate = new DateType(microEpoch);
 

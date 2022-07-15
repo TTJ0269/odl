@@ -64,7 +64,7 @@
                           <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fa-tenge"></i></span>
                           </div>
-                          <input type="text" class="form-control @error('libelletache') is-invalid @enderror" name="libelletache"  placeholder="Libelle" value="{{ old('libelletache') ?? $tach->libelletache }}" required autofocus/>
+                          <input type="text" onkeypress="return event.charCode != 39" class="form-control @error('libelletache') is-invalid @enderror" name="libelletache"  placeholder="Libelle" value="{{ old('libelletache') ?? $tach->libelletache }}" required autofocus/>
                           @error('libelletache')
                           <div class="invalid-feedback">
                               {{ $errors->first('libelletache')}}

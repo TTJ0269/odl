@@ -1,5 +1,5 @@
 
-/* classes attached to <body> */
+/* metiers attached to <body> */
 
 .fc-not-allowed,
 .fc-not-allowed .fc-event { /* override events' custom cursors */
@@ -130,7 +130,7 @@
 Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 
 These styles only apply when the standard-theme is activated.
-When it's NOT activated, the fc-button classes won't even be in the DOM.
+When it's NOT activated, the fc-button metiers won't even be in the DOM.
 */
 .fc {
 
@@ -496,7 +496,7 @@ a.fc-event:hover {
   }
 /* resizing */
 /* ---------------------------------------------------------------------------------------------------- */
-/* (subclasses should hone positioning for touch and non-touch) */
+/* (submetiers should hone positioning for touch and non-touch) */
 .fc-event .fc-event-resizer {
     display: none;
     position: absolute;
@@ -539,7 +539,7 @@ a.fc-event:hover {
 .fc-event-selected {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)
 
-  /* expand hit area (subclasses should expand) */
+  /* expand hit area (submetiers should expand) */
 
 }
 .fc-event-selected:before {

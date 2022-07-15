@@ -1201,10 +1201,10 @@ $.extend( $.validator, {
 
 	classRules: function( element ) {
 		var rules = {},
-			classes = $( element ).attr( "class" );
+			metiers = $( element ).attr( "class" );
 
-		if ( classes ) {
-			$.each( classes.split( " " ), function() {
+		if ( metiers ) {
+			$.each( metiers.split( " " ), function() {
 				if ( this in $.validator.classRuleSettings ) {
 					$.extend( rules, $.validator.classRuleSettings[ this ] );
 				}

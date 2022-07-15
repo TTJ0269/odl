@@ -36,7 +36,7 @@
 var DataTable = $.fn.dataTable;
 
 
-DataTable.AutoFill.classes.btn = 'btn btn-primary';
+DataTable.AutoFill.metiers.btn = 'btn btn-primary';
 
 
 return DataTable;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Metier;
 use App\Models\Activite;
 use App\Models\Tache;
 use App\Models\User;
@@ -47,9 +48,10 @@ class ActiviteController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
+          $metiers = Metier::select('*')->get();
           $activite = new Activite();
 
-          return view('activites.create',compact('activite'));
+          return view('activites.create',compact('activite','metiers'));
         }
         catch(\Exception $exception)
        {
@@ -67,13 +69,19 @@ class ActiviteController extends Controller
      public function store()
      {
         $this->authorize('ad_re_su', User::class);
+        $this->validator();
        try
        {
         if(Activite::where('libelleactivite','=',request('libelleactivite'))->select('id')->doesntExist())
         {
             $libelle = request('libelleactivite');
 
-            $activite = Activite::create($this->validator());
+            $activite = Activite::create([
+                'libelleactivite'=> request('libelleactivite'),
+                'identifiantactivite'=> request('identifiantactivite'),
+                'metier_id'=> request('metier_id'),
+                'categorie'=> request('categorie'),
+            ]);
 
             $this->historique(request('libelleactivite'), 'Ajout');
 
@@ -119,7 +127,8 @@ class ActiviteController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
-          return view('activites.edit', compact('activite'));
+          $metiers = Metier::select('*')->get();
+          return view('activites.edit', compact('activite','metiers'));
         }
         catch(\Exception $exception)
        {
@@ -138,17 +147,19 @@ class ActiviteController extends Controller
      public function update(Activite $activite)
      {
         $this->authorize('ad_re_su', User::class);
+        $this->validator();
        try
        {
           $activite->update([
               'libelleactivite'=> request('libelleactivite'),
               'identifiantactivite'=> request('identifiantactivite'),
+              'metier_id'=> request('metier_id'),
               'categorie'=> request('categorie'),
           ]);
 
           $this->historique(request('libelleactivite'), 'Modification');
 
-          return redirect('activites/' . $activite->id);
+          return redirect('activites/' . $activite->id)->with('message',"Modification effectuée avec succès.");
         }
         catch(\Exception $exception)
        {
@@ -192,6 +203,7 @@ class ActiviteController extends Controller
          return request()->validate([
              'libelleactivite'=>'required|min:2',
              'identifiantactivite'=>'max:10',
+             'metier_id'=>'required|integer',
              'categorie'=>'max:255',
          ]);
      }

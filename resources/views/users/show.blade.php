@@ -46,6 +46,7 @@
                             <p><strong>Prenom :</strong> {{$user->prenomuser}}</p>
                             <p><strong>Email :</strong> {{$user->email}}</p>
 
+                            <a href="{{ route('generationnewpassword', ['user' => $user->id]) }}" class="btn btn-success my-3"><i class="fas fa-at"></i><span> Nouveau mot de passe </span></a>
                             <form action="{{ route('activecompte') }}" method="POST" style="display: inline;">
                                 @csrf
                                 <input type="number" hidden  name="id" value="{{$user->id}}">

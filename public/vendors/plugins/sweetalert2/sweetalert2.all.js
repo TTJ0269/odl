@@ -339,11 +339,11 @@
 
     return result;
   };
-  var swalClasses = prefix(['container', 'shown', 'height-auto', 'iosfix', 'popup', 'modal', 'no-backdrop', 'no-transition', 'toast', 'toast-shown', 'toast-column', 'show', 'hide', 'close', 'title', 'header', 'content', 'html-container', 'actions', 'confirm', 'deny', 'cancel', 'footer', 'icon', 'icon-content', 'image', 'input', 'file', 'range', 'select', 'radio', 'checkbox', 'label', 'textarea', 'inputerror', 'input-label', 'validation-message', 'progress-steps', 'active-progress-step', 'progress-step', 'progress-step-line', 'loader', 'loading', 'styled', 'top', 'top-start', 'top-end', 'top-left', 'top-right', 'center', 'center-start', 'center-end', 'center-left', 'center-right', 'bottom', 'bottom-start', 'bottom-end', 'bottom-left', 'bottom-right', 'grow-row', 'grow-column', 'grow-fullscreen', 'rtl', 'timer-progress-bar', 'timer-progress-bar-container', 'scrollbar-measure', 'icon-success', 'icon-warning', 'icon-info', 'icon-question', 'icon-error']);
+  var swalmetiers = prefix(['container', 'shown', 'height-auto', 'iosfix', 'popup', 'modal', 'no-backdrop', 'no-transition', 'toast', 'toast-shown', 'toast-column', 'show', 'hide', 'close', 'title', 'header', 'content', 'html-container', 'actions', 'confirm', 'deny', 'cancel', 'footer', 'icon', 'icon-content', 'image', 'input', 'file', 'range', 'select', 'radio', 'checkbox', 'label', 'textarea', 'inputerror', 'input-label', 'validation-message', 'progress-steps', 'active-progress-step', 'progress-step', 'progress-step-line', 'loader', 'loading', 'styled', 'top', 'top-start', 'top-end', 'top-left', 'top-right', 'center', 'center-start', 'center-end', 'center-left', 'center-right', 'bottom', 'bottom-start', 'bottom-end', 'bottom-left', 'bottom-right', 'grow-row', 'grow-column', 'grow-fullscreen', 'rtl', 'timer-progress-bar', 'timer-progress-bar-container', 'scrollbar-measure', 'icon-success', 'icon-warning', 'icon-info', 'icon-question', 'icon-error']);
   var iconTypes = prefix(['success', 'warning', 'info', 'question', 'error']);
 
   var getContainer = function getContainer() {
-    return document.body.querySelector(".".concat(swalClasses.container));
+    return document.body.querySelector(".".concat(swalmetiers.container));
   };
   var elementBySelector = function elementBySelector(selectorString) {
     var container = getContainer();
@@ -355,58 +355,58 @@
   };
 
   var getPopup = function getPopup() {
-    return elementByClass(swalClasses.popup);
+    return elementByClass(swalmetiers.popup);
   };
   var getIcon = function getIcon() {
-    return elementByClass(swalClasses.icon);
+    return elementByClass(swalmetiers.icon);
   };
   var getTitle = function getTitle() {
-    return elementByClass(swalClasses.title);
+    return elementByClass(swalmetiers.title);
   };
   var getContent = function getContent() {
-    return elementByClass(swalClasses.content);
+    return elementByClass(swalmetiers.content);
   };
   var getHtmlContainer = function getHtmlContainer() {
-    return elementByClass(swalClasses['html-container']);
+    return elementByClass(swalmetiers['html-container']);
   };
   var getImage = function getImage() {
-    return elementByClass(swalClasses.image);
+    return elementByClass(swalmetiers.image);
   };
   var getProgressSteps = function getProgressSteps() {
-    return elementByClass(swalClasses['progress-steps']);
+    return elementByClass(swalmetiers['progress-steps']);
   };
   var getValidationMessage = function getValidationMessage() {
-    return elementByClass(swalClasses['validation-message']);
+    return elementByClass(swalmetiers['validation-message']);
   };
   var getConfirmButton = function getConfirmButton() {
-    return elementBySelector(".".concat(swalClasses.actions, " .").concat(swalClasses.confirm));
+    return elementBySelector(".".concat(swalmetiers.actions, " .").concat(swalmetiers.confirm));
   };
   var getDenyButton = function getDenyButton() {
-    return elementBySelector(".".concat(swalClasses.actions, " .").concat(swalClasses.deny));
+    return elementBySelector(".".concat(swalmetiers.actions, " .").concat(swalmetiers.deny));
   };
   var getInputLabel = function getInputLabel() {
-    return elementByClass(swalClasses['input-label']);
+    return elementByClass(swalmetiers['input-label']);
   };
   var getLoader = function getLoader() {
-    return elementBySelector(".".concat(swalClasses.loader));
+    return elementBySelector(".".concat(swalmetiers.loader));
   };
   var getCancelButton = function getCancelButton() {
-    return elementBySelector(".".concat(swalClasses.actions, " .").concat(swalClasses.cancel));
+    return elementBySelector(".".concat(swalmetiers.actions, " .").concat(swalmetiers.cancel));
   };
   var getActions = function getActions() {
-    return elementByClass(swalClasses.actions);
+    return elementByClass(swalmetiers.actions);
   };
   var getHeader = function getHeader() {
-    return elementByClass(swalClasses.header);
+    return elementByClass(swalmetiers.header);
   };
   var getFooter = function getFooter() {
-    return elementByClass(swalClasses.footer);
+    return elementByClass(swalmetiers.footer);
   };
   var getTimerProgressBar = function getTimerProgressBar() {
-    return elementByClass(swalClasses['timer-progress-bar']);
+    return elementByClass(swalmetiers['timer-progress-bar']);
   };
   var getCloseButton = function getCloseButton() {
-    return elementByClass(swalClasses.close);
+    return elementByClass(swalmetiers.close);
   }; // https://github.com/jkup/focusable/blob/master/index.js
 
   var focusable = "\n  a[href],\n  area[href],\n  input:not([disabled]),\n  select:not([disabled]),\n  textarea:not([disabled]),\n  button:not([disabled]),\n  iframe,\n  object,\n  embed,\n  [tabindex=\"0\"],\n  [contenteditable],\n  audio[controls],\n  video[controls],\n  summary\n";
@@ -432,10 +432,10 @@
     });
   };
   var isModal = function isModal() {
-    return !isToast() && !document.body.classList.contains(swalClasses['no-backdrop']);
+    return !isToast() && !document.body.classList.contains(swalmetiers['no-backdrop']);
   };
   var isToast = function isToast() {
-    return document.body.classList.contains(swalClasses['toast-shown']);
+    return document.body.classList.contains(swalmetiers['toast-shown']);
   };
   var isLoading = function isLoading() {
     return getPopup().hasAttribute('data-loading');
@@ -475,16 +475,16 @@
     return true;
   };
 
-  var removeCustomClasses = function removeCustomClasses(elem, params) {
+  var removeCustommetiers = function removeCustommetiers(elem, params) {
     toArray(elem.classList).forEach(function (className) {
-      if (!(objectValues(swalClasses).indexOf(className) !== -1) && !(objectValues(iconTypes).indexOf(className) !== -1) && !(objectValues(params.showClass).indexOf(className) !== -1)) {
+      if (!(objectValues(swalmetiers).indexOf(className) !== -1) && !(objectValues(iconTypes).indexOf(className) !== -1) && !(objectValues(params.showClass).indexOf(className) !== -1)) {
         elem.classList.remove(className);
       }
     });
   };
 
   var applyCustomClass = function applyCustomClass(elem, params, className) {
-    removeCustomClasses(elem, params);
+    removeCustommetiers(elem, params);
 
     if (params.customClass && params.customClass[className]) {
       if (typeof params.customClass[className] !== 'string' && !params.customClass[className].forEach) {
@@ -503,19 +503,19 @@
       case 'select':
       case 'textarea':
       case 'file':
-        return getChildByClass(content, swalClasses[inputType]);
+        return getChildByClass(content, swalmetiers[inputType]);
 
       case 'checkbox':
-        return content.querySelector(".".concat(swalClasses.checkbox, " input"));
+        return content.querySelector(".".concat(swalmetiers.checkbox, " input"));
 
       case 'radio':
-        return content.querySelector(".".concat(swalClasses.radio, " input:checked")) || content.querySelector(".".concat(swalClasses.radio, " input:first-child"));
+        return content.querySelector(".".concat(swalmetiers.radio, " input:checked")) || content.querySelector(".".concat(swalmetiers.radio, " input:first-child"));
 
       case 'range':
-        return content.querySelector(".".concat(swalClasses.range, " input"));
+        return content.querySelector(".".concat(swalmetiers.range, " input"));
 
       default:
-        return getChildByClass(content, swalClasses.input);
+        return getChildByClass(content, swalmetiers.input);
     }
   }
   var focusInput = function focusInput(input) {
@@ -642,7 +642,7 @@
     return typeof window === 'undefined' || typeof document === 'undefined';
   };
 
-  var sweetHTML = "\n <div aria-labelledby=\"".concat(swalClasses.title, "\" aria-describedby=\"").concat(swalClasses.content, "\" class=\"").concat(swalClasses.popup, "\" tabindex=\"-1\">\n   <div class=\"").concat(swalClasses.header, "\">\n     <ul class=\"").concat(swalClasses['progress-steps'], "\"></ul>\n     <div class=\"").concat(swalClasses.icon, "\"></div>\n     <img class=\"").concat(swalClasses.image, "\" />\n     <h2 class=\"").concat(swalClasses.title, "\" id=\"").concat(swalClasses.title, "\"></h2>\n     <button type=\"button\" class=\"").concat(swalClasses.close, "\"></button>\n   </div>\n   <div class=\"").concat(swalClasses.content, "\">\n     <div id=\"").concat(swalClasses.content, "\" class=\"").concat(swalClasses['html-container'], "\"></div>\n     <input class=\"").concat(swalClasses.input, "\" />\n     <input type=\"file\" class=\"").concat(swalClasses.file, "\" />\n     <div class=\"").concat(swalClasses.range, "\">\n       <input type=\"range\" />\n       <output></output>\n     </div>\n     <select class=\"").concat(swalClasses.select, "\"></select>\n     <div class=\"").concat(swalClasses.radio, "\"></div>\n     <label for=\"").concat(swalClasses.checkbox, "\" class=\"").concat(swalClasses.checkbox, "\">\n       <input type=\"checkbox\" />\n       <span class=\"").concat(swalClasses.label, "\"></span>\n     </label>\n     <textarea class=\"").concat(swalClasses.textarea, "\"></textarea>\n     <div class=\"").concat(swalClasses['validation-message'], "\" id=\"").concat(swalClasses['validation-message'], "\"></div>\n   </div>\n   <div class=\"").concat(swalClasses.actions, "\">\n     <div class=\"").concat(swalClasses.loader, "\"></div>\n     <button type=\"button\" class=\"").concat(swalClasses.confirm, "\"></button>\n     <button type=\"button\" class=\"").concat(swalClasses.deny, "\"></button>\n     <button type=\"button\" class=\"").concat(swalClasses.cancel, "\"></button>\n   </div>\n   <div class=\"").concat(swalClasses.footer, "\"></div>\n   <div class=\"").concat(swalClasses['timer-progress-bar-container'], "\">\n     <div class=\"").concat(swalClasses['timer-progress-bar'], "\"></div>\n   </div>\n </div>\n").replace(/(^|\n)\s*/g, '');
+  var sweetHTML = "\n <div aria-labelledby=\"".concat(swalmetiers.title, "\" aria-describedby=\"").concat(swalmetiers.content, "\" class=\"").concat(swalmetiers.popup, "\" tabindex=\"-1\">\n   <div class=\"").concat(swalmetiers.header, "\">\n     <ul class=\"").concat(swalmetiers['progress-steps'], "\"></ul>\n     <div class=\"").concat(swalmetiers.icon, "\"></div>\n     <img class=\"").concat(swalmetiers.image, "\" />\n     <h2 class=\"").concat(swalmetiers.title, "\" id=\"").concat(swalmetiers.title, "\"></h2>\n     <button type=\"button\" class=\"").concat(swalmetiers.close, "\"></button>\n   </div>\n   <div class=\"").concat(swalmetiers.content, "\">\n     <div id=\"").concat(swalmetiers.content, "\" class=\"").concat(swalmetiers['html-container'], "\"></div>\n     <input class=\"").concat(swalmetiers.input, "\" />\n     <input type=\"file\" class=\"").concat(swalmetiers.file, "\" />\n     <div class=\"").concat(swalmetiers.range, "\">\n       <input type=\"range\" />\n       <output></output>\n     </div>\n     <select class=\"").concat(swalmetiers.select, "\"></select>\n     <div class=\"").concat(swalmetiers.radio, "\"></div>\n     <label for=\"").concat(swalmetiers.checkbox, "\" class=\"").concat(swalmetiers.checkbox, "\">\n       <input type=\"checkbox\" />\n       <span class=\"").concat(swalmetiers.label, "\"></span>\n     </label>\n     <textarea class=\"").concat(swalmetiers.textarea, "\"></textarea>\n     <div class=\"").concat(swalmetiers['validation-message'], "\" id=\"").concat(swalmetiers['validation-message'], "\"></div>\n   </div>\n   <div class=\"").concat(swalmetiers.actions, "\">\n     <div class=\"").concat(swalmetiers.loader, "\"></div>\n     <button type=\"button\" class=\"").concat(swalmetiers.confirm, "\"></button>\n     <button type=\"button\" class=\"").concat(swalmetiers.deny, "\"></button>\n     <button type=\"button\" class=\"").concat(swalmetiers.cancel, "\"></button>\n   </div>\n   <div class=\"").concat(swalmetiers.footer, "\"></div>\n   <div class=\"").concat(swalmetiers['timer-progress-bar-container'], "\">\n     <div class=\"").concat(swalmetiers['timer-progress-bar'], "\"></div>\n   </div>\n </div>\n").replace(/(^|\n)\s*/g, '');
 
   var resetOldContainer = function resetOldContainer() {
     var oldContainer = getContainer();
@@ -652,7 +652,7 @@
     }
 
     oldContainer.parentNode.removeChild(oldContainer);
-    removeClass([document.documentElement, document.body], [swalClasses['no-backdrop'], swalClasses['toast-shown'], swalClasses['has-column']]);
+    removeClass([document.documentElement, document.body], [swalmetiers['no-backdrop'], swalmetiers['toast-shown'], swalmetiers['has-column']]);
     return true;
   };
 
@@ -668,13 +668,13 @@
 
   var addInputChangeListeners = function addInputChangeListeners() {
     var content = getContent();
-    var input = getChildByClass(content, swalClasses.input);
-    var file = getChildByClass(content, swalClasses.file);
-    var range = content.querySelector(".".concat(swalClasses.range, " input"));
-    var rangeOutput = content.querySelector(".".concat(swalClasses.range, " output"));
-    var select = getChildByClass(content, swalClasses.select);
-    var checkbox = content.querySelector(".".concat(swalClasses.checkbox, " input"));
-    var textarea = getChildByClass(content, swalClasses.textarea);
+    var input = getChildByClass(content, swalmetiers.input);
+    var file = getChildByClass(content, swalmetiers.file);
+    var range = content.querySelector(".".concat(swalmetiers.range, " input"));
+    var rangeOutput = content.querySelector(".".concat(swalmetiers.range, " output"));
+    var select = getChildByClass(content, swalmetiers.select);
+    var checkbox = content.querySelector(".".concat(swalmetiers.checkbox, " input"));
+    var textarea = getChildByClass(content, swalmetiers.textarea);
     input.oninput = resetValidationMessage;
     file.onchange = resetValidationMessage;
     select.onchange = resetValidationMessage;
@@ -708,7 +708,7 @@
 
   var setupRTL = function setupRTL(targetElement) {
     if (window.getComputedStyle(targetElement).direction === 'rtl') {
-      addClass(getContainer(), swalClasses.rtl);
+      addClass(getContainer(), swalmetiers.rtl);
     }
   };
   /*
@@ -727,10 +727,10 @@
     }
 
     var container = document.createElement('div');
-    container.className = swalClasses.container;
+    container.className = swalmetiers.container;
 
     if (oldContainerExisted) {
-      addClass(container, swalClasses['no-transition']);
+      addClass(container, swalmetiers['no-transition']);
     }
 
     setInnerHtml(container, sweetHTML);
@@ -801,7 +801,7 @@
 
   var measureScrollbar = function measureScrollbar() {
     var scrollDiv = document.createElement('div');
-    scrollDiv.className = swalClasses['scrollbar-measure'];
+    scrollDiv.className = swalmetiers['scrollbar-measure'];
     document.body.appendChild(scrollDiv);
     var scrollbarWidth = scrollDiv.getBoundingClientRect().width - scrollDiv.clientWidth;
     document.body.removeChild(scrollDiv);
@@ -840,10 +840,10 @@
 
   function handleButtonsStyling(confirmButton, denyButton, cancelButton, params) {
     if (!params.buttonsStyling) {
-      return removeClass([confirmButton, denyButton, cancelButton], swalClasses.styled);
+      return removeClass([confirmButton, denyButton, cancelButton], swalmetiers.styled);
     }
 
-    addClass([confirmButton, denyButton, cancelButton], swalClasses.styled); // Buttons background colors
+    addClass([confirmButton, denyButton, cancelButton], swalmetiers.styled); // Buttons background colors
 
     if (params.confirmButtonColor) {
       confirmButton.style.backgroundColor = params.confirmButtonColor;
@@ -863,9 +863,9 @@
     setInnerHtml(button, params["".concat(buttonType, "ButtonText")]); // Set caption text
 
     button.setAttribute('aria-label', params["".concat(buttonType, "ButtonAriaLabel")]); // ARIA label
-    // Add buttons custom classes
+    // Add buttons custom metiers
 
-    button.className = swalClasses[buttonType];
+    button.className = swalmetiers[buttonType];
     applyCustomClass(button, params, "".concat(buttonType, "Button"));
     addClass(button, params["".concat(buttonType, "ButtonClass")]);
   }
@@ -874,16 +874,16 @@
     if (typeof backdrop === 'string') {
       container.style.background = backdrop;
     } else if (!backdrop) {
-      addClass([document.documentElement, document.body], swalClasses['no-backdrop']);
+      addClass([document.documentElement, document.body], swalmetiers['no-backdrop']);
     }
   }
 
   function handlePositionParam(container, position) {
-    if (position in swalClasses) {
-      addClass(container, swalClasses[position]);
+    if (position in swalmetiers) {
+      addClass(container, swalmetiers[position]);
     } else {
       warn('The "position" parameter is not valid, defaulting to "center"');
-      addClass(container, swalClasses.center);
+      addClass(container, swalmetiers.center);
     }
   }
 
@@ -891,8 +891,8 @@
     if (grow && typeof grow === 'string') {
       var growClass = "grow-".concat(grow);
 
-      if (growClass in swalClasses) {
-        addClass(container, swalClasses[growClass]);
+      if (growClass in swalmetiers) {
+        addClass(container, swalmetiers[growClass]);
       }
     }
   }
@@ -944,7 +944,7 @@
     var innerParams = privateProps.innerParams.get(instance);
     var rerender = !innerParams || params.input !== innerParams.input;
     inputTypes.forEach(function (inputType) {
-      var inputClass = swalClasses[inputType];
+      var inputClass = swalmetiers[inputType];
       var inputContainer = getChildByClass(content, inputClass); // set attributes
 
       setAttributes(inputType, params.inputAttributes); // set class
@@ -1026,9 +1026,9 @@
 
   var setInputLabel = function setInputLabel(input, prependTo, params) {
     if (params.inputLabel) {
-      input.id = swalClasses.input;
+      input.id = swalmetiers.input;
       var label = document.createElement('label');
-      var labelClass = swalClasses['input-label'];
+      var labelClass = swalmetiers['input-label'];
       label.setAttribute('for', input.id);
       label.className = labelClass;
       addClass(label, params.customClass.inputLabel);
@@ -1038,7 +1038,7 @@
   };
 
   var getInputContainer = function getInputContainer(inputType) {
-    var inputClass = swalClasses[inputType] ? swalClasses[inputType] : swalClasses.input;
+    var inputClass = swalmetiers[inputType] ? swalmetiers[inputType] : swalmetiers.input;
     return getChildByClass(getContent(), inputClass);
   };
 
@@ -1097,7 +1097,7 @@
   renderInputType.checkbox = function (checkboxContainer, params) {
     var checkbox = getInput(getContent(), 'checkbox');
     checkbox.value = 1;
-    checkbox.id = swalClasses.checkbox;
+    checkbox.id = swalmetiers.checkbox;
     checkbox.checked = Boolean(params.inputValue);
     var label = checkboxContainer.querySelector('span');
     setInnerHtml(label, params.inputPlaceholder);
@@ -1267,7 +1267,7 @@
   };
 
   var iconContent = function iconContent(content) {
-    return "<div class=\"".concat(swalClasses['icon-content'], "\">").concat(content, "</div>");
+    return "<div class=\"".concat(swalmetiers['icon-content'], "\">").concat(content, "</div>");
   };
 
   var renderImage = function renderImage(instance, params) {
@@ -1285,7 +1285,7 @@
     applyNumericalStyle(image, 'width', params.imageWidth);
     applyNumericalStyle(image, 'height', params.imageHeight); // Class
 
-    image.className = swalClasses.image;
+    image.className = swalmetiers.image;
     applyCustomClass(image, params, 'image');
   };
 
@@ -1356,14 +1356,14 @@
 
   var createStepElement = function createStepElement(step) {
     var stepEl = document.createElement('li');
-    addClass(stepEl, swalClasses['progress-step']);
+    addClass(stepEl, swalmetiers['progress-step']);
     setInnerHtml(stepEl, step);
     return stepEl;
   };
 
   var createLineElement = function createLineElement(params) {
     var lineEl = document.createElement('li');
-    addClass(lineEl, swalClasses['progress-step-line']);
+    addClass(lineEl, swalmetiers['progress-step-line']);
 
     if (params.progressStepsDistance) {
       lineEl.style.width = params.progressStepsDistance;
@@ -1392,7 +1392,7 @@
       progressStepsContainer.appendChild(stepEl);
 
       if (index === currentProgressStep) {
-        addClass(stepEl, swalClasses['active-progress-step']);
+        addClass(stepEl, swalmetiers['active-progress-step']);
       }
 
       if (index !== params.progressSteps.length - 1) {
@@ -1453,20 +1453,20 @@
       popup.style.background = params.background;
     }
 
-    hide(getValidationMessage()); // Classes
+    hide(getValidationMessage()); // metiers
 
-    addClasses(popup, params);
+    addmetiers(popup, params);
   };
 
-  var addClasses = function addClasses(popup, params) {
+  var addmetiers = function addmetiers(popup, params) {
     // Default Class + showClass when updating Swal.update({})
-    popup.className = "".concat(swalClasses.popup, " ").concat(isVisible(popup) ? params.showClass.popup : '');
+    popup.className = "".concat(swalmetiers.popup, " ").concat(isVisible(popup) ? params.showClass.popup : '');
 
     if (params.toast) {
-      addClass([document.documentElement, document.body], swalClasses['toast-shown']);
-      addClass(popup, swalClasses.toast);
+      addClass([document.documentElement, document.body], swalmetiers['toast-shown']);
+      addClass(popup, swalmetiers.toast);
     } else {
-      addClass(popup, swalClasses.modal);
+      addClass(popup, swalmetiers.modal);
     } // Custom class
 
 
@@ -1478,7 +1478,7 @@
 
 
     if (params.icon) {
-      addClass(popup, swalClasses["icon-".concat(params.icon)]);
+      addClass(popup, swalmetiers["icon-".concat(params.icon)]);
     }
   };
 
@@ -1607,7 +1607,7 @@
     }
 
     loader.parentNode.insertBefore(loader, buttonToReplace);
-    addClass([popup, actions], swalClasses.loading);
+    addClass([popup, actions], swalmetiers.loading);
     show(loader);
     popup.setAttribute('data-loading', true);
     popup.setAttribute('aria-busy', true);
@@ -1973,7 +1973,7 @@
       hide(domCache.actions);
     }
 
-    removeClass([domCache.popup, domCache.actions], swalClasses.loading);
+    removeClass([domCache.popup, domCache.actions], swalmetiers.loading);
     domCache.popup.removeAttribute('aria-busy');
     domCache.popup.removeAttribute('data-loading');
     domCache.confirmButton.disabled = false;
@@ -2017,10 +2017,10 @@
   var iOSfix = function iOSfix() {
     var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
 
-    if (iOS && !hasClass(document.body, swalClasses.iosfix)) {
+    if (iOS && !hasClass(document.body, swalmetiers.iosfix)) {
       var offset = document.body.scrollTop;
       document.body.style.top = "".concat(offset * -1, "px");
-      addClass(document.body, swalClasses.iosfix);
+      addClass(document.body, swalmetiers.iosfix);
       lockBodyScroll();
       addBottomPaddingForTallPopups(); // #1948
     }
@@ -2087,9 +2087,9 @@
   };
 
   var undoIOSfix = function undoIOSfix() {
-    if (hasClass(document.body, swalClasses.iosfix)) {
+    if (hasClass(document.body, swalmetiers.iosfix)) {
       var offset = parseInt(document.body.style.top, 10);
-      removeClass(document.body, swalClasses.iosfix);
+      removeClass(document.body, swalmetiers.iosfix);
       document.body.style.top = '';
       document.body.scrollTop = offset * -1;
     }
@@ -2195,11 +2195,11 @@
       unsetAriaHidden();
     }
 
-    removeBodyClasses();
+    removeBodymetiers();
   }
 
-  function removeBodyClasses() {
-    removeClass([document.documentElement, document.body], [swalClasses.shown, swalClasses['height-auto'], swalClasses['no-backdrop'], swalClasses['toast-shown'], swalClasses['toast-column']]);
+  function removeBodymetiers() {
+    removeClass([document.documentElement, document.body], [swalmetiers.shown, swalmetiers['height-auto'], swalmetiers['no-backdrop'], swalmetiers['toast-shown'], swalmetiers['toast-column']]);
   }
 
   function close(resolveValue) {
@@ -2331,7 +2331,7 @@
     var domCache = privateProps.domCache.get(this);
     var params = privateProps.innerParams.get(this);
     setInnerHtml(domCache.validationMessage, error);
-    domCache.validationMessage.className = swalClasses['validation-message'];
+    domCache.validationMessage.className = swalmetiers['validation-message'];
 
     if (params.customClass && params.customClass.validationMessage) {
       addClass(domCache.validationMessage, params.customClass.validationMessage);
@@ -2342,9 +2342,9 @@
 
     if (input) {
       input.setAttribute('aria-invalid', true);
-      input.setAttribute('aria-describedBy', swalClasses['validation-message']);
+      input.setAttribute('aria-describedBy', swalmetiers['validation-message']);
       focusInput(input);
-      addClass(input, swalClasses.inputerror);
+      addClass(input, swalmetiers.inputerror);
     }
   } // Hide block with validation message
 
@@ -2360,7 +2360,7 @@
     if (input) {
       input.removeAttribute('aria-invalid');
       input.removeAttribute('aria-describedBy');
-      removeClass(input, swalClasses.inputerror);
+      removeClass(input, swalmetiers.inputerror);
     }
   }
 
@@ -2677,7 +2677,7 @@
 
   var SHOW_CLASS_TIMEOUT = 10;
   /**
-   * Open popup, add necessary classes and styles, fix scrollbar
+   * Open popup, add necessary metiers and styles, fix scrollbar
    *
    * @param params
    */
@@ -2694,7 +2694,7 @@
 
     var bodyStyles = window.getComputedStyle(document.body);
     var initialBodyOverflow = bodyStyles.overflowY;
-    addClasses$1(container, popup, params); // scrolling is 'hidden' until animation is done, after that 'auto'
+    addmetiers$1(container, popup, params); // scrolling is 'hidden' until animation is done, after that 'auto'
 
     setTimeout(function () {
       setScrollingVisibility(container, popup);
@@ -2710,7 +2710,7 @@
     }
 
     runDidOpen(popup, params);
-    removeClass(container, swalClasses['no-transition']);
+    removeClass(container, swalmetiers['no-transition']);
   };
 
   var runDidOpen = function runDidOpen(popup, params) {
@@ -2760,7 +2760,7 @@
     });
   };
 
-  var addClasses$1 = function addClasses(container, popup, params) {
+  var addmetiers$1 = function addmetiers(container, popup, params) {
     addClass(container, params.showClass.backdrop); // the workaround with setting/unsetting opacity is needed for #2019 and 2059
 
     popup.style.setProperty('opacity', '0', 'important');
@@ -2772,10 +2772,10 @@
       popup.style.removeProperty('opacity');
     }, SHOW_CLASS_TIMEOUT); // 10ms in order to fix #2062
 
-    addClass([document.documentElement, document.body], swalClasses.shown);
+    addClass([document.documentElement, document.body], swalmetiers.shown);
 
     if (params.heightAuto && params.backdrop && !params.toast) {
-      addClass([document.documentElement, document.body], swalClasses['height-auto']);
+      addClass([document.documentElement, document.body], swalmetiers['height-auto']);
     }
   };
 
@@ -2859,7 +2859,7 @@
 
   var populateInputOptions = {
     select: function select(content, inputOptions, params) {
-      var select = getChildByClass(content, swalClasses.select);
+      var select = getChildByClass(content, swalmetiers.select);
 
       var renderOption = function renderOption(parent, optionLabel, optionValue) {
         var option = document.createElement('option');
@@ -2894,14 +2894,14 @@
       select.focus();
     },
     radio: function radio(content, inputOptions, params) {
-      var radio = getChildByClass(content, swalClasses.radio);
+      var radio = getChildByClass(content, swalmetiers.radio);
       inputOptions.forEach(function (inputOption) {
         var radioValue = inputOption[0];
         var radioLabel = inputOption[1];
         var radioInput = document.createElement('input');
         var radioLabelElement = document.createElement('label');
         radioInput.type = 'radio';
-        radioInput.name = swalClasses.radio;
+        radioInput.name = swalmetiers.radio;
         radioInput.value = radioValue;
 
         if (isSelected(radioValue, params.inputValue)) {
@@ -2910,7 +2910,7 @@
 
         var label = document.createElement('span');
         setInnerHtml(label, radioLabel);
-        label.className = swalClasses.label;
+        label.className = swalmetiers.label;
         radioLabelElement.appendChild(radioInput);
         radioLabelElement.appendChild(label);
         radio.appendChild(radioLabelElement);
@@ -3356,9 +3356,9 @@
       addKeydownHandler(instance, globalState, innerParams, dismissWith);
 
       if (innerParams.toast && (innerParams.input || innerParams.footer || innerParams.showCloseButton)) {
-        addClass(document.body, swalClasses['toast-column']);
+        addClass(document.body, swalmetiers['toast-column']);
       } else {
-        removeClass(document.body, swalClasses['toast-column']);
+        removeClass(document.body, swalmetiers['toast-column']);
       }
 
       handleInputOptionsAndValue(instance, innerParams);

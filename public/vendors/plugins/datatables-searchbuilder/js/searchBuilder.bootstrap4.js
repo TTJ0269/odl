@@ -29,15 +29,15 @@
         }
     }(function ($, window, document) {
         var DataTable = $.fn.dataTable;
-        $.extend(true, DataTable.SearchBuilder.classes, {
+        $.extend(true, DataTable.SearchBuilder.metiers, {
             clearAll: 'btn btn-light dtsb-clearAll'
         });
-        $.extend(true, DataTable.Group.classes, {
+        $.extend(true, DataTable.Group.metiers, {
             add: 'btn btn-light dtsb-add',
             clearGroup: 'btn btn-light dtsb-clearGroup',
             logic: 'btn btn-light dtsb-logic'
         });
-        $.extend(true, DataTable.Criteria.classes, {
+        $.extend(true, DataTable.Criteria.metiers, {
             condition: 'form-control dtsb-condition',
             data: 'form-control dtsb-data',
             "delete": 'btn btn-light dtsb-delete',

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Events\NotificationEvent;
 use App\Mail\NotificationMail;
 use App\Models\User;
 use App\Models\Profil;
@@ -82,37 +83,33 @@ class UserController extends Controller
     $this->authorize('admin', User::class);
    try
    {
-      $emailuser = request('email');
-      $username=request('nomuser');
-      $userprenom=request('prenomuser');
       $password = strtotime(now());  //request('password')
 
-      $users = new User;
+      $imageuser = null;
 
-      $users->name=request('name');
-      $users->email=request('email');
-      $users->password=Hash::make($password);
-      $users->profil_id=request('profil_id');
-      $users->nomuser=request('nomuser');
-      $users->prenomuser=request('prenomuser');
-      $users->teluser=request('teluser');
-      if($request->file('image'))
-      {
-          $file=$request->file('image');
-          $filename=time().'.'.$file->getClientOriginalExtension();
-          $request->image->move('storage/image/', $filename);
+        if($request->file('image'))
+        {
+            $file=$request->file('image');
+            $filename=time().'.'.$file->getClientOriginalExtension();
+            $request->image->move('storage/image/', $filename);
 
-          $users->imageuser=$filename;
-      }
-      $users->save();
+            $imageuser = $filename;
+        }
+
+        $user = User::create([
+            'name'=> request('name'),
+            'email'=> request('email'),
+            'password' => $password,
+            'profil_id'=> request('profil_id'),
+            'nomuser'=> request('nomuser'),
+            'prenomuser'=> request('prenomuser'),
+            'teluser'=> request('teluser'),
+            'imageuser'=> $imageuser,
+        ]);
 
       $this->historique(request('nomuser').' '.request('prenomuser'), 'Ajout');
 
-      $message = "Votre mot de passe est : ";
-
-      $useremail = ['email' => $emailuser , 'nomuser' => $username , 'prenomuser' => $userprenom, 'password' => $password, 'message' => $message];
-
-      Mail::to($useremail['email'])->send(new NotificationMail($useremail));
+      event(new NotificationEvent($user));
 
       return redirect('users')->with('message', 'Utilisateur bien ajouté.');
 
@@ -246,35 +243,31 @@ class UserController extends Controller
      ]);
  }
 
- public function GenerationNewPassword()
+ public function GenerationNewPassword(User $user)
  {
    try
    {
-      $id = request('id');
-      $emailuser = request('email');
-      $username=request('nomutilisateur');
-      $userprenom=request('prenomutilisateur');
-      $a = Hash::make(strtotime(now())) ;
+      //dd($user);
+      //$a = 123456789 ;
+      $a = strtotime(now());
+      $message = 'Votre nouveau de passe est : ';
 
+      $useremail = ['email' => $user->email , 'nomuser' => $user->nomuser , 'prenomuser' => $user->prenomuser, 'password' => $a , 'message' => $message];
 
+      DB::table('users')->where('users.id','=',$user->id)->update(['users.password' => Hash::make($a), 'users.etatconnection' => 0]);
 
-      $useremail = ['email' => $emailuser , 'nomuser' => $username , 'prenomuser' => $userprenom, 'password' => $a];
+      Mail::to($useremail['email'])->send(new NotificationMail($useremail));
 
-      $user = DB::table('users')->where('users.id','=',$id)->update(['users.password' => Hash::make($a), 'users.etatconnection' => 0]);
-
-      Mail::to($useremail['email'])->send(new UserMail($useremail));
-
-      return redirect('users/' . $id)->with('message', 'Nouveau mot de passe bien régénérer.');
+      return redirect('users/' . $user->id)->with('message', 'Nouveau mot de passe bien régénérer.');
 
     }
     catch(\Exception $exception)
     {
       /** si erreur mot de passe par defaut **/
-      $user = DB::table('users')->where('users.id','=',$id)->update(['users.password' => Hash::make(123456789), 'users.etatconnection' => 0]);
+      DB::table('users')->where('users.id','=',$user->id)->update(['users.password' => Hash::make(123456789), 'users.etatconnection' => 0]);
 
       return redirect('erreur')->with('messageerreur',$exception->getMessage());
     }
-
  }
 
  public function ActiveCompte()

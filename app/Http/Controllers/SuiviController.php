@@ -170,7 +170,7 @@ class SuiviController extends Controller
     /* $this->authorize('ad_re_su', User::class);
     try
     {
-       /* $classes = Classe::select('*')->where('libelleclasse','not like',"%Aucune%")->get();
+       /* $metiers = metier::select('*')->where('libellemetier','not like',"%Aucune%")->get();
         $entreprises = Entreprise::select('*')->get();*/
 
         /** Liste des tuteurs**/
@@ -180,7 +180,7 @@ class SuiviController extends Controller
         ->select('users.*')
         ->get();
 
-       return view('suivis.edit', compact('classes', 'entreprises','users','suivi'));*/
+       return view('suivis.edit', compact('metiers', 'entreprises','users','suivi'));*/
 
     /*}
     catch(\Exception $exception)
@@ -240,7 +240,7 @@ class SuiviController extends Controller
     {
         return request()->validate([
             'entreprise_id'=>'required|integer',
-            'user_id'=>'required|integer',
+            //'user_id'=>'required|integer',
         ]);
     }
 
@@ -254,13 +254,17 @@ class SuiviController extends Controller
         $entreprise = Entreprise::where('id','=',$entreprise_id)->select('*')->first();
         $tuteur_suivi = User::where('email','=',$entreprise->emailentreprise)->select('*')->first();
 
-        $suivi = Suivi::create([
-            'entreprise_id'=> $entreprise_id,
-            'user_id'=> $user_id,
-            'tuteur_suivi_id' => $tuteur_suivi->id,
-            'datedebut'=> $datedebut,
-            'datefin'=> $datefin,
-          ]);
+        $nbre = count(request('user_id'));
+
+            for ($i=0; $i < $nbre; $i++) {
+                Suivi::create([
+                    'user_id' => (int)request('user_id')[$i],
+                    'entreprise_id'=> $entreprise_id,
+                    'tuteur_suivi_id' => $tuteur_suivi->id,
+                    'datedebut'=> $datedebut,
+                    'datefin'=> $datefin,
+                ]);
+            }
     }
 
 }

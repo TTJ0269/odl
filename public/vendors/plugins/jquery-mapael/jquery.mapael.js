@@ -610,7 +610,7 @@
             // init zoom buttons
             $.each(zoomOptions.buttons, function(type, opt) {
                 if (fnZoomButtons[type] === undefined) throw new Error("Unknown zoom button '" + type + "'");
-                // Create div with classes, contents and title (for tooltip)
+                // Create div with metiers, contents and title (for tooltip)
                 var $button = $("<div>").addClass(opt.cssClass)
                     .html(opt.content)
                     .attr("title", opt.title);
@@ -2060,7 +2060,7 @@
             /* Handle tooltip init */
             if (elem.options && elem.options.tooltip !== undefined) {
                 var content = '';
-                // Reset classes
+                // Reset metiers
                 self.$tooltip.removeClass().addClass(self.options.map.tooltip.cssClass);
                 // Get content
                 if (elem.options.tooltip.content !== undefined) {

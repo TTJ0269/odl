@@ -13,9 +13,9 @@ class Ifad extends Model
 
     protected $attributes=['etatsup'=> 0];
 
-    public function classes()
+    public function metiers()
      {
-         return $this->hasMany('App\Models\Classe');
+         return $this->hasMany('App\Models\Metier');
      }
 
      public function associations()

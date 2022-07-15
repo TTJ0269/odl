@@ -31,16 +31,16 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                @foreach ($fiche_positionnements as $fiche_positionnement)
+                @foreach ($users as $user)
                     <div class="text-center">
-                       <h4> Observation de la fiche de positionnement: {{ $fiche_positionnement->libellefiche }} </h4>
+                       <h4> Observation de l' apprenant(e): {{ $user->nomuser }} {{ $user->prenomuser }}</h4>
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fas fas fa-comments"></i></span>
                         </div>
-                        <input type="number" hidden  name="fiche_positionnement_id" value="{{$fiche_positionnement->id}}">
-                        <input type="text" hidden  name="fiche_positionnement_name" value="{{$fiche_positionnement->libellefiche}}">
+                        <input type="number" hidden  name="user_id" value="{{$user->id}}">
+                        <input type="text" hidden  name="user_name" value="{{ $user->nomuser }} {{ $user->prenomuser }}">
                         <textarea cols="10" class="form-control @error('descriptionobservation') is-invalid @enderror" name="descriptionobservation" placeholder="Rentrez une observation..." autofocus  required></textarea>
                         @error('descriptionobservation')
                             <div class="invalid-feedback">

@@ -378,7 +378,7 @@ function enableMouseSelection ( dt )
 			}
 
 			var ctx = dt.settings()[0];
-			var wrapperClass = dt.settings()[0].oClasses.sWrapper.trim().replace(/ +/g, '.');
+			var wrapperClass = dt.settings()[0].ometiers.sWrapper.trim().replace(/ +/g, '.');
 
 			// Ignore clicks inside a sub-table
 			if ( $(e.target).closest('div.'+wrapperClass)[0] != dt.table().container() ) {
@@ -530,7 +530,7 @@ function info ( api )
 function init ( ctx ) {
 	var api = new DataTable.Api( ctx );
 
-	// Row callback so that classes can be added to rows and cells if the item
+	// Row callback so that metiers can be added to rows and cells if the item
 	// was selected before the element was created. This will happen with the
 	// `deferRender` option enabled.
 	// 

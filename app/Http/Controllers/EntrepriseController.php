@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\NotificationMail;
+use App\Events\NotificationEvent;
 use App\Models\Entreprise;
 use App\Models\Suivi;
 use App\Models\Profil;
@@ -88,7 +90,7 @@ class EntrepriseController extends Controller
             $entreprise_email = request('emailentreprise');
             $entreprise_tel = request('telentreprise');
             $entreprise_adresse = request('adresseentreprise');
-            $password = strtotime(now());  //request('password')
+            $password = request('libelleentreprise').'@3060'; //strtotime(now());  //request('password')
             //$entreprise_logo = request('logoentreprise');
 
             //dd($entreprise_libelle, $entreprise_email, $entreprise_tel);
@@ -124,7 +126,7 @@ class EntrepriseController extends Controller
                     ]);
 
                 /** Création info connection entreprise **/
-                    $entrep = User::create([
+                    $user = User::create([
                         'name'=> request('libelleentreprise'),
                         'email'=> request('emailentreprise'),
                         'password' => Hash::make($password),
@@ -136,6 +138,8 @@ class EntrepriseController extends Controller
                     ]);
 
                     $this->historique(request('libelleentreprise'), 'Ajout');
+
+                    //event(new NotificationEvent($user));
 
                     return redirect('entreprises')->with('message', 'Entreprise bien ajoutée.');
                 }

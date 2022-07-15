@@ -20,6 +20,9 @@ class CreateActivitesTable extends Migration
             $table->string('categorie')->nullable();
             $table->integer('etatsup');
             $table->timestamps();
+
+            $table->unsignedBigInteger('metier_id');
+            $table->foreign('metier_id')->references('id')->on('metiers')->onDelete('cascade');
         });
     }
 

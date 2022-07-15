@@ -30,7 +30,7 @@
                 throw new Error('SearchPane requires Select');
             }
             var table = new DataTable.Api(paneSettings);
-            this.classes = $.extend(true, {}, SearchPane.classes);
+            this.metiers = $.extend(true, {}, SearchPane.metiers);
             // Get options from user
             this.c = $.extend(true, {}, SearchPane.defaults, opts);
             this.customPaneSettings = panes;
@@ -75,37 +75,37 @@
             this.c.layout = layout;
             var layVal = parseInt(layout.split('-')[1], 10);
             this.dom = {
-                buttonGroup: $('<div/>').addClass(this.classes.buttonGroup),
+                buttonGroup: $('<div/>').addClass(this.metiers.buttonGroup),
                 clear: $('<button type="button">&#215;</button>')
-                    .addClass(this.classes.dull)
-                    .addClass(this.classes.paneButton)
-                    .addClass(this.classes.clearButton),
-                container: $('<div/>').addClass(this.classes.container).addClass(this.classes.layout +
+                    .addClass(this.metiers.dull)
+                    .addClass(this.metiers.paneButton)
+                    .addClass(this.metiers.clearButton),
+                container: $('<div/>').addClass(this.metiers.container).addClass(this.metiers.layout +
                     (layVal < 10 ? layout : layout.split('-')[0] + '-9')),
                 countButton: $('<button type="button"></button>')
-                    .addClass(this.classes.paneButton)
-                    .addClass(this.classes.countButton),
+                    .addClass(this.metiers.paneButton)
+                    .addClass(this.metiers.countButton),
                 dtP: $('<table><thead><tr><th>' +
                     (this.colExists
                         ? $(table.column(this.colExists ? this.s.index : 0).header()).text()
                         : this.customPaneSettings.header || 'Custom Pane') + '</th><th/></tr></thead></table>'),
-                lower: $('<div/>').addClass(this.classes.subRow2).addClass(this.classes.narrowButton),
-                nameButton: $('<button type="button"></button>').addClass(this.classes.paneButton).addClass(this.classes.nameButton),
+                lower: $('<div/>').addClass(this.metiers.subRow2).addClass(this.metiers.narrowButton),
+                nameButton: $('<button type="button"></button>').addClass(this.metiers.paneButton).addClass(this.metiers.nameButton),
                 panesContainer: panesContainer,
-                searchBox: $('<input/>').addClass(this.classes.paneInputButton).addClass(this.classes.search),
-                searchButton: $('<button type = "button" class="' + this.classes.searchIcon + '"></button>')
-                    .addClass(this.classes.paneButton),
-                searchCont: $('<div/>').addClass(this.classes.searchCont),
-                searchLabelCont: $('<div/>').addClass(this.classes.searchLabelCont),
-                topRow: $('<div/>').addClass(this.classes.topRow),
-                upper: $('<div/>').addClass(this.classes.subRow1).addClass(this.classes.narrowSearch)
+                searchBox: $('<input/>').addClass(this.metiers.paneInputButton).addClass(this.metiers.search),
+                searchButton: $('<button type = "button" class="' + this.metiers.searchIcon + '"></button>')
+                    .addClass(this.metiers.paneButton),
+                searchCont: $('<div/>').addClass(this.metiers.searchCont),
+                searchLabelCont: $('<div/>').addClass(this.metiers.searchLabelCont),
+                topRow: $('<div/>').addClass(this.metiers.topRow),
+                upper: $('<div/>').addClass(this.metiers.subRow1).addClass(this.metiers.narrowSearch)
             };
             this.s.displayed = false;
             table = this.s.dt;
             this.selections = [];
             this.s.colOpts = this.colExists ? this._getOptions() : this._getBonusOptions();
             var colOpts = this.s.colOpts;
-            var clear = $('<button type="button">X</button>').addClass(this.classes.paneButton);
+            var clear = $('<button type="button">X</button>').addClass(this.metiers.paneButton);
             $(clear).text(table.i18n('searchPanes.clearPane', 'X'));
             this.dom.container.addClass(colOpts.className);
             this.dom.container.addClass((this.customPaneSettings !== null && this.customPaneSettings.className !== undefined)
@@ -152,7 +152,7 @@
             // If the clear button for this pane is clicked clear the selections
             if (this.c.clear) {
                 $(clear).on('click', function () {
-                    var searches = _this.dom.container.find(_this.classes.search);
+                    var searches = _this.dom.container.find(_this.metiers.search);
                     searches.each(function () {
                         $(this).val('');
                         $(this).trigger('input');
@@ -266,7 +266,7 @@
                 this.s.dtPane = undefined;
                 $.fn.dataTable.ext.search.push(this.s.searchFunction);
             }
-            this.dom.container.removeClass(this.classes.hidden);
+            this.dom.container.removeClass(this.metiers.hidden);
             this.s.displayed = false;
             this._buildPane(!this.s.dt.page.info().serverSide ?
                 selectedRows :
@@ -341,7 +341,7 @@
                     }
                 }
                 else {
-                    $(_this.dom.clear).removeClass(_this.classes.dull);
+                    $(_this.dom.clear).removeClass(_this.metiers.dull);
                     _this.s.selectPresent = true;
                     if (!_this.s.updating) {
                         _this._makeSelection();
@@ -363,7 +363,7 @@
                     else {
                         _this.s.deselect = true;
                         if (_this.s.dtPane.rows({ selected: true }).data().toArray().length === 0) {
-                            $(_this.dom.clear).addClass(_this.classes.dull);
+                            $(_this.dom.clear).addClass(_this.metiers.dull);
                         }
                         _this._makeSelection();
                         _this.s.deselect = false;
@@ -435,7 +435,7 @@
             });
             // When the clear button is clicked reset the pane
             $(this.dom.clear).on('click.dtsp', function () {
-                var searches = _this.dom.container.find('.' + _this.classes.search);
+                var searches = _this.dom.container.find('.' + _this.metiers.search);
                 searches.each(function () {
                     // set the value of the search box to be an empty string and then search on that, effectively reseting
                     $(this).val('');
@@ -570,21 +570,21 @@
          * Adjusts the layout of the top row when the screen is resized
          */
         SearchPane.prototype._adjustTopRow = function () {
-            var subContainers = this.dom.container.find('.' + this.classes.subRowsContainer);
+            var subContainers = this.dom.container.find('.' + this.metiers.subRowsContainer);
             var subRow1 = this.dom.container.find('.dtsp-subRow1');
             var subRow2 = this.dom.container.find('.dtsp-subRow2');
-            var topRow = this.dom.container.find('.' + this.classes.topRow);
+            var topRow = this.dom.container.find('.' + this.metiers.topRow);
             // If the width is 0 then it is safe to assume that the pane has not yet been displayed.
             //  Even if it has, if the width is 0 it won't make a difference if it has the narrow class or not
             if (($(subContainers[0]).width() < 252 || $(topRow[0]).width() < 252) && $(subContainers[0]).width() !== 0) {
-                $(subContainers[0]).addClass(this.classes.narrow);
-                $(subRow1[0]).addClass(this.classes.narrowSub).removeClass(this.classes.narrowSearch);
-                $(subRow2[0]).addClass(this.classes.narrowSub).removeClass(this.classes.narrowButton);
+                $(subContainers[0]).addClass(this.metiers.narrow);
+                $(subRow1[0]).addClass(this.metiers.narrowSub).removeClass(this.metiers.narrowSearch);
+                $(subRow2[0]).addClass(this.metiers.narrowSub).removeClass(this.metiers.narrowButton);
             }
             else {
-                $(subContainers[0]).removeClass(this.classes.narrow);
-                $(subRow1[0]).removeClass(this.classes.narrowSub).addClass(this.classes.narrowSearch);
-                $(subRow2[0]).removeClass(this.classes.narrowSub).addClass(this.classes.narrowButton);
+                $(subContainers[0]).removeClass(this.metiers.narrow);
+                $(subRow1[0]).removeClass(this.metiers.narrowSub).addClass(this.metiers.narrowSearch);
+                $(subRow2[0]).removeClass(this.metiers.narrowSub).addClass(this.metiers.narrowButton);
             }
         };
         /**
@@ -628,7 +628,7 @@
                 if ((colOpts.show === false
                     || (colOpts.show !== undefined && colOpts.show !== true)) &&
                     idx === -1) {
-                    this.dom.container.addClass(this.classes.hidden);
+                    this.dom.container.addClass(this.metiers.hidden);
                     this.s.displayed = false;
                     return false;
                 }
@@ -648,7 +648,7 @@
                         //  which will only occur if it has previously failed to meet the criteria to be
                         //  displayed, therefore we can just hide it again here
                         if (loadedFilter && loadedFilter.searchPanes && loadedFilter.searchPanes.panes && idx === -1) {
-                            this.dom.container.addClass(this.classes.hidden);
+                            this.dom.container.addClass(this.metiers.hidden);
                             this.s.displayed = false;
                             return;
                         }
@@ -662,7 +662,7 @@
                         uniqueRatio > this.c.threshold :
                         uniqueRatio > colOpts.threshold)
                         || (colOpts.show !== true && binLength <= 1))) {
-                        this.dom.container.addClass(this.classes.hidden);
+                        this.dom.container.addClass(this.metiers.hidden);
                         this.s.displayed = false;
                         return;
                     }
@@ -675,7 +675,7 @@
                     else {
                         rowData.binsTotal = rowData.bins;
                     }
-                    this.dom.container.addClass(this.classes.show);
+                    this.dom.container.addClass(this.metiers.show);
                     this.s.displayed = true;
                 }
                 else if (dataIn !== null && dataIn.searchPanes !== null && dataIn.searchPanes.options !== null) {
@@ -710,7 +710,7 @@
                         uniqueRatio > this.c.threshold :
                         uniqueRatio > colOpts.threshold)
                         || (colOpts.show !== true && binLength <= 1))) {
-                        this.dom.container.addClass(this.classes.hidden);
+                        this.dom.container.addClass(this.metiers.hidden);
                         this.s.displayed = false;
                         return;
                     }
@@ -771,13 +771,13 @@
                             }
                             // We are displaying the count in the same columne as the name of the search option.
                             // This is so that there is not need to call columns.adjust(), which in turn speeds up the code
-                            var pill = '<span class="' + _this.classes.pill + '">' + message + '</span>';
+                            var pill = '<span class="' + _this.metiers.pill + '">' + message + '</span>';
                             if (_this.c.hideCount || colOpts.hideCount) {
                                 pill = '';
                             }
-                            return '<div class="' + _this.classes.nameCont + '"><span title="' +
+                            return '<div class="' + _this.metiers.nameCont + '"><span title="' +
                                 (typeof data === 'string' && data.match(/<[^>]*>/) !== null ? data.replace(/<[^>]*>/g, '') : data) +
-                                '" class="' + _this.classes.name + '">' +
+                                '" class="' + _this.metiers.name + '">' +
                                 data + '</span>' +
                                 pill + '</div>';
                         },
@@ -789,7 +789,7 @@
                             null
                     },
                     {
-                        className: 'dtsp-countColumn ' + this.classes.badgePill,
+                        className: 'dtsp-countColumn ' + this.metiers.badgePill,
                         data: 'shown',
                         orderData: [1, 2],
                         targets: 1,
@@ -820,7 +820,7 @@
                 : undefined, (this.customPaneSettings !== null && this.customPaneSettings.dtOpts !== undefined)
                 ? this.customPaneSettings.dtOpts
                 : {}));
-            $(this.dom.dtP).addClass(this.classes.table);
+            $(this.dom.dtP).addClass(this.metiers.table);
             // This is hacky but necessary for when datatables is generating the column titles automatically
             $(this.dom.searchBox).attr('placeholder', colOpts.header !== undefined
                 ? colOpts.header
@@ -967,12 +967,12 @@
             //  Empty everything to start again
             $(this.dom.topRow).empty();
             $(this.dom.dtP).empty();
-            $(this.dom.topRow).addClass(this.classes.topRow);
+            $(this.dom.topRow).addClass(this.metiers.topRow);
             // If there are more than 3 columns defined then make there be a smaller gap between the panes
             if (layVal > 3) {
-                $(this.dom.container).addClass(this.classes.smallGap);
+                $(this.dom.container).addClass(this.metiers.smallGap);
             }
-            $(this.dom.topRow).addClass(this.classes.subRowsContainer);
+            $(this.dom.topRow).addClass(this.metiers.subRowsContainer);
             $(this.dom.upper).appendTo(this.dom.topRow);
             $(this.dom.lower).appendTo(this.dom.topRow);
             $(this.dom.searchCont).appendTo(this.dom.upper);
@@ -987,8 +987,8 @@
                     this.customPaneSettings.dtOpts.searching !== undefined &&
                     !this.customPaneSettings.dtOpts.searching)) {
                 $(this.dom.searchBox).attr('disabled', 'disabled')
-                    .removeClass(this.classes.paneInputButton)
-                    .addClass(this.classes.disabledButton);
+                    .removeClass(this.metiers.paneInputButton)
+                    .addClass(this.metiers.disabledButton);
             }
             $(this.dom.searchBox).appendTo(this.dom.searchCont);
             // Create the contents of the searchCont div. Worth noting that this function will change when using semantic ui
@@ -1299,10 +1299,10 @@
             }
             // If a filter has been applied then outline the respective pane, remove it when it no longer is.
             if (filters.length > 0) {
-                container.addClass(this.classes.selected);
+                container.addClass(this.metiers.selected);
             }
             else if (filters.length === 0) {
-                container.removeClass(this.classes.selected);
+                container.removeClass(this.metiers.selected);
             }
             this.s.updating = updating;
         };
@@ -1432,7 +1432,7 @@
             }
         };
         SearchPane.version = '1.1.0';
-        SearchPane.classes = {
+        SearchPane.metiers = {
             buttonGroup: 'dtsp-buttonGroup',
             buttonSub: 'dtsp-buttonSub',
             clear: 'dtsp-clear',
@@ -1516,18 +1516,18 @@
                 throw new Error('SearchPane requires Select');
             }
             var table = new DataTable$1.Api(paneSettings);
-            this.classes = $$1.extend(true, {}, SearchPanes.classes);
+            this.metiers = $$1.extend(true, {}, SearchPanes.metiers);
             // Get options from user
             this.c = $$1.extend(true, {}, SearchPanes.defaults, opts);
             // Add extra elements to DOM object including clear
             this.dom = {
-                clearAll: $$1('<button type="button">Clear All</button>').addClass(this.classes.clearAll),
-                container: $$1('<div/>').addClass(this.classes.panes).text(table.i18n('searchPanes.loadMessage', 'Loading Search Panes...')),
-                emptyMessage: $$1('<div/>').addClass(this.classes.emptyMessage),
-                options: $$1('<div/>').addClass(this.classes.container),
-                panes: $$1('<div/>').addClass(this.classes.container),
-                title: $$1('<div/>').addClass(this.classes.title),
-                titleRow: $$1('<div/>').addClass(this.classes.titleRow),
+                clearAll: $$1('<button type="button">Clear All</button>').addClass(this.metiers.clearAll),
+                container: $$1('<div/>').addClass(this.metiers.panes).text(table.i18n('searchPanes.loadMessage', 'Loading Search Panes...')),
+                emptyMessage: $$1('<div/>').addClass(this.metiers.emptyMessage),
+                options: $$1('<div/>').addClass(this.metiers.container),
+                panes: $$1('<div/>').addClass(this.metiers.container),
+                title: $$1('<div/>').addClass(this.metiers.title),
+                titleRow: $$1('<div/>').addClass(this.metiers.titleRow),
                 wrapper: $$1('<div/>')
             };
             this.s = {
@@ -1589,7 +1589,7 @@
          */
         SearchPanes.prototype.clearSelections = function () {
             // Load in all of the searchBoxes in the documents
-            var searches = this.dom.container.find(this.classes.search);
+            var searches = this.dom.container.find(this.metiers.search);
             // For each searchBox set the input text to be empty and then trigger
             //  an input on them so that they no longer filter the panes
             searches.each(function () {
@@ -1829,8 +1829,8 @@
          */
         SearchPanes.prototype._attach = function () {
             var _this = this;
-            $$1(this.dom.container).removeClass(this.classes.hide);
-            $$1(this.dom.titleRow).removeClass(this.classes.hide);
+            $$1(this.dom.container).removeClass(this.metiers.hide);
+            $$1(this.dom.titleRow).removeClass(this.metiers.hide);
             $$1(this.dom.titleRow).remove();
             $$1(this.dom.title).appendTo(this.dom.titleRow);
             // If the clear button is permitted attach it
@@ -1848,7 +1848,7 @@
             }
             // Attach everything to the document
             $$1(this.dom.panes).appendTo(this.dom.container);
-            if ($$1('div.' + this.classes.container).length === 0) {
+            if ($$1('div.' + this.metiers.container).length === 0) {
                 $$1(this.dom.container).prependTo(this.s.dt);
             }
             return this.dom.container;
@@ -1857,8 +1857,8 @@
          * Attach the top row containing the filter count and clear all button
          */
         SearchPanes.prototype._attachExtras = function () {
-            $$1(this.dom.container).removeClass(this.classes.hide);
-            $$1(this.dom.titleRow).removeClass(this.classes.hide);
+            $$1(this.dom.container).removeClass(this.metiers.hide);
+            $$1(this.dom.titleRow).removeClass(this.metiers.hide);
             $$1(this.dom.titleRow).remove();
             $$1(this.dom.title).appendTo(this.dom.titleRow);
             // If the clear button is permitted attach it
@@ -1884,13 +1884,13 @@
             // If the message is an empty string then searchPanes.emptyPanes is undefined,
             //  therefore the pane container should be removed from the display
             if (message === null) {
-                $$1(this.dom.container).addClass(this.classes.hide);
-                $$1(this.dom.titleRow).removeClass(this.classes.hide);
+                $$1(this.dom.container).addClass(this.metiers.hide);
+                $$1(this.dom.titleRow).removeClass(this.metiers.hide);
                 return;
             }
             else {
-                $$1(this.dom.container).removeClass(this.classes.hide);
-                $$1(this.dom.titleRow).addClass(this.classes.hide);
+                $$1(this.dom.container).removeClass(this.metiers.hide);
+                $$1(this.dom.titleRow).addClass(this.metiers.hide);
             }
             // Otherwise display the message
             $$1(this.dom.emptyMessage).text(message);
@@ -2473,7 +2473,7 @@
             this.s.dt.state.save();
         };
         SearchPanes.version = '1.2.1';
-        SearchPanes.classes = {
+        SearchPanes.metiers = {
             clear: 'dtsp-clear',
             clearAll: 'dtsp-clearAll',
             container: 'dtsp-searchPanes',

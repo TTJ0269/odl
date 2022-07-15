@@ -309,7 +309,7 @@ $.extend( AutoFill.prototype, {
 						'<div>'
 					)
 					.append( $('<div class="dt-autofill-button">' )
-						.append( $('<button class="'+AutoFill.classes.btn+'">'+dt.i18n('autoFill.button', '&gt;')+'</button>')
+						.append( $('<button class="'+AutoFill.metiers.btn+'">'+dt.i18n('autoFill.button', '&gt;')+'</button>')
 							.on( 'click', function () {
 								var result = actions[ name ].execute(
 									dt, cells, $(this).closest('li')
@@ -1138,11 +1138,11 @@ AutoFill.defaults = {
 
 
 /**
- * Classes used by AutoFill that are configurable
+ * metiers used by AutoFill that are configurable
  * 
  * @namespace
  */
-AutoFill.classes = {
+AutoFill.metiers = {
 	/** @type {String} Class used by the selection button */
 	btn: 'btn'
 };

@@ -18,7 +18,7 @@
   function DiffView(mv, type) {
     this.mv = mv;
     this.type = type;
-    this.classes = type == "left"
+    this.metiers = type == "left"
       ? {chunk: "CodeMirror-merge-l-chunk",
          start: "CodeMirror-merge-l-chunk-start",
          end: "CodeMirror-merge-l-chunk-end",
@@ -48,7 +48,7 @@
       this.orig.state.diffViews = [this];
       var classLocation = options.chunkClassLocation || "background";
       if (Object.prototype.toString.call(classLocation) != "[object Array]") classLocation = [classLocation]
-      this.classes.classLocation = classLocation
+      this.metiers.classLocation = classLocation
 
       this.diff = getDiff(asString(orig), asString(options.value), this.mv.options.ignoreWhitespace);
       this.chunks = getChunks(this.diff);
@@ -91,14 +91,14 @@
       if (mode == "full") {
         if (dv.svg) clear(dv.svg);
         if (dv.copyButtons) clear(dv.copyButtons);
-        clearMarks(dv.edit, edit.marked, dv.classes);
-        clearMarks(dv.orig, orig.marked, dv.classes);
+        clearMarks(dv.edit, edit.marked, dv.metiers);
+        clearMarks(dv.orig, orig.marked, dv.metiers);
         edit.from = edit.to = orig.from = orig.to = 0;
       }
       ensureDiff(dv);
       if (dv.showDifferences) {
-        updateMarks(dv.edit, dv.diff, edit, DIFF_INSERT, dv.classes);
-        updateMarks(dv.orig, dv.diff, orig, DIFF_DELETE, dv.classes);
+        updateMarks(dv.edit, dv.diff, edit, DIFF_INSERT, dv.metiers);
+        updateMarks(dv.orig, dv.diff, orig, DIFF_DELETE, dv.metiers);
       }
 
       if (dv.mv.options.connect == "align")
@@ -217,71 +217,71 @@
 
   // Updating the marks for editor content
 
-  function removeClass(editor, line, classes) {
-    var locs = classes.classLocation
+  function removeClass(editor, line, metiers) {
+    var locs = metiers.classLocation
     for (var i = 0; i < locs.length; i++) {
-      editor.removeLineClass(line, locs[i], classes.chunk);
-      editor.removeLineClass(line, locs[i], classes.start);
-      editor.removeLineClass(line, locs[i], classes.end);
+      editor.removeLineClass(line, locs[i], metiers.chunk);
+      editor.removeLineClass(line, locs[i], metiers.start);
+      editor.removeLineClass(line, locs[i], metiers.end);
     }
   }
 
-  function clearMarks(editor, arr, classes) {
+  function clearMarks(editor, arr, metiers) {
     for (var i = 0; i < arr.length; ++i) {
       var mark = arr[i];
       if (mark instanceof CodeMirror.TextMarker)
         mark.clear();
       else if (mark.parent)
-        removeClass(editor, mark, classes);
+        removeClass(editor, mark, metiers);
     }
     arr.length = 0;
   }
 
   // FIXME maybe add a margin around viewport to prevent too many updates
-  function updateMarks(editor, diff, state, type, classes) {
+  function updateMarks(editor, diff, state, type, metiers) {
     var vp = editor.getViewport();
     editor.operation(function() {
       if (state.from == state.to || vp.from - state.to > 20 || state.from - vp.to > 20) {
-        clearMarks(editor, state.marked, classes);
-        markChanges(editor, diff, type, state.marked, vp.from, vp.to, classes);
+        clearMarks(editor, state.marked, metiers);
+        markChanges(editor, diff, type, state.marked, vp.from, vp.to, metiers);
         state.from = vp.from; state.to = vp.to;
       } else {
         if (vp.from < state.from) {
-          markChanges(editor, diff, type, state.marked, vp.from, state.from, classes);
+          markChanges(editor, diff, type, state.marked, vp.from, state.from, metiers);
           state.from = vp.from;
         }
         if (vp.to > state.to) {
-          markChanges(editor, diff, type, state.marked, state.to, vp.to, classes);
+          markChanges(editor, diff, type, state.marked, state.to, vp.to, metiers);
           state.to = vp.to;
         }
       }
     });
   }
 
-  function addClass(editor, lineNr, classes, main, start, end) {
-    var locs = classes.classLocation, line = editor.getLineHandle(lineNr);
+  function addClass(editor, lineNr, metiers, main, start, end) {
+    var locs = metiers.classLocation, line = editor.getLineHandle(lineNr);
     for (var i = 0; i < locs.length; i++) {
-      if (main) editor.addLineClass(line, locs[i], classes.chunk);
-      if (start) editor.addLineClass(line, locs[i], classes.start);
-      if (end) editor.addLineClass(line, locs[i], classes.end);
+      if (main) editor.addLineClass(line, locs[i], metiers.chunk);
+      if (start) editor.addLineClass(line, locs[i], metiers.start);
+      if (end) editor.addLineClass(line, locs[i], metiers.end);
     }
     return line;
   }
 
-  function markChanges(editor, diff, type, marks, from, to, classes) {
+  function markChanges(editor, diff, type, marks, from, to, metiers) {
     var pos = Pos(0, 0);
     var top = Pos(from, 0), bot = editor.clipPos(Pos(to - 1));
-    var cls = type == DIFF_DELETE ? classes.del : classes.insert;
+    var cls = type == DIFF_DELETE ? metiers.del : metiers.insert;
     function markChunk(start, end) {
       var bfrom = Math.max(from, start), bto = Math.min(to, end);
       for (var i = bfrom; i < bto; ++i)
-        marks.push(addClass(editor, i, classes, true, i == start, i == end - 1));
+        marks.push(addClass(editor, i, metiers, true, i == start, i == end - 1));
       // When the chunk is empty, make sure a horizontal line shows up
       if (start == end && bfrom == end && bto == end) {
         if (bfrom)
-          marks.push(addClass(editor, bfrom - 1, classes, false, false, true));
+          marks.push(addClass(editor, bfrom - 1, metiers, false, false, true));
         else
-          marks.push(addClass(editor, bfrom, classes, false, true, false));
+          marks.push(addClass(editor, bfrom, metiers, false, true, false));
       }
     }
 
@@ -499,7 +499,7 @@
       var curveBot = " C " + w/2 + " " + botLpx + " " + w/2 + " " + botRpx + " -1 " + botRpx;
       attrs(dv.svg.appendChild(document.createElementNS(svgNS, "path")),
             "d", "M -1 " + topRpx + curveTop + " L " + (w + 2) + " " + botLpx + curveBot + " z",
-            "class", dv.classes.connect);
+            "class", dv.metiers.connect);
     }
     if (dv.copyButtons) {
       var copy = dv.copyButtons.appendChild(elt("div", dv.type == "left" ? "\u21dd" : "\u21dc",

@@ -83,27 +83,27 @@
       this.prevOptions = {};
       this.$wrapper = $('<div>', {
         class: function _class() {
-          var classes = [];
-          classes.push(_this.options.state ? 'on' : 'off');
+          var metiers = [];
+          metiers.push(_this.options.state ? 'on' : 'off');
           if (_this.options.size) {
-            classes.push(_this.options.size);
+            metiers.push(_this.options.size);
           }
           if (_this.options.disabled) {
-            classes.push('disabled');
+            metiers.push('disabled');
           }
           if (_this.options.readonly) {
-            classes.push('readonly');
+            metiers.push('readonly');
           }
           if (_this.options.indeterminate) {
-            classes.push('indeterminate');
+            metiers.push('indeterminate');
           }
           if (_this.options.inverse) {
-            classes.push('inverse');
+            metiers.push('inverse');
           }
           if (_this.$element.attr('id')) {
-            classes.push('id-' + _this.$element.attr('id'));
+            metiers.push('id-' + _this.$element.attr('id'));
           }
-          return classes.map(_this._getClass.bind(_this)).concat([_this.options.baseClass], _this._getClasses(_this.options.wrapperClass)).join(' ');
+          return metiers.map(_this._getClass.bind(_this)).concat([_this.options.baseClass], _this._getmetiers(_this.options.wrapperClass)).join(' ');
         }
       });
       this.$container = $('<div>', { class: this._getClass('container') });
@@ -404,8 +404,8 @@
         if (!value) {
           value = $.fn.bootstrapSwitch.defaults.wrapperClass;
         }
-        this.$wrapper.removeClass(this._getClasses(this.options.wrapperClass).join(' '));
-        this.$wrapper.addClass(this._getClasses(value).join(' '));
+        this.$wrapper.removeClass(this._getmetiers(this.options.wrapperClass).join(' '));
+        this.$wrapper.addClass(this._getmetiers(value).join(' '));
         this.options.wrapperClass = value;
         return this.$element;
       }
@@ -728,12 +728,12 @@
         return this.options.baseClass + '-' + name;
       }
     }, {
-      key: '_getClasses',
-      value: function _getClasses(classes) {
-        if (!$.isArray(classes)) {
-          return [this._getClass(classes)];
+      key: '_getmetiers',
+      value: function _getmetiers(metiers) {
+        if (!$.isArray(metiers)) {
+          return [this._getClass(metiers)];
         }
-        return classes.map(this._getClass.bind(this));
+        return metiers.map(this._getClass.bind(this));
       }
     }]);
 

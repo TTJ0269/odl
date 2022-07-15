@@ -40,4 +40,9 @@ class MessageController extends Controller
         return view('message.erreurpage');
     }
 
+    public function send_erreur_mail()
+    {
+        return view('message.erreurpage');
+    }
+
 }

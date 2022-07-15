@@ -11,16 +11,11 @@ class FichePositionnement extends Model
 
     protected $guarded = [];
 
-    protected $attributes=['etatsup'=> 0];
+    protected $attributes=['etat'=> 0,'etatsup'=> 0];
 
 
      public function association()
     {
         return $this->belongsTo('App\Models\Association');
     }
-
-    public function observations()
-     {
-         return $this->hasMany('App\Models\Observation');
-     }
 }

@@ -332,7 +332,7 @@ $.extend( Responsive.prototype, {
 			} );
 
 		// Class logic - determine which columns are in this breakpoint based
-		// on the classes. If no class control (i.e. `auto`) then `-` is used
+		// on the metiers. If no class control (i.e. `auto`) then `-` is used
 		// to indicate this to the rest of the function
 		var display = $.map( columns, function ( col, i ) {
 			if ( dt.column(i).visible() === false ) {
@@ -879,7 +879,7 @@ $.extend( Responsive.prototype, {
 		}
 
 		// Are there any columns that actually need auto-sizing, or do they all
-		// have classes defined
+		// have metiers defined
 		if ( $.inArray( true, $.map( columns, function (c) { return c.auto; } ) ) === -1 ) {
 			return;
 		}
@@ -1340,7 +1340,7 @@ Responsive.defaults = {
 	/**
 	 * Enable / disable auto hiding calculations. It can help to increase
 	 * performance slightly if you disable this option, but all columns would
-	 * need to have breakpoint classes assigned to them
+	 * need to have breakpoint metiers assigned to them
 	 *
 	 * @type {Boolean}
 	 * @default  `true`

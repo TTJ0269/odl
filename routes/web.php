@@ -5,7 +5,7 @@ use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\IfadController;
-use App\Http\Controllers\ClasseController;
+use App\Http\Controllers\MetierController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\AssociationController;
 use App\Http\Controllers\FichePositionnementController;
@@ -55,9 +55,10 @@ Route::resource('/users', UserController::class);
 Route::get('/new-password', [MessageController::class, 'messagenewpassword'])->name('newpassword');
 Route::get('/emailerreur', [MessageController::class, 'emailerreur'])->name('emailerreur');
 Route::get('/erreur', [MessageController::class, 'pageerreur'])->name('pageerreur');
+Route::get('/send-erreur-mail', [MessageController::class, 'send_erreur_mail'])->name('sendemail');
 
 /*** route generer un mouveau mot de passe pour utilisateur ***/
-Route::post('/generationnewpassword', [UserController::class, '@GenerationNewPassword'])->name('generationnewpassword');
+Route::get('/generationnewpassword/{user}', [UserController::class, 'GenerationNewPassword'])->name('generationnewpassword');
 
 /*** route generer compte utilisateur ***/
 Route::post('/activecompte', [UserController::class, 'ActiveCompte'])->name('activecompte');
@@ -75,8 +76,8 @@ Route::resource('/taches', TacheController::class);
 /*** routes generales pour IFAD ***/
 Route::resource('/ifads', IfadController::class);
 
-/*** routes generales pour Classe ***/
-Route::resource('/classes', ClasseController::class);
+/*** routes generales pour metier ***/
+Route::resource('/metiers', MetierController::class);
 
 /*** routes generales pour Association ***/
 Route::resource('/associations', AssociationController::class);
@@ -97,19 +98,23 @@ Route::post('/profilphoto', [ProfilUserController::class, 'changephoto'])->name(
 Route::resource('/fiche_positionnements', FichePositionnementController::class);
 Route::get('/fiche_positionnements/show/{fiche_positionnement}', [FichePositionnementController::class, 'show'])->name('fiche_show');
 Route::get('/fiche_positionnements/edit/{fiche_positionnement}', [FichePositionnementController::class, 'edit'])->name('fiche_edit');
-
+Route::get('/fiches_archive_show', [FichePositionnementController::class, 'fiches_archive_show'])->name('fiches_archive_show');
+Route::get('/fiche_archive/{fiche_positionnement}', [FichePositionnementController::class, 'fiche_archive'])->name('fiche_archive');
+Route::get('/fiche_desarchive/{fiche_positionnement}', [FichePositionnementController::class, 'fiche_desarchive'])->name('fiche_desarchive');
 
 
 /*** routes generales pour Positionnement ***/
 Route::resource('/positionnements', PositionnementController::class);
 Route::get('/positionnement/create', [PositionnementController::class, 'index'])->name('positionnement_index');
 Route::post('/positionnement/create', [PositionnementController::class, 'create'])->name('positionnement_create');
-Route::get('/positionnement/recup/{user}', [PositionnementController::class, 'recup'])->name('positionnement_recup');
+Route::get('/positionnement/recup_metier/{user}', [PositionnementController::class, 'recup_metier'])->name('positionnement_recup_metier');
+//Route::get('/positionnement/recup', [PositionnementController::class, 'index'])->name('positionnement_recup_index');
+//Route::post('/positionnement/recup', [PositionnementController::class, 'recup'])->name('positionnement_recup');
 Route::get('/get_index', [PositionnementController::class, 'getUser'])->name('get_index');
 
 /*** routes generales pour Observation ***/
 Route::resource('/observations', ObservationController::class);
-Route::get('/observations/create/{fiche_positionnement}', [ObservationController::class, 'create'])->name('observation_create');
+Route::get('/observations/create/{user}', [ObservationController::class, 'create'])->name('observation_create');
 
 /*** routes statistiques ***/
 Route::get('/statistique', [StatistiqueController::class, 'index'])->name('statistique_index');
@@ -123,7 +128,7 @@ Route::post('/preference_left', [PreferenceController::class, 'left'])->name('pr
 Route::post('/preference_center', [PreferenceController::class, 'center'])->name('preference_center');
 Route::post('/preference_right', [PreferenceController::class, 'right'])->name('preference_right');
 
-/*** routes generales pour Fiche_positionnement all regroupe l'apprenant le tuteur l'entreprise l'ifad et la classe (temporaire)***/
+/*** routes generales pour Fiche_positionnement all regroupe l'apprenant le tuteur l'entreprise l'ifad et la metier (temporaire)***/
 /*Route::get('/positionnement-apprenant', [FicheLongueController::class,'index'])->name('positionnement_apprenant_index');
 Route::get('/fiche_positionnement-apprenant/create', [FicheLongueController::class, 'index'])->name('fiche_apprenant_get_create');
 Route::post('/fiche_positionnement-apprenant/create', [FicheLongueController::class, 'create'])->name('fiche_apprenant_create');
@@ -147,4 +152,4 @@ Route::get('/hoho', function () {
 
 Route::get('/pie', [ChartController::class, 'pie'])->name('chart.pie');
 
-Route::get('/first', [ChartController::class, 'first'])->name('first');
+//Route::get('/first', [ChartController::class, 'first'])->name('first');

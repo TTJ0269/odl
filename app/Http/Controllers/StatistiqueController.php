@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Profil;
 use App\Models\User;
 use App\Models\Association;
-use App\Models\Classe;
+use App\Models\metier;
 use App\Models\FichePositionnement;
 
 class StatistiqueController extends Controller
@@ -86,7 +86,7 @@ class StatistiqueController extends Controller
         ->select('users.*')->distinct('users.id')
         ->get();
 
-        /** selection des activites classes par activites **/
+        /** selection des activites metiers par activites **/
         $activites = DB::table('activites')
         ->join('taches','activites.id','=','taches.activite_id')
         ->join('positionnements','taches.id','=','positionnements.tache_id')

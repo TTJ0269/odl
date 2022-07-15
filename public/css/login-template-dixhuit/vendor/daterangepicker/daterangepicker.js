@@ -61,7 +61,7 @@
         if (this.element.hasClass('dropup'))
             this.drops = 'up';
 
-        this.buttonClasses = 'btn btn-sm';
+        this.buttonmetiers = 'btn btn-sm';
         this.applyClass = 'btn-success';
         this.cancelClass = 'btn-default';
 
@@ -225,11 +225,11 @@
         if (typeof options.showISOWeekNumbers === 'boolean')
             this.showISOWeekNumbers = options.showISOWeekNumbers;
 
-        if (typeof options.buttonClasses === 'string')
-            this.buttonClasses = options.buttonClasses;
+        if (typeof options.buttonmetiers === 'string')
+            this.buttonmetiers = options.buttonmetiers;
 
-        if (typeof options.buttonClasses === 'object')
-            this.buttonClasses = options.buttonClasses.join(' ');
+        if (typeof options.buttonmetiers === 'object')
+            this.buttonmetiers = options.buttonmetiers.join(' ');
 
         if (typeof options.showDropdowns === 'boolean')
             this.showDropdowns = options.showDropdowns;
@@ -399,8 +399,8 @@
             this.container.find('.ranges').prependTo( this.container.find('.calendar.left').parent() );
         }
 
-        //apply CSS classes and labels to buttons
-        this.container.find('.applyBtn, .cancelBtn').addClass(this.buttonClasses);
+        //apply CSS metiers and labels to buttons
+        this.container.find('.applyBtn, .cancelBtn').addClass(this.buttonmetiers);
         if (this.applyClass.length)
             this.container.find('.applyBtn').addClass(this.applyClass);
         if (this.cancelClass.length)
@@ -790,57 +790,57 @@
 
                 for (var col = 0; col < 7; col++) {
 
-                    var classes = [];
+                    var metiers = [];
 
                     //highlight today's date
                     if (calendar[row][col].isSame(new Date(), "day"))
-                        classes.push('today');
+                        metiers.push('today');
 
                     //highlight weekends
                     if (calendar[row][col].isoWeekday() > 5)
-                        classes.push('weekend');
+                        metiers.push('weekend');
 
                     //grey out the dates in other months displayed at beginning and end of this calendar
                     if (calendar[row][col].month() != calendar[1][1].month())
-                        classes.push('off');
+                        metiers.push('off');
 
                     //don't allow selection of dates before the minimum date
                     if (this.minDate && calendar[row][col].isBefore(this.minDate, 'day'))
-                        classes.push('off', 'disabled');
+                        metiers.push('off', 'disabled');
 
                     //don't allow selection of dates after the maximum date
                     if (maxDate && calendar[row][col].isAfter(maxDate, 'day'))
-                        classes.push('off', 'disabled');
+                        metiers.push('off', 'disabled');
 
                     //don't allow selection of date if a custom function decides it's invalid
                     if (this.isInvalidDate(calendar[row][col]))
-                        classes.push('off', 'disabled');
+                        metiers.push('off', 'disabled');
 
                     //highlight the currently selected start date
                     if (calendar[row][col].format('YYYY-MM-DD') == this.startDate.format('YYYY-MM-DD'))
-                        classes.push('active', 'start-date');
+                        metiers.push('active', 'start-date');
 
                     //highlight the currently selected end date
                     if (this.endDate != null && calendar[row][col].format('YYYY-MM-DD') == this.endDate.format('YYYY-MM-DD'))
-                        classes.push('active', 'end-date');
+                        metiers.push('active', 'end-date');
 
                     //highlight dates in-between the selected dates
                     if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
-                        classes.push('in-range');
+                        metiers.push('in-range');
 
-                    //apply custom classes for this date
+                    //apply custom metiers for this date
                     var isCustom = this.isCustomDate(calendar[row][col]);
                     if (isCustom !== false) {
                         if (typeof isCustom === 'string')
-                            classes.push(isCustom);
+                            metiers.push(isCustom);
                         else
-                            Array.prototype.push.apply(classes, isCustom);
+                            Array.prototype.push.apply(metiers, isCustom);
                     }
 
                     var cname = '', disabled = false;
-                    for (var i = 0; i < classes.length; i++) {
-                        cname += classes[i] + ' ';
-                        if (classes[i] == 'disabled')
+                    for (var i = 0; i < metiers.length; i++) {
+                        cname += metiers[i] + ' ';
+                        if (metiers[i] == 'disabled')
                             disabled = true;
                     }
                     if (!disabled)

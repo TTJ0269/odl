@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Classe;
+use App\Models\Metier;
 use App\Models\Ifad;
 use App\Models\User;
 use App\Models\Activite;
 use App\Models\Historique;
 
-class ClasseController extends Controller
+class MetierController extends Controller
 {
     public function __construct()
     {
@@ -22,15 +22,15 @@ class ClasseController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-     // Afficher les classes
+     // Afficher les metiers
      public function index()
      {
         $this->authorize('ad_re_su', User::class);
        try
        {
-            $classes = Classe::select('*')->get();
+            $metiers = Metier::select('*')->get();
 
-            return view('classes.index', compact('classes'));
+            return view('metiers.index', compact('metiers'));
         }
         catch(\Exception $exception)
        {
@@ -50,10 +50,10 @@ class ClasseController extends Controller
        try
        {
 
-          $class = new Classe();
+          $metier = new Metier();
           $ifads = Ifad::select('*')->get();
 
-          return view('classes.create',compact('class','ifads'));
+          return view('metiers.create',compact('metier','ifads'));
         }
         catch(\Exception $exception)
        {
@@ -73,11 +73,11 @@ class ClasseController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-          $classe = Classe::create($this->validator());
+          $metier = Metier::create($this->validator());
 
-          $this->historique(request('libelleclasse'), 'Ajout');
+          $this->historique(request('libellemetier'), 'Ajout');
 
-          return redirect('classes')->with('message', 'Classe bien ajoutée.');
+          return redirect('metiers')->with('message', 'metier bien ajoutée.');
         }
         catch(\Exception $exception)
         {
@@ -92,12 +92,12 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function show(Classe $class)
+     public function show(Metier $metier)
      {
         $this->authorize('ad_re_su', User::class);
        try
         {
-          return view('classes.show',compact('class'));
+          return view('metiers.show',compact('metier'));
         }
         catch(\Exception $exception)
        {
@@ -112,14 +112,14 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function edit(Classe $class)
+     public function edit(Metier $metier)
      {
         $this->authorize('ad_re_su', User::class);
         try
         {
           $ifads = Ifad::select('*')->get();
 
-          return view('classes.edit', compact('class','ifads'));
+          return view('metiers.edit', compact('metier','ifads'));
         }
         catch(\Exception $exception)
        {
@@ -135,18 +135,18 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function update(Classe $class)
+     public function update(Metier $metier)
      {
         $this->authorize('ad_re_su', User::class);
        try
        {
-          $classe_libelle = request('libelleclasse');
+          $metier_libelle = request('libellemetier');
 
-          $class->update($this->validator());
+          $metier->update($this->validator());
 
-          $this->historique($classe_libelle, 'Modification');
+          $this->historique($metier_libelle, 'Modification');
 
-          return redirect('classes/' . $class->id);
+          return redirect('metiers/' . $metier->id);
         }
         catch(\Exception $exception)
        {
@@ -161,21 +161,21 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function destroy(Classe $class)
+     public function destroy(Metier $metier)
      {
         $this->authorize('ad_re_su', User::class);
         try
         {
-            if(Activite::where('classe_id','=',$class->id)->doesntExist())
+            if(Activite::where('metier_id','=',$metier->id)->doesntExist())
             {
-              $class->delete();
+              $metier->delete();
 
-              $this->historique($class->libelleclasse, 'Suppression');
+              $this->historique($metier->libellemetier, 'Suppression');
 
-              return redirect('classes')->with('messagealert','Suppression éffectuée');
+              return redirect('metiers')->with('messagealert','Suppression éffectuée');
             }
 
-            return redirect('classes')->with('messagealert','Cette classe est referencée dans une autre table');
+            return redirect('metiers')->with('messagealert','Cette metier est referencée dans une autre table');
         }
           catch(\Exception $exception)
         {
@@ -187,7 +187,7 @@ class ClasseController extends Controller
      private  function validator()
      {
          return request()->validate([
-             'libelleclasse'=>'required|min:2',
+             'libellemetier'=>'required|min:2',
              'ifad_id' => 'required'
          ]);
      }
@@ -199,7 +199,7 @@ class ClasseController extends Controller
         /** historiques des actions sur le systeme **/
         $historique = Historique::create([
         'user_action'=> $auth_user,
-        'table'=> 'Classe',
+        'table'=> 'metier',
         'attribute' => $attribute,
         'action'=> $action
         ]);

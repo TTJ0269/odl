@@ -72,11 +72,14 @@
                 <div class="col-sm-12">
                     <div class="card-body">
                             @can('admin','App\Models\User')
-                            <form action="{{ route('fiche_positionnements.destroy', ['fiche_positionnement' => $fiche_positionnement->id]) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('fiche_positionnements.destroy', ['fiche_positionnement' => $fiche_positionnement->id]) }}" method="POST" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer?')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Supprimer</button>
                             </form>
+                            @endcan
+                            @can('ad_re_su','App\Models\User')
+                            <a href="{{ route('fiche_archive', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-success float-right"><i class="fas fa-folder-open"></i> Archiver</a>
                             @endcan
                             <table id="#" class="table table-bordered table-striped">
                                   <hr>
@@ -116,14 +119,6 @@
                                     @endforeach
                                     </tbody>
                             </table>
-                            <div class="text-center">
-                                @can('admin','App\Models\User')
-                                <h4><a href="{{ route('observation_create', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-warning my-2"> <i class="fas fa-comments"></i><span> Faire une observation </span> </a></h4>
-                                @endcan
-                                @can('charge_suivi','App\Models\User')
-                                <h4><a href="{{ route('observation_create', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-warning my-2"> <i class="fas fa-comments"></i><span> Faire une observation </span> </a></h4>
-                                @endcan
-                            </div>
                     </div>
                 </div>
             </div>

@@ -12533,10 +12533,10 @@ iconv.enableStreamingAPI = function enableStreamingAPI(stream_module) {
     if (iconv.supportsStreams)
         return;
 
-    // Dependency-inject stream module to create IconvLite stream classes.
+    // Dependency-inject stream module to create IconvLite stream metiers.
     var streams = __webpack_require__(411)(stream_module);
 
-    // Not public API yet, but expose the stream classes.
+    // Not public API yet, but expose the stream metiers.
     iconv.IconvLiteEncoderStream = streams.IconvLiteEncoderStream;
     iconv.IconvLiteDecoderStream = streams.IconvLiteDecoderStream;
 
@@ -15889,7 +15889,7 @@ function maybeReadMore_(stream, state) {
   state.readingMore = false;
 }
 
-// abstract method.  to be overridden in specific implementation classes.
+// abstract method.  to be overridden in specific implementation metiers.
 // call cb(er, data) where data is <= n in length.
 // for virtual (non-string, non-buffer) streams, "length" is somewhat
 // arbitrary, and perhaps not very meaningful.
@@ -16505,7 +16505,7 @@ module.exports = {
 // Here's how this works:
 //
 // The Transform stream has all the aspects of the readable and writable
-// stream classes.  When you write(chunk), that calls _write(chunk,cb)
+// stream metiers.  When you write(chunk), that calls _write(chunk,cb)
 // internally, and returns false if there's a lot of pending writes
 // buffered up.  When you call read(), that calls _read(n) until
 // there's enough pending readable data buffered up.
@@ -16621,7 +16621,7 @@ Transform.prototype.push = function (chunk, encoding) {
 };
 
 // This is the part where you do stuff!
-// override this function in implementation classes.
+// override this function in implementation metiers.
 // 'chunk' is an input chunk.
 //
 // Call `push(newChunk)` to pass along transformed output
@@ -21132,7 +21132,7 @@ var LineBreaker = /*#__PURE__*/function () {
       if (this.curClass === BK || this.curClass === CR && this.nextClass !== LF) {
         this.curClass = mapFirst(mapClass(this.nextClass));
         return new Break(this.lastPos, true);
-      } // handle classes not handled by the pair table
+      } // handle metiers not handled by the pair table
 
 
       var cur = void 0;
@@ -23754,7 +23754,7 @@ var PDFAbstractReference = /*#__PURE__*/function () {
   _createClass(PDFAbstractReference, [{
     key: "toString",
     value: function toString() {
-      throw new Error('Must be implemented by subclasses');
+      throw new Error('Must be implemented by submetiers');
     }
   }]);
 
@@ -26715,12 +26715,12 @@ var PDFFont = /*#__PURE__*/function () {
   _createClass(PDFFont, [{
     key: "encode",
     value: function encode() {
-      throw new Error('Must be implemented by subclasses');
+      throw new Error('Must be implemented by submetiers');
     }
   }, {
     key: "widthOfString",
     value: function widthOfString() {
-      throw new Error('Must be implemented by subclasses');
+      throw new Error('Must be implemented by submetiers');
     }
   }, {
     key: "ref",
@@ -26740,7 +26740,7 @@ var PDFFont = /*#__PURE__*/function () {
   }, {
     key: "embed",
     value: function embed() {
-      throw new Error('Must be implemented by subclasses');
+      throw new Error('Must be implemented by submetiers');
     }
   }, {
     key: "lineHeight",
@@ -41904,7 +41904,7 @@ var RuleSet = new r.Array(new r.Pointer(r.uint16, Rule), r.uint16);
 var ClassRule = new r.Struct({
   glyphCount: r.uint16,
   lookupCount: r.uint16,
-  classes: new r.Array(r.uint16, function (t) {
+  metiers: new r.Array(r.uint16, function (t) {
     return t.glyphCount - 1;
   }),
   lookupRecords: new r.Array(LookupRecord, 'lookupCount')
@@ -43619,11 +43619,11 @@ function StateTable() {
 
   var Entry = new r.Struct(entry);
   var StateArray = new UnboundedArray(new r.Array(r.uint16, function (t) {
-    return t.nClasses;
+    return t.nmetiers;
   }));
 
   var StateHeader = new r.Struct({
-    nClasses: r.uint32,
+    nmetiers: r.uint32,
     classTable: new r.Pointer(r.uint32, new LookupTable(lookupType)),
     stateArray: new r.Pointer(r.uint32, StateArray),
     entryTable: new r.Pointer(r.uint32, new UnboundedArray(Entry))
@@ -43650,18 +43650,18 @@ function StateTable1() {
     newStateOffset: r.uint16,
     // convert offset to stateArray index
     newState: function newState(t) {
-      return (t.newStateOffset - (t.parent.stateArray.base - t.parent._startOffset)) / t.parent.nClasses;
+      return (t.newStateOffset - (t.parent.stateArray.base - t.parent._startOffset)) / t.parent.nmetiers;
     },
     flags: r.uint16
   }, entryData);
 
   var Entry = new r.Struct(entry);
   var StateArray = new UnboundedArray(new r.Array(r.uint8, function (t) {
-    return t.nClasses;
+    return t.nmetiers;
   }));
 
   var StateHeader1 = new r.Struct({
-    nClasses: r.uint16,
+    nmetiers: r.uint16,
     classTable: new r.Pointer(r.uint16, ClassLookupTable),
     stateArray: new r.Pointer(r.uint16, StateArray),
     entryTable: new r.Pointer(r.uint16, new UnboundedArray(Entry))
@@ -46249,14 +46249,14 @@ var AATStateMachine = function () {
     visited.add(state);
 
     var _stateTable = this.stateTable,
-        nClasses = _stateTable.nClasses,
+        nmetiers = _stateTable.nmetiers,
         stateArray = _stateTable.stateArray,
         entryTable = _stateTable.entryTable;
 
     var row = stateArray.getItem(state);
 
-    // Skip predefined classes
-    for (var classCode = 4; classCode < nClasses; classCode++) {
+    // Skip predefined metiers
+    for (var classCode = 4; classCode < nmetiers; classCode++) {
       var entryIndex = row[classCode];
       var entry = entryTable.getItem(entryIndex);
 
@@ -47158,7 +47158,7 @@ var DefaultShaper = (_temp = _class$4 = function () {
   };
 
   DefaultShaper.planFeatures = function planFeatures(plan) {
-    // Do nothing by default. Let subclasses override this.
+    // Do nothing by default. Let submetiers override this.
   };
 
   DefaultShaper.planPostprocessing = function planPostprocessing(plan, userFeatures) {
@@ -47202,7 +47202,7 @@ var DefaultShaper = (_temp = _class$4 = function () {
 var trie = new UnicodeTrie(Buffer("AAHwAAAAAAAAADgAAf0BAv7tmi1MxDAUx7vtvjhAgcDgkEgEAnmXEBIMCYaEcygEiqBQ4FAkCE4ikUgMiiBJSAgSiUQSDMn9L9eSl6bddddug9t7yS/trevre+3r27pcNxZiG+yCfdCVv/9LeQxOwRm4AJegD27ALbgD9+ABPJF+z+BN/h7yDj5k/VOWX6SdmU5+wLWknggxDxaS8u0qiiX4uiz9XamQ3wzDMAzDMAzDMAzDVI/h959V/v7BMAzDMAzDMLlyNTNiMSdewVxbiA44B4/guz1qW58VYlMI0WsJ0W+N6kXw0spvPtdwhtkwnGM6uLaV4Xyzg3v3PM9DPfQ/sOg4xPWjipy31P8LTqbU304c/cLCUmWJLNB2Uz2U1KTeRKNmKHVMfbJC+/0loTZRH/W5cvEvBJPMbREkWt3FD1NcqXZBSpuE2Ad0PBehPtNrPtIEdYP+hiRt/V1jIiE69X4NT/uVZI3PUHE9bm5M7ePGdZWy951v7Nn6j8v1WWKP3mt6ttnsigx6VN7Vc0VomSSGqW2mGNP1muZPl7LfjNUaKNFtDGVf2fvE9O7VlBS5j333c5p/eeoOqcs1R/hIqDWLJ7TTlksirVT1SI7l8k4Yp+g3jafGcrU1RM6l9th80XOpnlN97bDNY4i4s61B0Si/ipa0uHMl6zqEjlFfCZm/TM8KmzQDjmuTAQ==","base64"));
 var FEATURES = ['isol', 'fina', 'fin2', 'fin3', 'medi', 'med2', 'init'];
 
-var ShapingClasses = {
+var Shapingmetiers = {
   Non_Joining: 0,
   Left_Joining: 1,
   Right_Joining: 2,
@@ -47287,7 +47287,7 @@ var ArabicShaper = function (_DefaultShaper) {
           prevAction = void 0;
       var glyph = glyphs[i];
       var type = getShapingClass(glyph.codePoints[0]);
-      if (type === ShapingClasses.Transparent) {
+      if (type === Shapingmetiers.Transparent) {
         actions[i] = NONE;
         continue;
       }
@@ -47327,10 +47327,10 @@ function getShapingClass(codePoint) {
 
   var category = unicode.getCategory(codePoint);
   if (category === 'Mn' || category === 'Me' || category === 'Cf') {
-    return ShapingClasses.Transparent;
+    return Shapingmetiers.Transparent;
   }
 
-  return ShapingClasses.Non_Joining;
+  return Shapingmetiers.Non_Joining;
 }
 
 var GlyphIterator = function () {
@@ -47752,7 +47752,7 @@ var OTProcessor = function () {
   };
 
   OTProcessor.prototype.applyLookup = function applyLookup(lookup, table) {
-    throw new Error("applyLookup must be implemented by subclasses");
+    throw new Error("applyLookup must be implemented by submetiers");
   };
 
   OTProcessor.prototype.applyLookupList = function applyLookupList(lookupRecords) {
@@ -47990,7 +47990,7 @@ var OTProcessor = function () {
 
           var _rule = _ref16;
 
-          if (this.classSequenceMatches(1, _rule.classes, table.classDef)) {
+          if (this.classSequenceMatches(1, _rule.metiers, table.classDef)) {
             return this.applyLookupList(_rule.lookupRecords);
           }
         }
@@ -51346,7 +51346,7 @@ function _applyDecoratedDescriptor$4(target, property, decorators, descriptor, c
  * the actual vector path the glyph represents, and methods for rendering the glyph to a graphics context.
  *
  * You do not create glyph objects directly. They are created by various methods on the font object.
- * There are several subclasses of the base Glyph class internally that may be returned depending
+ * There are several submetiers of the base Glyph class internally that may be returned depending
  * on the font format, but they all inherit from this class.
  */
 var Glyph = (_class$8 = function () {
@@ -51546,7 +51546,7 @@ var Glyph = (_class$8 = function () {
     key: 'path',
     get: function get() {
       // Cache the path so we only decode it once
-      // Decoding is actually performed by subclasses
+      // Decoding is actually performed by submetiers
       return this._getPath();
     }
   }, {
@@ -60964,12 +60964,12 @@ var _base64Js = _interopRequireDefault(__webpack_require__(510));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var categories = ["Cc", "Zs", "Po", "Sc", "Ps", "Pe", "Sm", "Pd", "Nd", "Lu", "Sk", "Pc", "Ll", "So", "Lo", "Pi", "Cf", "No", "Pf", "Lt", "Lm", "Mn", "Me", "Mc", "Nl", "Zl", "Zp", "Cs", "Co"];
-var combiningClasses = ["Not_Reordered", "Above", "Above_Right", "Below", "Attached_Above_Right", "Attached_Below", "Overlay", "Iota_Subscript", "Double_Below", "Double_Above", "Below_Right", "Above_Left", "CCC10", "CCC11", "CCC12", "CCC13", "CCC14", "CCC15", "CCC16", "CCC17", "CCC18", "CCC19", "CCC20", "CCC21", "CCC22", "CCC23", "CCC24", "CCC25", "CCC30", "CCC31", "CCC32", "CCC27", "CCC28", "CCC29", "CCC33", "CCC34", "CCC35", "CCC36", "Nukta", "Virama", "CCC84", "CCC91", "CCC103", "CCC107", "CCC118", "CCC122", "CCC129", "CCC130", "CCC132", "Attached_Above", "Below_Left", "Left", "Kana_Voicing", "CCC26", "Right"];
+var combiningmetiers = ["Not_Reordered", "Above", "Above_Right", "Below", "Attached_Above_Right", "Attached_Below", "Overlay", "Iota_Subscript", "Double_Below", "Double_Above", "Below_Right", "Above_Left", "CCC10", "CCC11", "CCC12", "CCC13", "CCC14", "CCC15", "CCC16", "CCC17", "CCC18", "CCC19", "CCC20", "CCC21", "CCC22", "CCC23", "CCC24", "CCC25", "CCC30", "CCC31", "CCC32", "CCC27", "CCC28", "CCC29", "CCC33", "CCC34", "CCC35", "CCC36", "Nukta", "Virama", "CCC84", "CCC91", "CCC103", "CCC107", "CCC118", "CCC122", "CCC129", "CCC130", "CCC132", "Attached_Above", "Below_Left", "Left", "Kana_Voicing", "CCC26", "Right"];
 var scripts = ["Common", "Latin", "Bopomofo", "Inherited", "Greek", "Coptic", "Cyrillic", "Armenian", "Hebrew", "Arabic", "Syriac", "Thaana", "Nko", "Samaritan", "Mandaic", "Devanagari", "Bengali", "Gurmukhi", "Gujarati", "Oriya", "Tamil", "Telugu", "Kannada", "Malayalam", "Sinhala", "Thai", "Lao", "Tibetan", "Myanmar", "Georgian", "Hangul", "Ethiopic", "Cherokee", "Canadian_Aboriginal", "Ogham", "Runic", "Tagalog", "Hanunoo", "Buhid", "Tagbanwa", "Khmer", "Mongolian", "Limbu", "Tai_Le", "New_Tai_Lue", "Buginese", "Tai_Tham", "Balinese", "Sundanese", "Batak", "Lepcha", "Ol_Chiki", "Braille", "Glagolitic", "Tifinagh", "Han", "Hiragana", "Katakana", "Yi", "Lisu", "Vai", "Bamum", "Syloti_Nagri", "Phags_Pa", "Saurashtra", "Kayah_Li", "Rejang", "Javanese", "Cham", "Tai_Viet", "Meetei_Mayek", "null", "Linear_B", "Lycian", "Carian", "Old_Italic", "Gothic", "Old_Permic", "Ugaritic", "Old_Persian", "Deseret", "Shavian", "Osmanya", "Osage", "Elbasan", "Caucasian_Albanian", "Linear_A", "Cypriot", "Imperial_Aramaic", "Palmyrene", "Nabataean", "Hatran", "Phoenician", "Lydian", "Meroitic_Hieroglyphs", "Meroitic_Cursive", "Kharoshthi", "Old_South_Arabian", "Old_North_Arabian", "Manichaean", "Avestan", "Inscriptional_Parthian", "Inscriptional_Pahlavi", "Psalter_Pahlavi", "Old_Turkic", "Old_Hungarian", "Hanifi_Rohingya", "Old_Sogdian", "Sogdian", "Elymaic", "Brahmi", "Kaithi", "Sora_Sompeng", "Chakma", "Mahajani", "Sharada", "Khojki", "Multani", "Khudawadi", "Grantha", "Newa", "Tirhuta", "Siddham", "Modi", "Takri", "Ahom", "Dogra", "Warang_Citi", "Nandinagari", "Zanabazar_Square", "Soyombo", "Pau_Cin_Hau", "Bhaiksuki", "Marchen", "Masaram_Gondi", "Gunjala_Gondi", "Makasar", "Cuneiform", "Egyptian_Hieroglyphs", "Anatolian_Hieroglyphs", "Mro", "Bassa_Vah", "Pahawh_Hmong", "Medefaidrin", "Miao", "Tangut", "Nushu", "Duployan", "SignWriting", "Nyiakeng_Puachue_Hmong", "Wancho", "Mende_Kikakui", "Adlam"];
 var eaw = ["N", "Na", "A", "W", "H", "F"];
 var data = {
   categories: categories,
-  combiningClasses: combiningClasses,
+  combiningmetiers: combiningmetiers,
   scripts: scripts,
   eaw: eaw
 };
@@ -60989,7 +60989,7 @@ var bits = function bits(n) {
 var buildUnicodeProperties = function buildUnicodeProperties(data, trie) {
   // compute the number of bits stored for each field
   var CATEGORY_BITS = bits(data.categories.length - 1);
-  var COMBINING_BITS = bits(data.combiningClasses.length - 1);
+  var COMBINING_BITS = bits(data.combiningmetiers.length - 1);
   var SCRIPT_BITS = bits(data.scripts.length - 1);
   var EAW_BITS = bits(data.eaw.length - 1);
   var NUMBER_BITS = 10; // compute shift and mask values for each field
@@ -61011,7 +61011,7 @@ var buildUnicodeProperties = function buildUnicodeProperties(data, trie) {
 
   var getCombiningClass = function getCombiningClass(codePoint) {
     var val = trie.get(codePoint);
-    return data.combiningClasses[val >> COMBINING_SHIFT & COMBINING_MASK];
+    return data.combiningmetiers[val >> COMBINING_SHIFT & COMBINING_MASK];
   };
 
   var getScript = function getScript(codePoint) {
@@ -64548,7 +64548,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 "use strict";
 
 
-// The following break classes are handled by the pair table
+// The following break metiers are handled by the pair table
 exports.OP = 0; // Opening punctuation
 
 exports.CL = 1; // Closing punctuation
@@ -64606,7 +64606,7 @@ exports.JV = 26; // Hangul V Jamo
 exports.JT = 27; // Hangul T Jamo
 
 exports.RI = 28; // Regional Indicator
-// The following break classes are not handled by the pair table
+// The following break metiers are not handled by the pair table
 
 exports.AI = 29; // Ambiguous (Alphabetic or Ideograph)
 
@@ -69729,7 +69729,7 @@ else
     return Stream.prototype.on.call(me, ev, handler)
   }
 
-  // this really needs to be replaced with character classes.
+  // this really needs to be replaced with character metiers.
   // XML allows all manner of ridiculous numbers and digits.
   var CDATA = '[CDATA['
   var DOCTYPE = 'DOCTYPE'
@@ -72640,7 +72640,7 @@ var SVGtoPDF = function SVGtoPDF(doc, svg, x, y, options) {
   function parseSelector(v) {
     var parts = v.split(/(?=[.#])/g),
         ids = [],
-        classes = [],
+        metiers = [],
         tags = [],
         temp;
 
@@ -72648,7 +72648,7 @@ var SVGtoPDF = function SVGtoPDF(doc, svg, x, y, options) {
       if (temp = parts[i].match(/^[#]([_A-Za-z0-9-]+)$/)) {
         ids.push(temp[1]);
       } else if (temp = parts[i].match(/^[.]([_A-Za-z0-9-]+)$/)) {
-        classes.push(temp[1]);
+        metiers.push(temp[1]);
       } else if (temp = parts[i].match(/^([_A-Za-z0-9-]+)$/)) {
         tags.push(temp[1]);
       } else if (parts[i] !== '*') {
@@ -72659,8 +72659,8 @@ var SVGtoPDF = function SVGtoPDF(doc, svg, x, y, options) {
     return {
       tags: tags,
       ids: ids,
-      classes: classes,
-      specificity: ids.length * 10000 + classes.length * 100 + tags.length
+      metiers: metiers,
+      specificity: ids.length * 10000 + metiers.length * 100 + tags.length
     };
   }
 
@@ -72705,8 +72705,8 @@ var SVGtoPDF = function SVGtoPDF(doc, svg, x, y, options) {
       }
     }
 
-    for (var _i3 = 0; _i3 < selector.classes.length; _i3++) {
-      if (elem.classList.indexOf(selector.classes[_i3]) === -1) {
+    for (var _i3 = 0; _i3 < selector.metiers.length; _i3++) {
+      if (elem.classList.indexOf(selector.metiers[_i3]) === -1) {
         return false;
       }
     }

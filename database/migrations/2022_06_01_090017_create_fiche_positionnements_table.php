@@ -23,9 +23,10 @@ class CreateFichePositionnementsTable extends Migration
             $table->string('nom_tuteur')->nullable();
             $table->string('prenom_tuteur')->nullable();
             $table->string('tel_tuteur')->nullable();
-            $table->string('classe_apprenant')->nullable();
+            $table->string('metier_apprenant')->nullable();
             $table->BigInteger('responsable_suivi_id');
             $table->Date('dateenregistrement')->default(now());
+            $table->integer('etat')->default(0);
             $table->integer('etatsup');
             $table->timestamps();
 

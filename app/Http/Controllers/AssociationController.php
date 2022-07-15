@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Association;
 use App\Models\User;
 use App\Models\Ifad;
-use App\Models\Classe;
+use App\Models\Metier;
 
 class AssociationController extends Controller
 {
@@ -44,10 +44,10 @@ class AssociationController extends Controller
         try
         {
             $ifads = DB::table('ifads')
-            ->join('classes','ifads.id','=','classes.ifad_id')
-            ->select('classes.id','classes.libelleclasse')
+            ->join('metiers','ifads.id','=','metiers.ifad_id')
+            ->select('metiers.id','metiers.libellemetier')
             ->where('ifads.id', $request->ifad_id)
-            ->where('classes.libelleclasse','not like',"%Aucune%")
+            ->where('metiers.libellemetier','not like',"%Aucune%")
             ->orderBy('ifads.id')
             ->get();
 
@@ -84,7 +84,7 @@ class AssociationController extends Controller
          ->select('users.*','profils.libelleprofil')
          ->get();
 
-         //$classes = Classe::select('*')->get();
+         //$metiers = metier::select('*')->get();
 
          return view('associations.create',compact('association','users','ifads'));
 
@@ -109,8 +109,8 @@ class AssociationController extends Controller
 
        try
        {
-           /** ici il peut arriver qu'un utilisateur ne soit pas dans aucune classe
-            * pour cela aucune_le libelle de l'IFAD ont creer prealablement comme classe **/
+           /** ici il peut arriver qu'un utilisateur ne soit pas dans aucune metier
+            * pour cela aucune_le libelle de l'IFAD ont creer prealablement comme metier **/
              $ifad_id = request('ifad_id');
             if($ifad_id == null)
              {

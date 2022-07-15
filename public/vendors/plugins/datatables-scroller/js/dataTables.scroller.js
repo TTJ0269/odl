@@ -462,7 +462,7 @@ $.extend( Scroller.prototype, {
 		this.dom.force.style.left = "0px";
 		this.dom.force.style.width = "1px";
 
-		this.dom.scroller = $('div.'+this.s.dt.oClasses.sScrollBody, this.s.dt.nTableWrapper)[0];
+		this.dom.scroller = $('div.'+this.s.dt.ometiers.sScrollBody, this.s.dt.nTableWrapper)[0];
 		this.dom.scroller.appendChild( this.dom.force );
 		this.dom.scroller.style.position = "relative";
 
@@ -609,9 +609,9 @@ $.extend( Scroller.prototype, {
 		var nTable = origTable.cloneNode( false );
 		var tbody = $('<tbody/>').appendTo( nTable );
 		var container = $(
-			'<div class="'+dt.oClasses.sWrapper+' DTS">'+
-				'<div class="'+dt.oClasses.sScrollWrapper+'">'+
-					'<div class="'+dt.oClasses.sScrollBody+'"></div>'+
+			'<div class="'+dt.ometiers.sWrapper+' DTS">'+
+				'<div class="'+dt.ometiers.sScrollWrapper+'">'+
+					'<div class="'+dt.ometiers.sScrollBody+'"></div>'+
 				'</div>'+
 			'</div>'
 		);
@@ -631,7 +631,7 @@ $.extend( Scroller.prototype, {
             }
 		}
 	
-		$('div.'+dt.oClasses.sScrollBody, container).append( nTable );
+		$('div.'+dt.ometiers.sScrollBody, container).append( nTable );
 
 		// If initialised using `dom`, use the holding element as the insert point
 		var insertEl = this.s.dt.nHolding || origTable.parentNode;
@@ -1016,7 +1016,7 @@ $.extend( Scroller.prototype, {
 				}
 			}
 			else if ( iTopRow % 2 !== 0 ) {
-				// For the row-striping classes (odd/even) we want only to start
+				// For the row-striping metiers (odd/even) we want only to start
 				// on evens otherwise the stripes will change between draws and
 				// look rubbish
 				iTopRow++;

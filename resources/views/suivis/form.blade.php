@@ -61,8 +61,8 @@
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                   </div>
-                    <select class="custom-select select2bs4 @error('user_id') is-invalid @enderror" name="user_id">
-                        <option selected disabled>Sélectionner un(e) apprenant(e)</option>
+                    <select class="custom-select select2bs4 @error('user_id') is-invalid @enderror" name="user_id[]" multiple>
+                        <option disabled></option>
                         @foreach ($apprenants as $apprenant)
                         <option value="{{ $apprenant->id }}"> {{ $apprenant->nomuser }} {{ $apprenant->prenomuser }} </option>
                         @endforeach

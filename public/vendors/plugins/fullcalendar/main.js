@@ -4770,7 +4770,7 @@ var FullCalendar = (function (exports) {
         return PositionCache;
     }());
 
-    /* eslint max-classes-per-file: "off" */
+    /* eslint max-metiers-per-file: "off" */
     /*
     An object for getting/setting scroll-related information for an element.
     Internally, this is done very differently for window versus DOM element,
@@ -4877,17 +4877,17 @@ var FullCalendar = (function (exports) {
             }
         }
         Theme.prototype.setIconOverride = function (iconOverrideHash) {
-            var iconClassesCopy;
+            var iconmetiersCopy;
             var buttonName;
             if (typeof iconOverrideHash === 'object' && iconOverrideHash) { // non-null object
-                iconClassesCopy = __assign({}, this.iconClasses);
+                iconmetiersCopy = __assign({}, this.iconmetiers);
                 for (buttonName in iconOverrideHash) {
-                    iconClassesCopy[buttonName] = this.applyIconOverridePrefix(iconOverrideHash[buttonName]);
+                    iconmetiersCopy[buttonName] = this.applyIconOverridePrefix(iconOverrideHash[buttonName]);
                 }
-                this.iconClasses = iconClassesCopy;
+                this.iconmetiers = iconmetiersCopy;
             }
             else if (iconOverrideHash === false) {
-                this.iconClasses = {};
+                this.iconmetiers = {};
             }
         };
         Theme.prototype.applyIconOverridePrefix = function (className) {
@@ -4898,15 +4898,15 @@ var FullCalendar = (function (exports) {
             return className;
         };
         Theme.prototype.getClass = function (key) {
-            return this.classes[key] || '';
+            return this.metiers[key] || '';
         };
         Theme.prototype.getIconClass = function (buttonName, isRtl) {
             var className;
-            if (isRtl && this.rtlIconClasses) {
-                className = this.rtlIconClasses[buttonName] || this.iconClasses[buttonName];
+            if (isRtl && this.rtlIconmetiers) {
+                className = this.rtlIconmetiers[buttonName] || this.iconmetiers[buttonName];
             }
             else {
-                className = this.iconClasses[buttonName];
+                className = this.iconmetiers[buttonName];
             }
             if (className) {
                 return this.baseIconClass + " " + className;
@@ -4925,8 +4925,8 @@ var FullCalendar = (function (exports) {
         };
         return Theme;
     }());
-    Theme.prototype.classes = {};
-    Theme.prototype.iconClasses = {};
+    Theme.prototype.metiers = {};
+    Theme.prototype.iconmetiers = {};
     Theme.prototype.baseIconClass = '';
     Theme.prototype.iconOverridePrefix = '';
 
@@ -5009,7 +5009,7 @@ var FullCalendar = (function (exports) {
         };
     }
 
-    /* eslint max-classes-per-file: off */
+    /* eslint max-metiers-per-file: off */
     var PureComponent = /** @class */ (function (_super) {
         __extends(PureComponent, _super);
         function PureComponent() {
@@ -5430,7 +5430,7 @@ var FullCalendar = (function (exports) {
             eventDropTransformers: input.eventDropTransformers || [],
             componentInteractions: input.componentInteractions || [],
             calendarInteractions: input.calendarInteractions || [],
-            themeClasses: input.themeClasses || {},
+            thememetiers: input.thememetiers || {},
             eventSourceDefs: input.eventSourceDefs || [],
             cmdFormatter: input.cmdFormatter,
             recurringTypes: input.recurringTypes || [],
@@ -5469,7 +5469,7 @@ var FullCalendar = (function (exports) {
             eventDropTransformers: [],
             componentInteractions: [],
             calendarInteractions: [],
-            themeClasses: {},
+            thememetiers: {},
             eventSourceDefs: [],
             cmdFormatter: null,
             recurringTypes: [],
@@ -5535,7 +5535,7 @@ var FullCalendar = (function (exports) {
             eventDropTransformers: hooks0.eventDropTransformers.concat(hooks1.eventDropTransformers),
             calendarInteractions: hooks0.calendarInteractions.concat(hooks1.calendarInteractions),
             componentInteractions: hooks0.componentInteractions.concat(hooks1.componentInteractions),
-            themeClasses: __assign(__assign({}, hooks0.themeClasses), hooks1.themeClasses),
+            thememetiers: __assign(__assign({}, hooks0.thememetiers), hooks1.thememetiers),
             eventSourceDefs: hooks0.eventSourceDefs.concat(hooks1.eventSourceDefs),
             cmdFormatter: hooks1.cmdFormatter || hooks0.cmdFormatter,
             recurringTypes: hooks0.recurringTypes.concat(hooks1.recurringTypes),
@@ -5558,7 +5558,7 @@ var FullCalendar = (function (exports) {
         }
         return StandardTheme;
     }(Theme));
-    StandardTheme.prototype.classes = {
+    StandardTheme.prototype.metiers = {
         root: 'fc-theme-standard',
         tableCellShaded: 'fc-cell-shaded',
         buttonGroup: 'fc-button-group',
@@ -5566,14 +5566,14 @@ var FullCalendar = (function (exports) {
         buttonActive: 'fc-button-active',
     };
     StandardTheme.prototype.baseIconClass = 'fc-icon';
-    StandardTheme.prototype.iconClasses = {
+    StandardTheme.prototype.iconmetiers = {
         close: 'fc-icon-x',
         prev: 'fc-icon-chevron-left',
         next: 'fc-icon-chevron-right',
         prevYear: 'fc-icon-chevrons-left',
         nextYear: 'fc-icon-chevrons-right',
     };
-    StandardTheme.prototype.rtlIconClasses = {
+    StandardTheme.prototype.rtlIconmetiers = {
         prev: 'fc-icon-chevron-right',
         next: 'fc-icon-chevron-left',
         prevYear: 'fc-icon-chevrons-right',
@@ -5632,7 +5632,7 @@ var FullCalendar = (function (exports) {
         };
     }
 
-    /* eslint max-classes-per-file: off */
+    /* eslint max-metiers-per-file: off */
     // NOTE: in JSX, you should always use this class with <HookProps> arg. otherwise, will default to any???
     var RenderHook = /** @class */ (function (_super) {
         __extends(RenderHook, _super);
@@ -7359,7 +7359,7 @@ var FullCalendar = (function (exports) {
         });
     }
     function buildTheme(options, pluginHooks) {
-        var ThemeClass = pluginHooks.themeClasses[options.themeSystem] || StandardTheme;
+        var ThemeClass = pluginHooks.thememetiers[options.themeSystem] || StandardTheme;
         return new ThemeClass(options);
     }
     function buildDateProfileGenerator(props) {
@@ -7503,7 +7503,7 @@ var FullCalendar = (function (exports) {
     - a "mirror" that moves with the pointer
     - a minimum number of pixels or other criteria for a true drag to begin
 
-    subclasses must emit:
+    submetiers must emit:
     - pointerdown
     - dragstart
     - dragmove
@@ -7577,14 +7577,14 @@ var FullCalendar = (function (exports) {
                 }
                 else {
                     var ariaAttrs = buttonIcon ? { 'aria-label': buttonName } : {};
-                    var buttonClasses = ["fc-" + buttonName + "-button", theme.getClass('button')];
+                    var buttonmetiers = ["fc-" + buttonName + "-button", theme.getClass('button')];
                     if (buttonName === props.activeButton) {
-                        buttonClasses.push(theme.getClass('buttonActive'));
+                        buttonmetiers.push(theme.getClass('buttonActive'));
                     }
                     var isDisabled = (!props.isTodayEnabled && buttonName === 'today') ||
                         (!props.isPrevEnabled && buttonName === 'prev') ||
                         (!props.isNextEnabled && buttonName === 'next');
-                    children.push(createElement("button", __assign({ disabled: isDisabled, className: buttonClasses.join(' '), onClick: buttonClick, type: "button" }, ariaAttrs), buttonText || (buttonIcon ? createElement("span", { className: buttonIcon }) : '')));
+                    children.push(createElement("button", __assign({ disabled: isDisabled, className: buttonmetiers.join(' '), onClick: buttonClick, type: "button" }, ariaAttrs), buttonText || (buttonIcon ? createElement("span", { className: buttonIcon }) : '')));
                 }
             }
             if (children.length > 1) {
@@ -7803,8 +7803,8 @@ var FullCalendar = (function (exports) {
                     EventClicking,
                     EventHovering,
                 ];
-                var interactionClasses = DEFAULT_INTERACTIONS.concat(_this.props.pluginHooks.componentInteractions);
-                var interactions = interactionClasses.map(function (TheInteractionClass) { return new TheInteractionClass(settings); });
+                var interactionmetiers = DEFAULT_INTERACTIONS.concat(_this.props.pluginHooks.componentInteractions);
+                var interactions = interactionmetiers.map(function (TheInteractionClass) { return new TheInteractionClass(settings); });
                 _this.interactionsStore[component.uid] = interactions;
                 interactionSettingsStore[component.uid] = settings;
             };
@@ -7954,8 +7954,8 @@ var FullCalendar = (function (exports) {
     }
     // Plugin
     // -----------------------------------------------------------------------------------------------------------------
-    function buildViewPropTransformers(theClasses) {
-        return theClasses.map(function (TheClass) { return new TheClass(); });
+    function buildViewPropTransformers(themetiers) {
+        return themetiers.map(function (TheClass) { return new TheClass(); });
     }
 
     var CalendarRoot = /** @class */ (function (_super) {
@@ -12534,7 +12534,7 @@ var FullCalendar = (function (exports) {
         __extends(TimeColsView, _super);
         function TimeColsView() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.allDaySplitter = new AllDaySplitter(); // for use by subclasses
+            _this.allDaySplitter = new AllDaySplitter(); // for use by submetiers
             _this.headerElRef = createRef();
             _this.rootElRef = createRef();
             _this.scrollerElRef = createRef();
@@ -13920,7 +13920,7 @@ var FullCalendar = (function (exports) {
         }
         return BootstrapTheme;
     }(Theme));
-    BootstrapTheme.prototype.classes = {
+    BootstrapTheme.prototype.metiers = {
         root: 'fc-theme-bootstrap',
         table: 'table-bordered',
         tableCellShaded: 'table-active',
@@ -13932,14 +13932,14 @@ var FullCalendar = (function (exports) {
         popoverContent: 'popover-body',
     };
     BootstrapTheme.prototype.baseIconClass = 'fa';
-    BootstrapTheme.prototype.iconClasses = {
+    BootstrapTheme.prototype.iconmetiers = {
         close: 'fa-times',
         prev: 'fa-chevron-left',
         next: 'fa-chevron-right',
         prevYear: 'fa-angle-double-left',
         nextYear: 'fa-angle-double-right',
     };
-    BootstrapTheme.prototype.rtlIconClasses = {
+    BootstrapTheme.prototype.rtlIconmetiers = {
         prev: 'fa-chevron-right',
         next: 'fa-chevron-left',
         prevYear: 'fa-angle-double-right',
@@ -13949,7 +13949,7 @@ var FullCalendar = (function (exports) {
     BootstrapTheme.prototype.iconOverrideCustomButtonOption = 'bootstrapFontAwesome';
     BootstrapTheme.prototype.iconOverridePrefix = 'fa-';
     var plugin = createPlugin({
-        themeClasses: {
+        thememetiers: {
             bootstrap: BootstrapTheme,
         },
     });

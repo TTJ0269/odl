@@ -17,11 +17,12 @@ class CreateObservationsTable extends Migration
             $table->bigIncrements('id');
             $table->text('descriptionobservation');
             $table->Date('dateobservation')->default(now());
+            $table->integer('responsable');
             $table->integer('etatsup');
             $table->timestamps();
 
-            $table->unsignedBigInteger('fiche_positionnement_id');
-            $table->foreign('fiche_positionnement_id')->references('id')->on('fiche_positionnements')->onDelete('cascade');
+            $table->unsignedBigInteger('association_id');
+            $table->foreign('association_id')->references('id')->on('associations')->onDelete('cascade');
         });
     }
 

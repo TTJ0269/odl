@@ -296,7 +296,7 @@ $.Widget.prototype = {
 	defaultElement: "<div>",
 
 	options: {
-		classes: {},
+		metiers: {},
 		disabled: false,
 
 		// Callbacks
@@ -312,7 +312,7 @@ $.Widget.prototype = {
 		this.bindings = $();
 		this.hoverable = $();
 		this.focusable = $();
-		this.classesElementLookup = {};
+		this.metiersElementLookup = {};
 
 		if ( element !== this ) {
 			$.data( element, this.widgetFullName, this );
@@ -362,7 +362,7 @@ $.Widget.prototype = {
 		var that = this;
 
 		this._destroy();
-		$.each( this.classesElementLookup, function( key, value ) {
+		$.each( this.metiersElementLookup, function( key, value ) {
 			that._removeClass( value, key );
 		} );
 
@@ -438,8 +438,8 @@ $.Widget.prototype = {
 	},
 
 	_setOption: function( key, value ) {
-		if ( key === "classes" ) {
-			this._setOptionClasses( value );
+		if ( key === "metiers" ) {
+			this._setOptionmetiers( value );
 		}
 
 		this.options[ key ] = value;
@@ -451,12 +451,12 @@ $.Widget.prototype = {
 		return this;
 	},
 
-	_setOptionClasses: function( value ) {
+	_setOptionmetiers: function( value ) {
 		var classKey, elements, currentElements;
 
 		for ( classKey in value ) {
-			currentElements = this.classesElementLookup[ classKey ];
-			if ( value[ classKey ] === this.options.classes[ classKey ] ||
+			currentElements = this.metiersElementLookup[ classKey ];
+			if ( value[ classKey ] === this.options.metiers[ classKey ] ||
 					!currentElements ||
 					!currentElements.length ) {
 				continue;
@@ -464,19 +464,19 @@ $.Widget.prototype = {
 
 			// We are doing this to create a new jQuery object because the _removeClass() call
 			// on the next line is going to destroy the reference to the current elements being
-			// tracked. We need to save a copy of this collection so that we can add the new classes
+			// tracked. We need to save a copy of this collection so that we can add the new metiers
 			// below.
 			elements = $( currentElements.get() );
 			this._removeClass( currentElements, classKey );
 
-			// We don't use _addClass() here, because that uses this.options.classes
-			// for generating the string of classes. We want to use the value passed in from
-			// _setOption(), this is the new value of the classes option which was passed to
-			// _setOption(). We pass this value directly to _classes().
-			elements.addClass( this._classes( {
+			// We don't use _addClass() here, because that uses this.options.metiers
+			// for generating the string of metiers. We want to use the value passed in from
+			// _setOption(), this is the new value of the metiers option which was passed to
+			// _setOption(). We pass this value directly to _metiers().
+			elements.addClass( this._metiers( {
 				element: elements,
 				keys: classKey,
-				classes: value,
+				metiers: value,
 				add: true
 			} ) );
 		}
@@ -500,34 +500,34 @@ $.Widget.prototype = {
 		return this._setOptions( { disabled: true } );
 	},
 
-	_classes: function( options ) {
+	_metiers: function( options ) {
 		var full = [];
 		var that = this;
 
 		options = $.extend( {
 			element: this.element,
-			classes: this.options.classes || {}
+			metiers: this.options.metiers || {}
 		}, options );
 
-		function processClassString( classes, checkOption ) {
+		function processClassString( metiers, checkOption ) {
 			var current, i;
-			for ( i = 0; i < classes.length; i++ ) {
-				current = that.classesElementLookup[ classes[ i ] ] || $();
+			for ( i = 0; i < metiers.length; i++ ) {
+				current = that.metiersElementLookup[ metiers[ i ] ] || $();
 				if ( options.add ) {
 					current = $( $.unique( current.get().concat( options.element.get() ) ) );
 				} else {
 					current = $( current.not( options.element ).get() );
 				}
-				that.classesElementLookup[ classes[ i ] ] = current;
-				full.push( classes[ i ] );
-				if ( checkOption && options.classes[ classes[ i ] ] ) {
-					full.push( options.classes[ classes[ i ] ] );
+				that.metiersElementLookup[ metiers[ i ] ] = current;
+				full.push( metiers[ i ] );
+				if ( checkOption && options.metiers[ metiers[ i ] ] ) {
+					full.push( options.metiers[ metiers[ i ] ] );
 				}
 			}
 		}
 
 		this._on( options.element, {
-			"remove": "_untrackClassesElement"
+			"remove": "_untrackmetiersElement"
 		} );
 
 		if ( options.keys ) {
@@ -540,11 +540,11 @@ $.Widget.prototype = {
 		return full.join( " " );
 	},
 
-	_untrackClassesElement: function( event ) {
+	_untrackmetiersElement: function( event ) {
 		var that = this;
-		$.each( that.classesElementLookup, function( key, value ) {
+		$.each( that.metiersElementLookup, function( key, value ) {
 			if ( $.inArray( event.target, value ) !== -1 ) {
-				that.classesElementLookup[ key ] = $( value.not( event.target ).get() );
+				that.metiersElementLookup[ key ] = $( value.not( event.target ).get() );
 			}
 		} );
 	},
@@ -566,7 +566,7 @@ $.Widget.prototype = {
 				element: shift ? this.element : element,
 				add: add
 			};
-		options.element.toggleClass( this._classes( options ), add );
+		options.element.toggleClass( this._metiers( options ), add );
 		return this;
 	},
 
@@ -4320,7 +4320,7 @@ var widgetsAccordion = $.widget( "ui.accordion", {
 	options: {
 		active: 0,
 		animate: {},
-		classes: {
+		metiers: {
 			"ui-accordion-header": "ui-corner-top",
 			"ui-accordion-header-collapsed": "ui-corner-all",
 			"ui-accordion-content": "ui-corner-bottom"
@@ -4742,8 +4742,8 @@ var widgetsAccordion = $.widget( "ui.accordion", {
 		this.active = clickedIsActive ? $() : clicked;
 		this._toggle( eventData );
 
-		// Switch classes
-		// corner classes on the previously active header stay after the animation
+		// Switch metiers
+		// corner metiers on the previously active header stay after the animation
 		this._removeClass( active, "ui-accordion-header-active", "ui-state-active" );
 		if ( options.icons ) {
 			activeChildren = active.children( ".ui-accordion-header-icon" );
@@ -6338,7 +6338,7 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 			if ( that[ "_" + widget + "Options" ] ) {
 				options = that[ "_" + widget + "Options" ]( "middle" );
 			} else {
-				options = { classes: {} };
+				options = { metiers: {} };
 			}
 
 			// Find instances of this widget inside controlgroup and init them
@@ -6363,8 +6363,8 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 						instance = element[ widget ]()[ widget ]( "instance" );
 					}
 					if ( instance ) {
-						instanceOptions.classes =
-							that._resolveClassesValues( instanceOptions.classes, instance );
+						instanceOptions.metiers =
+							that._resolvemetiersValues( instanceOptions.metiers, instance );
 					}
 					element[ widget ]( instanceOptions );
 
@@ -6394,7 +6394,7 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 
 	_updateCornerClass: function( element, position ) {
 		var remove = "ui-corner-top ui-corner-bottom ui-corner-left ui-corner-right ui-corner-all";
-		var add = this._buildSimpleOptions( position, "label" ).classes.label;
+		var add = this._buildSimpleOptions( position, "label" ).metiers.label;
 
 		this._removeClass( element, null, remove );
 		this._addClass( element, null, add );
@@ -6403,9 +6403,9 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 	_buildSimpleOptions: function( position, key ) {
 		var direction = this.options.direction === "vertical";
 		var result = {
-			classes: {}
+			metiers: {}
 		};
-		result.classes[ key ] = {
+		result.metiers[ key ] = {
 			"middle": "",
 			"first": "ui-corner-" + ( direction ? "top" : "left" ),
 			"last": "ui-corner-" + ( direction ? "bottom" : "right" ),
@@ -6418,8 +6418,8 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 	_spinnerOptions: function( position ) {
 		var options = this._buildSimpleOptions( position, "ui-spinner" );
 
-		options.classes[ "ui-spinner-up" ] = "";
-		options.classes[ "ui-spinner-down" ] = "";
+		options.metiers[ "ui-spinner-up" ] = "";
+		options.metiers[ "ui-spinner-down" ] = "";
 
 		return options;
 	},
@@ -6436,7 +6436,7 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 		var direction = this.options.direction === "vertical";
 		return {
 			width: direction ? "auto" : false,
-			classes: {
+			metiers: {
 				middle: {
 					"ui-selectmenu-button-open": "",
 					"ui-selectmenu-button-closed": ""
@@ -6458,12 +6458,12 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 		};
 	},
 
-	_resolveClassesValues: function( classes, instance ) {
+	_resolvemetiersValues: function( metiers, instance ) {
 		var result = {};
-		$.each( classes, function( key ) {
-			var current = instance.options.classes[ key ] || "";
+		$.each( metiers, function( key ) {
+			var current = instance.options.metiers[ key ] || "";
 			current = $.trim( current.replace( controlgroupCornerRegex, "" ) );
-			result[ key ] = ( current + " " + classes[ key ] ).replace( /\s+/g, " " );
+			result[ key ] = ( current + " " + metiers[ key ] ).replace( /\s+/g, " " );
 		} );
 		return result;
 	},
@@ -6511,7 +6511,7 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 					var options = that[ "_" + instance.widgetName + "Options" ](
 						children.length === 1 ? "only" : value
 					);
-					options.classes = that._resolveClassesValues( options.classes, instance );
+					options.metiers = that._resolvemetiersValues( options.metiers, instance );
 					instance.element[ instance.widgetName ]( options );
 				} else {
 					that._updateCornerClass( children[ value ](), value );
@@ -6551,7 +6551,7 @@ $.widget( "ui.checkboxradio", [ $.ui.formResetMixin, {
 		disabled: null,
 		label: null,
 		icon: true,
-		classes: {
+		metiers: {
 			"ui-checkboxradio-label": "ui-corner-all",
 			"ui-checkboxradio-icon": "ui-corner-all"
 		}
@@ -6631,7 +6631,7 @@ $.widget( "ui.checkboxradio", [ $.ui.formResetMixin, {
 		}
 
 		this._on( {
-			change: "_toggleClasses",
+			change: "_togglemetiers",
 			focus: function() {
 				this._addClass( this.label, null, "ui-state-focus ui-visual-focus" );
 			},
@@ -6681,7 +6681,7 @@ $.widget( "ui.checkboxradio", [ $.ui.formResetMixin, {
 		return group.not( this.element );
 	},
 
-	_toggleClasses: function() {
+	_togglemetiers: function() {
 		var checked = this.element[ 0 ].checked;
 		this._toggleClass( this.label, "ui-checkboxradio-checked", "ui-state-active", checked );
 
@@ -6818,7 +6818,7 @@ $.widget( "ui.button", {
 	version: "1.12.1",
 	defaultElement: "<button>",
 	options: {
-		classes: {
+		metiers: {
 			"ui-button": "ui-corner-all"
 		},
 		disabled: null,
@@ -9549,7 +9549,7 @@ $.widget( "ui.draggable", $.ui.mouse, {
 	version: "1.12.1",
 	widgetEventPrefix: "drag",
 	options: {
-		addClasses: true,
+		addmetiers: true,
 		appendTo: "parent",
 		axis: false,
 		connectToSortable: false,
@@ -9584,7 +9584,7 @@ $.widget( "ui.draggable", $.ui.mouse, {
 		if ( this.options.helper === "original" ) {
 			this._setPositionRelative();
 		}
-		if ( this.options.addClasses ) {
+		if ( this.options.addmetiers ) {
 			this._addClass( "ui-draggable" );
 		}
 		this._setHandleClassName();
@@ -10787,7 +10787,7 @@ $.widget( "ui.resizable", $.ui.mouse, {
 		animateEasing: "swing",
 		aspectRatio: false,
 		autoHide: false,
-		classes: {
+		metiers: {
 			"ui-resizable-se": "ui-icon ui-icon-gripsmall-diagonal-se"
 		},
 		containment: false,
@@ -11967,7 +11967,7 @@ $.widget( "ui.dialog", {
 		appendTo: "body",
 		autoOpen: true,
 		buttons: [],
-		classes: {
+		metiers: {
 			"ui-dialog": "ui-corner-all",
 			"ui-dialog-titlebar": "ui-corner-all"
 		},
@@ -12878,7 +12878,7 @@ $.widget( "ui.droppable", {
 	widgetEventPrefix: "drop",
 	options: {
 		accept: "*",
-		addClasses: true,
+		addmetiers: true,
 		greedy: false,
 		scope: "default",
 		tolerance: "intersect",
@@ -12922,7 +12922,7 @@ $.widget( "ui.droppable", {
 
 		this._addToManager( o.scope );
 
-		o.addClasses && this._addClass( "ui-droppable" );
+		o.addmetiers && this._addClass( "ui-droppable" );
 
 	},
 
@@ -13362,7 +13362,7 @@ var widgetsDroppable = $.ui.droppable;
 var widgetsProgressbar = $.widget( "ui.progressbar", {
 	version: "1.12.1",
 	options: {
-		classes: {
+		metiers: {
 			"ui-progressbar": "ui-corner-all",
 			"ui-progressbar-value": "ui-corner-left",
 			"ui-progressbar-complete": "ui-corner-right"
@@ -13823,7 +13823,7 @@ var widgetsSelectmenu = $.widget( "ui.selectmenu", [ $.ui.formResetMixin, {
 	defaultElement: "<select>",
 	options: {
 		appendTo: null,
-		classes: {
+		metiers: {
 			"ui-selectmenu-button-open": "ui-corner-top",
 			"ui-selectmenu-button-closed": "ui-corner-all"
 		},
@@ -13936,7 +13936,7 @@ var widgetsSelectmenu = $.widget( "ui.selectmenu", [ $.ui.formResetMixin, {
 		// Initialize menu widget
 		this.menuInstance = this.menu
 			.menu( {
-				classes: {
+				metiers: {
 					"ui-menu": "ui-corner-bottom"
 				},
 				role: "listbox",
@@ -14381,7 +14381,7 @@ var widgetsSelectmenu = $.widget( "ui.selectmenu", [ $.ui.formResetMixin, {
 		this.button.attr( "aria-expanded", this.isOpen );
 
 		// We can't use two _toggleClass() calls here, because we need to make sure
-		// we always remove classes first and add them second, otherwise if both classes have the
+		// we always remove metiers first and add them second, otherwise if both metiers have the
 		// same theme class, it will be removed after we add it.
 		this._removeClass( this.button, "ui-selectmenu-button-" +
 			( this.isOpen ? "closed" : "open" ) )
@@ -14488,7 +14488,7 @@ var widgetsSlider = $.widget( "ui.slider", $.ui.mouse, {
 
 	options: {
 		animate: false,
-		classes: {
+		metiers: {
 			"ui-slider": "ui-corner-all",
 			"ui-slider-handle": "ui-corner-all",
 
@@ -16770,7 +16770,7 @@ $.widget( "ui.spinner", {
 	defaultElement: "<input>",
 	widgetEventPrefix: "spin",
 	options: {
-		classes: {
+		metiers: {
 			"ui-spinner": "ui-corner-all",
 			"ui-spinner-down": "ui-corner-br",
 			"ui-spinner-up": "ui-corner-tr"
@@ -16968,12 +16968,12 @@ $.widget( "ui.spinner", {
 			.attr( "tabIndex", -1 )
 			.attr( "aria-hidden", true )
 			.button( {
-				classes: {
+				metiers: {
 					"ui-button": ""
 				}
 			} );
 
-		// TODO: Right now button does not support classes this is already updated in button PR
+		// TODO: Right now button does not support metiers this is already updated in button PR
 		this._removeClass( this.buttons, "ui-corner-all" );
 
 		this._addClass( this.buttons.first(), "ui-spinner-button ui-spinner-up" );
@@ -17317,7 +17317,7 @@ $.widget( "ui.tabs", {
 	delay: 300,
 	options: {
 		active: null,
-		classes: {
+		metiers: {
 			"ui-tabs": "ui-corner-all",
 			"ui-tabs-nav": "ui-corner-all",
 			"ui-tabs-panel": "ui-corner-bottom",
@@ -18221,7 +18221,7 @@ var widgetsTabs = $.ui.tabs;
 $.widget( "ui.tooltip", {
 	version: "1.12.1",
 	options: {
-		classes: {
+		metiers: {
 			"ui-tooltip": "ui-corner-all ui-widget-shadow"
 		},
 		content: function() {

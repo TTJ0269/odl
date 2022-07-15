@@ -225,15 +225,15 @@ $('.select2bs4').select2({
     $(document).ready(function () {
         $('#ifad').on('change', function () {
             var ifadId = this.value;
-            $('#classe').html('');
+            $('#metier').html('');
             $.ajax({
                 url: '{{ route('get_ifad') }}?ifad_id='+ifadId,
                 type: 'get',
                 success: function (res) {
-                    $('#classe').html('<option value="">Sélectionner une classe</option>');
+                    $('#metier').html('<option value="">Sélectionner une metier</option>');
                     $.each(res, function (key, value) {
-                        $('#classe').append('<option value="' + value
-                            .id + '">' +''+ value.libelleclasse +'</option>');
+                        $('#metier').append('<option value="' + value
+                            .id + '">' +''+ value.libellemetier +'</option>');
                     });
                 }
             });

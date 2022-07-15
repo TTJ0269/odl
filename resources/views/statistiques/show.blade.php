@@ -32,6 +32,7 @@
                   <div class="form-group">
                     <h5> Fiche de positionnement </h5>
                     <h5> {{$fiche_positionnement->association->ifad->libelleifad}} </h5>
+                    <h5> Métier: {{$fiche_positionnement->metier_apprenant}} </h5>
                     <h5> Apprenant(e): {{$fiche_positionnement->association->user->nomuser}} {{$fiche_positionnement->association->user->prenomuser}} </h5>
                     <h5>Date de l'évaluation: {{$fiche_positionnement->dateenregistrement}} </h5>
                   </div>

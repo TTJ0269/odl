@@ -43,7 +43,8 @@
                                 <thead>
                                     <th scope="col">Numero</th>
                                     <th scope="col">Description</th>
-                                    <th scope="col">Fiche de positionnement</th>
+                                    <th scope="col">Apprenant(e)</th>
+                                    <th scope="col">Date</th>
                                 </thead>
 
                                     <tbody>
@@ -51,7 +52,8 @@
                                     <tr>
                                     <th scope="row"> {{++$key}} </th>
                                     <td> <a href="{{ route('observations.show', ['observation' => $observation->id]) }}" style="color:rgb(55, 144, 246);"> {{$observation->descriptionobservation}} </a></td>
-                                    <th scope="row"> {{$observation->libellefiche}} </th>
+                                    <th scope="row"> {{$observation->association->user->nomuser}} {{$observation->association->user->prenomuser}}</th>
+                                    <th scope="row"> {{$observation->created_at}}</th>
                                     </tr>
                                     @endforeach
                                     </tbody>

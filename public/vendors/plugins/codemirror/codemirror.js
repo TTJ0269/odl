@@ -130,7 +130,7 @@
     var current = node.className;
     if (!classTest(cls).test(current)) { node.className += (current ? " " : "") + cls; }
   }
-  function joinClasses(a, b) {
+  function joinmetiers(a, b) {
     var as = a.split(" ");
     for (var i = 0; i < as.length; i++)
       { if (as[i] && !classTest(as[i]).test(b)) { b += " " + as[i]; } }
@@ -1066,10 +1066,10 @@
   function highlightLine(cm, line, context, forceToEnd) {
     // A styles array always starts with a number identifying the
     // mode/overlays that it is based on (for easy invalidation).
-    var st = [cm.state.modeGen], lineClasses = {};
+    var st = [cm.state.modeGen], linemetiers = {};
     // Compute the base array of styles
     runMode(cm, line.text, cm.doc.mode, context, function (end, style) { return st.push(end, style); },
-            lineClasses, forceToEnd);
+            linemetiers, forceToEnd);
     var state = context.state;
 
     // Run overlays, adjust style array.
@@ -1097,7 +1097,7 @@
             st[start+1] = (cur ? cur + " " : "") + "overlay " + style;
           }
         }
-      }, lineClasses);
+      }, linemetiers);
       context.state = state;
       context.baseTokens = null;
       context.baseTokenPos = 1;
@@ -1105,7 +1105,7 @@
 
     for (var o = 0; o < cm.state.overlays.length; ++o) loop( o );
 
-    return {styles: st, classes: lineClasses.bgClass || lineClasses.textClass ? lineClasses : null}
+    return {styles: st, metiers: linemetiers.bgClass || linemetiers.textClass ? linemetiers : null}
   }
 
   function getLineStyles(cm, line, updateFrontier) {
@@ -1116,8 +1116,8 @@
       if (resetState) { context.state = resetState; }
       line.stateAfter = context.save(!resetState);
       line.styles = result.styles;
-      if (result.classes) { line.styleClasses = result.classes; }
-      else if (line.styleClasses) { line.styleClasses = null; }
+      if (result.metiers) { line.stylemetiers = result.metiers; }
+      else if (line.stylemetiers) { line.stylemetiers = null; }
       if (updateFrontier === cm.doc.highlightFrontier)
         { cm.doc.modeFrontier = Math.max(cm.doc.modeFrontier, ++cm.doc.highlightFrontier); }
     }
@@ -1193,7 +1193,7 @@
     return asArray ? tokens : new Token(stream, style, context.state)
   }
 
-  function extractLineClasses(type, output) {
+  function extractLinemetiers(type, output) {
     if (type) { for (;;) {
       var lineClass = type.match(/(?:^|\s+)line-(background-)?(\S+)/);
       if (!lineClass) { break }
@@ -1208,13 +1208,13 @@
   }
 
   // Run the given mode's parser over a line, calling f for each token.
-  function runMode(cm, text, mode, context, f, lineClasses, forceToEnd) {
+  function runMode(cm, text, mode, context, f, linemetiers, forceToEnd) {
     var flattenSpans = mode.flattenSpans;
     if (flattenSpans == null) { flattenSpans = cm.options.flattenSpans; }
     var curStart = 0, curStyle = null;
     var stream = new StringStream(text, cm.options.tabSize, context), style;
     var inner = cm.options.addModeClass && [null];
-    if (text == "") { extractLineClasses(callBlankLine(mode, context.state), lineClasses); }
+    if (text == "") { extractLinemetiers(callBlankLine(mode, context.state), linemetiers); }
     while (!stream.eol()) {
       if (stream.pos > cm.options.maxHighlightLength) {
         flattenSpans = false;
@@ -1222,7 +1222,7 @@
         stream.pos = text.length;
         style = null;
       } else {
-        style = extractLineClasses(readToken(mode, stream, context.state, inner), lineClasses);
+        style = extractLinemetiers(readToken(mode, stream, context.state, inner), linemetiers);
       }
       if (inner) {
         var mName = inner[0].name;
@@ -1746,11 +1746,11 @@
       builder.map = [];
       var allowFrontierUpdate = lineView != cm.display.externalMeasured && lineNo(line);
       insertLineContent(line, builder, getLineStyles(cm, line, allowFrontierUpdate));
-      if (line.styleClasses) {
-        if (line.styleClasses.bgClass)
-          { builder.bgClass = joinClasses(line.styleClasses.bgClass, builder.bgClass || ""); }
-        if (line.styleClasses.textClass)
-          { builder.textClass = joinClasses(line.styleClasses.textClass, builder.textClass || ""); }
+      if (line.stylemetiers) {
+        if (line.stylemetiers.bgClass)
+          { builder.bgClass = joinmetiers(line.stylemetiers.bgClass, builder.bgClass || ""); }
+        if (line.stylemetiers.textClass)
+          { builder.textClass = joinmetiers(line.stylemetiers.textClass, builder.textClass || ""); }
       }
 
       // Ensure at least a single node is present, for measuring.
@@ -1776,7 +1776,7 @@
 
     signal(cm, "renderLine", cm, lineView.line, builder.pre);
     if (builder.pre.className)
-      { builder.textClass = joinClasses(builder.pre.className, builder.textClass || ""); }
+      { builder.textClass = joinmetiers(builder.pre.className, builder.textClass || ""); }
 
     return builder
   }
@@ -2094,7 +2094,7 @@
       var type = lineView.changes[j];
       if (type == "text") { updateLineText(cm, lineView); }
       else if (type == "gutter") { updateLineGutter(cm, lineView, lineN, dims); }
-      else if (type == "class") { updateLineClasses(cm, lineView); }
+      else if (type == "class") { updateLinemetiers(cm, lineView); }
       else if (type == "widget") { updateLineWidgets(cm, lineView, dims); }
     }
     lineView.changes = null;
@@ -2139,8 +2139,8 @@
   }
 
   // Redraw the line's text. Interacts with the background and text
-  // classes because the mode may output tokens that influence these
-  // classes.
+  // metiers because the mode may output tokens that influence these
+  // metiers.
   function updateLineText(cm, lineView) {
     var cls = lineView.text.className;
     var built = getLineContent(cm, lineView);
@@ -2150,13 +2150,13 @@
     if (built.bgClass != lineView.bgClass || built.textClass != lineView.textClass) {
       lineView.bgClass = built.bgClass;
       lineView.textClass = built.textClass;
-      updateLineClasses(cm, lineView);
+      updateLinemetiers(cm, lineView);
     } else if (cls) {
       lineView.text.className = cls;
     }
   }
 
-  function updateLineClasses(cm, lineView) {
+  function updateLinemetiers(cm, lineView) {
     updateLineBackground(cm, lineView);
     if (lineView.line.wrapClass)
       { ensureLineWrapped(lineView).className = lineView.line.wrapClass; }
@@ -2221,7 +2221,7 @@
     if (built.bgClass) { lineView.bgClass = built.bgClass; }
     if (built.textClass) { lineView.textClass = built.textClass; }
 
-    updateLineClasses(cm, lineView);
+    updateLinemetiers(cm, lineView);
     updateLineGutter(cm, lineView, lineN, dims);
     insertLineWidgets(cm, lineView, dims);
     return lineView.node
@@ -3971,9 +3971,9 @@
         var highlighted = highlightLine(cm, line, context, true);
         if (resetState) { context.state = resetState; }
         line.styles = highlighted.styles;
-        var oldCls = line.styleClasses, newCls = highlighted.classes;
-        if (newCls) { line.styleClasses = newCls; }
-        else if (oldCls) { line.styleClasses = null; }
+        var oldCls = line.stylemetiers, newCls = highlighted.metiers;
+        if (newCls) { line.stylemetiers = newCls; }
+        else if (oldCls) { line.stylemetiers = null; }
         var ischange = !oldStyles || oldStyles.length != line.styles.length ||
           oldCls != newCls && (!oldCls || !newCls || oldCls.bgClass != newCls.bgClass || oldCls.textClass != newCls.textClass);
         for (var i = 0; !ischange && i < oldStyles.length; ++i) { ischange = oldStyles[i] != line.styles[i]; }

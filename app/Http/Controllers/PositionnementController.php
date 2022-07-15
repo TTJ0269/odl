@@ -12,7 +12,7 @@ use App\Models\Positionnement;
 use App\Models\FichePositionnement;
 use App\Models\Activite;
 use App\Models\Tache;
-use App\Models\Classe;
+use App\Models\Metier;
 use App\Models\Ifad;
 use App\Models\Suivi;
 use App\Models\Entreprise;
@@ -64,51 +64,37 @@ class PositionnementController extends Controller
         }
     }
 
-    public function recup(User $user)
+    public function recup_metier(User $user)
     {
-        $this->authorize('ad_re_su_ch', User::class);
-      try
-      {
-        $user_id = (Auth::user()->id);
-        $profil = (Auth::user()->profil_id);
-
-        if(Tache::select('*')->doesntExist())
+        if(Metier::select('*')->doesntExist())
         {
-           return back()->with('messagealert', "Ajouter au moins une tâche.");
+           return back()->with('messagealert', "Ajouter au moins un métier.");
         }
         else
         {
-            /** selection des activites classes par activites **/
-            $activites = Activite::select('*')->orderBy('id')->distinct('id')->get();
-
-            $i = 0;
-            foreach($activites as $activite)
+            if(DB::table('associations')->where('associations.user_id','=',$user->id)->select('associations.id')->doesntExist())
             {
-                $tab_activite_id[$i] = $activite->id;
-                $tab_activite_libelle[$i] = $activite->libelleactivite;
-
-
-                $tab_tache[$i] = DB::table('activites')
-                ->join('taches','activites.id','=','taches.activite_id')
-                ->select('taches.*','activites.id as id_activite')
-                ->where('activites.id','=',$tab_activite_id[$i])
-                ->orderBy('activites.id')
-                ->distinct('activites.id')
-                ->get();
-
-                $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
-
-                $i++;
+                return back()->with('messagealert',"L'apprenant(e) n'est pas associé à un IFAD");
             }
+            else
+            {
+                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$user->nomuser." ".$user->prenomuser;
 
-            return view('positionnements.recup',compact('collections','user'));
+                if(FichePositionnement::where('libellefiche','=',$fiche_positionnement)->select('id')->exists())
+                {
+                    return redirect('positionnements')->with('messagealert',"L'apprenant(e) ".$user->nomuser." ".$user->prenomuser." a déjà été positionné(e) aujourd'hui");
+                }
+                else
+                {
+                    $ifad_id = DB::table('associations')->where('associations.user_id','=',$user->id)
+                    ->select('ifad_id')->get()->last()->ifad_id;
+
+                    $metiers = Metier::where('ifad_id','=',$ifad_id)->select('*')->get();
+
+                    return view('positionnements.recup_metier',compact('metiers','user'));
+                }
+            }
         }
-
-      }
-      catch(\Exception $exception)
-      {
-        return redirect('erreur')->with('messageerreur',$exception->getMessage());
-      }
     }
 
     /**
@@ -150,57 +136,64 @@ class PositionnementController extends Controller
         $this->authorize('ad_re_su_ch', User::class);
         try
         {
-            $user_id = request('user_id');
 
-            if($user_id == null)
+            $user_id = (Auth::user()->id);
+            $profil = (Auth::user()->profil_id);
+
+            $recup_user_id = request('user_id');
+            $metier_id = request('metier_id');
+
+            //dd($user , $metier);
+            if($recup_user_id == null)
             {
                 return back()->with('messagealert', "Sélectionner un(e) apprenant(e).");
             }
+            elseif($metier_id == null)
+            {
+                return back()->with('messagealert', "Sélectionner un métier.");
+            }
             else
             {
-                $users = User::select('*')->where('id','=',$user_id)->first();
-
-                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$users->nomuser." ".$users->prenomuser;
-
-                if(FichePositionnement::where('libellefiche','=',$fiche_positionnement)->select('id')->exists())
+                if(DB::table('activites')->join('taches','activites.id','=','taches.activite_id')
+                ->where('activites.metier_id','=',$metier_id)->select('taches.id')->doesntExist())
                 {
-                    return redirect('positionnements')->with('messagealert',"L'apprenant(e) ".$users->nomuser." ".$users->prenomuser." a déjà été positionné(e) aujourd'hui");
+                  return back()->with('messagealert', "Ajouter au moins une tâche à ce métier.");
                 }
                 else
                 {
-
                     $positionnement = new Positionnement();
-                    $taches = Tache::select('*')->get();
 
-                    $nombre_tache_select = 0;
-                    $i = 1;
-                    foreach($taches as $tache_value)
+                    $users = User::select('*')->where('id','=',$recup_user_id)->first();
+
+                    $metiers = Metier::select('*')->where('id','=',$metier_id)->first();
+
+                    /** selection des activites metiers par activites **/
+                    $activites = Activite::where('metier_id','=',$metier_id)->select('*')->orderBy('id')->distinct('id')->get();
+
+                    $i = 0;
+                    foreach($activites as $activite)
                     {
-                       $value_id[$i]= request('tache_id_'.$tache_value->id);
-                       $value_libelle[$i]= request('tache_libelle_'.$tache_value->id);
+                        $tab_activite_id[$i] = $activite->id;
+                        $tab_activite_libelle[$i] = $activite->libelleactivite;
 
-                       if($value_id[$i] != null)
-                       {
-                           $collections[$i] = collect(['tache_id' => $value_id[$i],'tache_libelle' => $value_libelle[$i]])->all();
-                           $nombre_tache_select = $nombre_tache_select + 1;
-                       }
 
-                       $i++;
+                        $tab_tache[$i] = DB::table('activites')
+                        ->join('taches','activites.id','=','taches.activite_id')
+                        ->select('taches.*','activites.id as id_activite')
+                        ->where('activites.id','=',$tab_activite_id[$i])
+                        ->where('activites.metier_id','=',$metier_id)
+                        ->orderBy('activites.id')
+                        ->distinct('activites.id')
+                        ->get();
+
+                        $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
+
+                        $i++;
                     }
 
-                    if($nombre_tache_select == 0)
-                    {
-                        return back()->with('messagealert', "Sélectionner au moins une tâche.");
-                    }
-                    else
-                    {
-                        // dd($collections);
-                        return view('positionnements.create',compact('collections','users'));
-                    }
+                    return view('positionnements.create',compact('collections','users','metiers'));
                 }
-
             }
-
 
         }
         catch(\Exception $exception)
@@ -222,6 +215,8 @@ class PositionnementController extends Controller
             $prenom_tuteur = request('prenom_tuteur');
             $tel_tuteur = request('tel_tuteur');
             $user_id = request('user_id');
+            $metier_id = request('metier_id');
+            $metier_libelle = request('metier_libelle');
 
         if(Entreprise::where('emailentreprise','=',$auth_email)->select('id')->exists())
         {
@@ -266,6 +261,31 @@ class PositionnementController extends Controller
         $responsable_suivi_id = Auth::user()->id;
         $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$users->nomuser." ".$users->prenomuser;
 
+        /** Recuperation des valeurs **/
+        $taches = DB::table('activites')->join('taches','activites.id','=','taches.activite_id')
+        ->where('activites.metier_id','=',$metier_id)->select('taches.*')->get();
+
+            $nombre_tache = 0;
+            $t = 1;
+            foreach($taches as $tache_value)
+            {
+               $value_id[$t]= request('valeurpost_'.$tache_value->id);
+
+               if($value_id[$t] != null)
+               {
+                   if($value_id[$t] != 0)
+                   {
+                     $nombre_tache = $nombre_tache +1;
+                   }
+               }
+               $t++;
+            }
+
+            if($nombre_tache == 0)
+            {
+                return back()->with('messagealert', "Fiche de positionnement non enregistrée. Vous n'avez pas positionné l'apprenant(e).");
+            }
+
            /** Enregistrement du livret de positionnement et recuperation de id **/
             $fiche = FichePositionnement::insertGetId([
              'libellefiche'=> $fiche_positionnement,
@@ -276,14 +296,12 @@ class PositionnementController extends Controller
              'nom_tuteur'=> $nom_tuteur,
              'prenom_tuteur'=> $prenom_tuteur,
              'tel_tuteur'=> $tel_tuteur,
-             'classe_apprenant'=> null,
+             'metier_apprenant'=> $metier_libelle,
              'dateenregistrement'=>now(),
              'association_id'=> $association->id,
              'responsable_suivi_id'=> $responsable_suivi_id,
+             'etat'=> 0,
              'etatsup'=> 0]);
-
-            /** Recuperation des valeurs **/
-            $taches = Tache::select('*')->get();
 
             $i = 1;
             foreach($taches as $tache_value)
@@ -292,11 +310,14 @@ class PositionnementController extends Controller
 
                if($value_id[$i] != null)
                {
-                   /** enregistrement des positionnements **/
-                    $positionnement = Positionnement::create([
-                        'valeurpost'=> $value_id[$i],
-                        'fiche_positionnement_id'=> $fiche,
-                        'tache_id'=> $tache_value->id,]);
+                   if($value_id[$i] != 0)
+                   {
+                        /** enregistrement des positionnements **/
+                        $positionnement = Positionnement::create([
+                            'valeurpost'=> $value_id[$i],
+                            'fiche_positionnement_id'=> $fiche,
+                            'tache_id'=> $tache_value->id,]);
+                   }
                }
 
                $i++;

@@ -1786,9 +1786,9 @@
                  * @returns {boolean} True if the class names has really changed, false otherwise.
                  */
                 function hostClassNamesChanged(oldClassNames, newClassNames) {
-                    var currClasses = typeof newClassNames == TYPES.s ? newClassNames.split(_strSpace) : [];
-                    var oldClasses = typeof oldClassNames == TYPES.s ? oldClassNames.split(_strSpace) : [];
-                    var diff = getArrayDifferences(oldClasses, currClasses);
+                    var currmetiers = typeof newClassNames == TYPES.s ? newClassNames.split(_strSpace) : [];
+                    var oldmetiers = typeof oldClassNames == TYPES.s ? oldClassNames.split(_strSpace) : [];
+                    var diff = getArrayDifferences(oldmetiers, currmetiers);
 
                     // remove none theme from diff list to prevent update
                     var idx = inArray(_classNameThemeNone, diff);
@@ -3190,14 +3190,14 @@
                             //clear size observer
                             _sizeObserverElement.children().remove();
 
-                            //remove the style property and classes from already generated elements
+                            //remove the style property and metiers from already generated elements
                             each([_paddingElement, _viewportElement, _contentElement, _textareaCoverElement], function (i, elm) {
                                 if (elm) {
                                     removeClass(elm.removeAttr(LEXICON.s), _classNamesDynamicDestroy);
                                 }
                             });
 
-                            //add classes to the host element which was removed previously to match the expected DOM
+                            //add metiers to the host element which was removed previously to match the expected DOM
                             addClass(_hostElement, _isTextarea ? _classNameHostTextareaElement : _classNameHostElement);
                         }
                         else {
@@ -4132,10 +4132,10 @@
                     var i;
                     var split;
                     var appendix;
-                    var appendClasses = function (classes, condition) {
+                    var appendmetiers = function (metiers, condition) {
                         appendix = '';
-                        if (condition && typeof classes == TYPES.s) {
-                            split = classes.split(_strSpace);
+                        if (condition && typeof metiers == TYPES.s) {
+                            split = metiers.split(_strSpace);
                             for (i = 0; i < split[LEXICON.l]; i++)
                                 appendix += '|' + split[i] + '$';
                             // split[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') for escaping regex characters
@@ -4145,8 +4145,8 @@
 
                     return new RegExp(
                         '(^' + _classNameHostElement + '([-_].+|)$)' +
-                        appendClasses(_classNameCache, withCurrClassNameOption) +
-                        appendClasses(_oldClassName, withOldClassNameOption), 'g');
+                        appendmetiers(_classNameCache, withCurrClassNameOption) +
+                        appendmetiers(_oldClassName, withOldClassNameOption), 'g');
                 }
 
                 /**
@@ -4269,20 +4269,20 @@
                 }
 
                 /**
-                 * Generates a string which represents a HTML div with the given classes or attributes.
-                 * @param classesOrAttrs The class of the div as string or a object which represents the attributes of the div. (The class attribute can also be written as "className".)
+                 * Generates a string which represents a HTML div with the given metiers or attributes.
+                 * @param metiersOrAttrs The class of the div as string or a object which represents the attributes of the div. (The class attribute can also be written as "className".)
                  * @param content The content of the div as string.
                  * @returns {string} The concated string which represents a HTML div and its content.
                  */
-                function generateDiv(classesOrAttrs, content) {
-                    return '<div ' + (classesOrAttrs ? type(classesOrAttrs) == TYPES.s ?
-                        'class="' + classesOrAttrs + '"' :
+                function generateDiv(metiersOrAttrs, content) {
+                    return '<div ' + (metiersOrAttrs ? type(metiersOrAttrs) == TYPES.s ?
+                        'class="' + metiersOrAttrs + '"' :
                         (function () {
                             var key;
                             var attrs = _strEmpty;
-                            if (FRAMEWORK.isPlainObject(classesOrAttrs)) {
-                                for (key in classesOrAttrs)
-                                    attrs += (key === 'c' ? 'class' : key) + '="' + classesOrAttrs[key] + '" ';
+                            if (FRAMEWORK.isPlainObject(metiersOrAttrs)) {
+                                for (key in metiersOrAttrs)
+                                    attrs += (key === 'c' ? 'class' : key) + '="' + metiersOrAttrs[key] + '" ';
                             }
                             return attrs;
                         })() :
@@ -4405,22 +4405,22 @@
                 /**
                  * jQuery addClass method shortcut.
                  */
-                function addClass(el, classes) {
-                    return _frameworkProto.addClass.call(el, classes);
+                function addClass(el, metiers) {
+                    return _frameworkProto.addClass.call(el, metiers);
                 }
 
                 /**
                  * jQuery removeClass method shortcut.
                  */
-                function removeClass(el, classes) {
-                    return _frameworkProto.removeClass.call(el, classes);
+                function removeClass(el, metiers) {
+                    return _frameworkProto.removeClass.call(el, metiers);
                 }
 
                 /**
-                 * Adds or removes the given classes dependent on the boolean value. True for add, false for remove.
+                 * Adds or removes the given metiers dependent on the boolean value. True for add, false for remove.
                  */
-                function addRemoveClass(el, classes, doAdd) {
-                    return doAdd ? addClass(el, classes) : removeClass(el, classes);
+                function addRemoveClass(el, metiers, doAdd) {
+                    return doAdd ? addClass(el, metiers) : removeClass(el, metiers);
                 }
 
                 /**

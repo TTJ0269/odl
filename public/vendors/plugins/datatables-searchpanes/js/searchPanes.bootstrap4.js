@@ -29,7 +29,7 @@
 }(function ($, window, document) {
     'use strict';
     var DataTable = $.fn.dataTable;
-    $.extend(true, DataTable.SearchPane.classes, {
+    $.extend(true, DataTable.SearchPane.metiers, {
         buttonGroup: 'btn-group col justify-content-end',
         disabledButton: 'disabled',
         dull: '',
@@ -47,7 +47,7 @@
         table: 'table table-sm table-borderless',
         topRow: 'dtsp-topRow row'
     });
-    $.extend(true, DataTable.SearchPanes.classes, {
+    $.extend(true, DataTable.SearchPanes.metiers, {
         clearAll: 'dtsp-clearAll col-auto btn btn-light',
         container: 'dtsp-searchPanes',
         panes: 'dtsp-panes dtsp-container',

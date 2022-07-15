@@ -506,9 +506,9 @@ $.extend( FixedColumns.prototype , {
 		this.s = $.extend( true, this.s, FixedColumns.defaults, oInit );
 
 		/* Set up the DOM as we need it and cache nodes */
-		var classes = this.s.dt.oClasses;
-		this.dom.grid.dt = $(this.s.dt.nTable).parents('div.'+classes.sScrollWrapper)[0];
-		this.dom.scroller = $('div.'+classes.sScrollBody, this.dom.grid.dt )[0];
+		var metiers = this.s.dt.ometiers;
+		this.dom.grid.dt = $(this.s.dt.nTable).parents('div.'+metiers.sScrollWrapper)[0];
+		this.dom.scroller = $('div.'+metiers.sScrollBody, this.dom.grid.dt )[0];
 
 		/* Set up the DOM that we want for the fixed column layout grid */
 		this._fnColCalc();
@@ -1176,9 +1176,9 @@ $.extend( FixedColumns.prototype , {
 		}
 		else
 		{
-			/* To ensure that we copy cell classes exactly, regardless of colspan, multiple rows
+			/* To ensure that we copy cell metiers exactly, regardless of colspan, multiple rows
 			 * etc, we make a copy of the header from the DataTable again, but don't insert the
-			 * cloned cells, just copy the classes across. To get the matching layout for the
+			 * cloned cells, just copy the metiers across. To get the matching layout for the
 			 * fixed component, we use the DataTables _fnDetectHeader method, allowing 1:1 mapping
 			 */
 			aoCloneLayout = this._fnCopyLayout( dt.aoHeader, aiColumns, false );

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\FichePositionnement;
 use App\Models\Positionnement;
-use App\Models\Classe;
+use App\Models\Metier;
 use App\Models\Profil;
 use App\Models\User;
 use App\Models\Association;
@@ -41,6 +41,7 @@ class FichePositionnementController extends Controller
                 ->join('associations','users.id','=','associations.user_id')
                 ->join('ifads','ifads.id','=','associations.ifad_id')
                 ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
+                ->where('fiche_positionnements.etat','=',0)
                 ->select('fiche_positionnements.*','ifads.libelleifad')
                 ->distinct('fiche_positionnements.id')
                 ->orderBy('fiche_positionnements.id','DESC')
@@ -172,7 +173,7 @@ class FichePositionnementController extends Controller
                 }
             }
 
-            /** selection des activites classes par activites **/
+            /** selection des activites metiers par activites **/
             $activites = DB::table('activites')
             ->join('taches','activites.id','=','taches.activite_id')
             ->join('positionnements','taches.id','=','positionnements.tache_id')
@@ -225,7 +226,7 @@ class FichePositionnementController extends Controller
             $user_id = (Auth::user()->id);
             $profil_id = (Auth::user()->profil_id);
 
-            /** selection des activites classes par activites **/
+            /** selection des activites metiers par activites **/
             $activites = DB::table('activites')
             ->join('taches','activites.id','=','taches.activite_id')
             ->join('positionnements','taches.id','=','positionnements.tache_id')
@@ -308,11 +309,65 @@ class FichePositionnementController extends Controller
      public function destroy(FichePositionnement $fiche_positionnement)
      {
         $this->authorize('admin', User::class);
+        try
+        {
+            $fiche_positionnement->delete();
 
-         $fiche_positionnement->delete();
-
-         return redirect('fiche_positionnements');
+            return redirect('fiche_positionnements');
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
      }
+
+      /** Visualisation de l'Archivage des fiches **/
+    public function fiches_archive_show()
+    {
+        $this->authorize('ad_re_su', User::class);
+        try
+        {
+            $fiche_positionnements = FichePositionnement::where('etat','=',1)->select('*')->orderBy('id','DESC')->get();
+
+            return view('fiche_positionnements.archive', compact('fiche_positionnements'));
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }
+
+        /** Archivage de la fiche de positionnement **/
+     public function fiche_archive(FichePositionnement $fiche_positionnement)
+     {
+        $this->authorize('ad_re_su', User::class);
+        try
+        {
+            $fiche = FichePositionnement::where('id','=',$fiche_positionnement->id)->update(['etat' => 1]);
+
+            return back()->with('message','Archivage effectué avec succès.');
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+     }
+
+    /** Désarchivage de la fiche de positionnement **/
+    public function fiche_desarchive(FichePositionnement $fiche_positionnement)
+    {
+        $this->authorize('ad_re_su', User::class);
+        try
+        {
+            $fiche = FichePositionnement::where('id','=',$fiche_positionnement->id)->update(['etat' => 0]);
+
+            return back()->with('message','Désarchivage effectué avec succès.');
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }
 
      private function historique($attribute, $action)
     {

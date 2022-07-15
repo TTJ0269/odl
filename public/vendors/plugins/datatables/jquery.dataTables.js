@@ -22,7 +22,7 @@
  */
 
 /*jslint evil: true, undef: true, browser: true */
-/*globals $,require,jQuery,define,_selector_run,_selector_opts,_selector_first,_selector_row_indexes,_ext,_Api,_api_register,_api_registerPlural,_re_new_lines,_re_html,_re_formatted_numeric,_re_escape_regex,_empty,_intVal,_numToDecimal,_isNumber,_isHtml,_htmlNumeric,_pluck,_pluck_order,_range,_stripHtml,_unique,_fnBuildAjax,_fnAjaxUpdate,_fnAjaxParameters,_fnAjaxUpdateDraw,_fnAjaxDataSrc,_fnAddColumn,_fnColumnOptions,_fnAdjustColumnSizing,_fnVisibleToColumnIndex,_fnColumnIndexToVisible,_fnVisbleColumns,_fnGetColumns,_fnColumnTypes,_fnApplyColumnDefs,_fnHungarianMap,_fnCamelToHungarian,_fnLanguageCompat,_fnBrowserDetect,_fnAddData,_fnAddTr,_fnNodeToDataIndex,_fnNodeToColumnIndex,_fnGetCellData,_fnSetCellData,_fnSplitObjNotation,_fnGetObjectDataFn,_fnSetObjectDataFn,_fnGetDataMaster,_fnClearTable,_fnDeleteIndex,_fnInvalidate,_fnGetRowElements,_fnCreateTr,_fnBuildHead,_fnDrawHead,_fnDraw,_fnReDraw,_fnAddOptionsHtml,_fnDetectHeader,_fnGetUniqueThs,_fnFeatureHtmlFilter,_fnFilterComplete,_fnFilterCustom,_fnFilterColumn,_fnFilter,_fnFilterCreateSearch,_fnEscapeRegex,_fnFilterData,_fnFeatureHtmlInfo,_fnUpdateInfo,_fnInfoMacros,_fnInitialise,_fnInitComplete,_fnLengthChange,_fnFeatureHtmlLength,_fnFeatureHtmlPaginate,_fnPageChange,_fnFeatureHtmlProcessing,_fnProcessingDisplay,_fnFeatureHtmlTable,_fnScrollDraw,_fnApplyToChildren,_fnCalculateColumnWidths,_fnThrottle,_fnConvertToWidth,_fnGetWidestNode,_fnGetMaxLenString,_fnStringToCss,_fnSortFlatten,_fnSort,_fnSortAria,_fnSortListener,_fnSortAttachListener,_fnSortingClasses,_fnSortData,_fnSaveState,_fnLoadState,_fnSettingsFromNode,_fnLog,_fnMap,_fnBindAction,_fnCallbackReg,_fnCallbackFire,_fnLengthOverflow,_fnRenderer,_fnDataSource,_fnRowAttributes*/
+/*globals $,require,jQuery,define,_selector_run,_selector_opts,_selector_first,_selector_row_indexes,_ext,_Api,_api_register,_api_registerPlural,_re_new_lines,_re_html,_re_formatted_numeric,_re_escape_regex,_empty,_intVal,_numToDecimal,_isNumber,_isHtml,_htmlNumeric,_pluck,_pluck_order,_range,_stripHtml,_unique,_fnBuildAjax,_fnAjaxUpdate,_fnAjaxParameters,_fnAjaxUpdateDraw,_fnAjaxDataSrc,_fnAddColumn,_fnColumnOptions,_fnAdjustColumnSizing,_fnVisibleToColumnIndex,_fnColumnIndexToVisible,_fnVisbleColumns,_fnGetColumns,_fnColumnTypes,_fnApplyColumnDefs,_fnHungarianMap,_fnCamelToHungarian,_fnLanguageCompat,_fnBrowserDetect,_fnAddData,_fnAddTr,_fnNodeToDataIndex,_fnNodeToColumnIndex,_fnGetCellData,_fnSetCellData,_fnSplitObjNotation,_fnGetObjectDataFn,_fnSetObjectDataFn,_fnGetDataMaster,_fnClearTable,_fnDeleteIndex,_fnInvalidate,_fnGetRowElements,_fnCreateTr,_fnBuildHead,_fnDrawHead,_fnDraw,_fnReDraw,_fnAddOptionsHtml,_fnDetectHeader,_fnGetUniqueThs,_fnFeatureHtmlFilter,_fnFilterComplete,_fnFilterCustom,_fnFilterColumn,_fnFilter,_fnFilterCreateSearch,_fnEscapeRegex,_fnFilterData,_fnFeatureHtmlInfo,_fnUpdateInfo,_fnInfoMacros,_fnInitialise,_fnInitComplete,_fnLengthChange,_fnFeatureHtmlLength,_fnFeatureHtmlPaginate,_fnPageChange,_fnFeatureHtmlProcessing,_fnProcessingDisplay,_fnFeatureHtmlTable,_fnScrollDraw,_fnApplyToChildren,_fnCalculateColumnWidths,_fnThrottle,_fnConvertToWidth,_fnGetWidestNode,_fnGetMaxLenString,_fnStringToCss,_fnSortFlatten,_fnSort,_fnSortAria,_fnSortListener,_fnSortAttachListener,_fnSortingmetiers,_fnSortData,_fnSaveState,_fnLoadState,_fnSettingsFromNode,_fnLog,_fnMap,_fnBindAction,_fnCallbackReg,_fnCallbackFire,_fnLengthOverflow,_fnRenderer,_fnDataSource,_fnRowAttributes*/
 
 (function( factory ) {
 	"use strict";
@@ -994,12 +994,12 @@
 				"bInfo",
 				"bProcessing",
 				"bAutoWidth",
-				"bSortClasses",
+				"bSortmetiers",
 				"bServerSide",
 				"bDeferRender"
 			] );
 			_fnMap( oSettings, oInit, [
-				"asStripeClasses",
+				"asStripemetiers",
 				"ajax",
 				"fnServerData",
 				"fnFormatNumber",
@@ -1050,10 +1050,10 @@
 			/* Browser support detection */
 			_fnBrowserDetect( oSettings );
 			
-			var oClasses = oSettings.oClasses;
+			var ometiers = oSettings.ometiers;
 			
-			$.extend( oClasses, DataTable.ext.classes, oInit.oClasses );
-			$this.addClass( oClasses.sTable );
+			$.extend( ometiers, DataTable.ext.metiers, oInit.ometiers );
+			$this.addClass( ometiers.sTable );
 			
 			
 			if ( oSettings.iInitDisplayStart === undefined )
@@ -1106,22 +1106,22 @@
 			/*
 			 * Stripes
 			 */
-			if ( oInit.asStripeClasses === null )
+			if ( oInit.asStripemetiers === null )
 			{
-				oSettings.asStripeClasses =[
-					oClasses.sStripeOdd,
-					oClasses.sStripeEven
+				oSettings.asStripemetiers =[
+					ometiers.sStripeOdd,
+					ometiers.sStripeEven
 				];
 			}
 			
-			/* Remove row stripe classes if they are already on the table row */
-			var stripeClasses = oSettings.asStripeClasses;
+			/* Remove row stripe metiers if they are already on the table row */
+			var stripemetiers = oSettings.asStripemetiers;
 			var rowOne = $this.children('tbody').find('tr').eq(0);
-			if ( $.inArray( true, $.map( stripeClasses, function(el, i) {
+			if ( $.inArray( true, $.map( stripemetiers, function(el, i) {
 				return rowOne.hasClass(el);
 			} ) ) !== -1 ) {
-				$('tbody tr', this).removeClass( stripeClasses.join(' ') );
-				oSettings.asDestroyStripes = stripeClasses.slice();
+				$('tbody tr', this).removeClass( stripemetiers.join(' ') );
+				oSettings.asDestroyStripes = stripemetiers.slice();
 			}
 			
 			/*
@@ -1207,10 +1207,10 @@
 					}
 				}
 			
-				/* Do a first pass on the sorting classes (allows any size changes to be taken into
-				 * account, and also will apply sorting disabled classes if disabled
+				/* Do a first pass on the sorting metiers (allows any size changes to be taken into
+				 * account, and also will apply sorting disabled metiers if disabled
 				 */
-				_fnSortingClasses( oSettings );
+				_fnSortingmetiers( oSettings );
 			
 				if ( features.bSort ) {
 					_fnCallbackReg( oSettings, 'aoDrawCallback', function () {
@@ -1230,7 +1230,7 @@
 			
 				_fnCallbackReg( oSettings, 'aoDrawCallback', function () {
 					if ( oSettings.bSorted || _fnDataSource( oSettings ) === 'ssp' || features.bDeferRender ) {
-						_fnSortingClasses( oSettings );
+						_fnSortingmetiers( oSettings );
 					}
 				}, 'sc' );
 			
@@ -1265,7 +1265,7 @@
 				}
 			
 				if ( tfoot.length === 0 || tfoot.children().length === 0 ) {
-					$this.addClass( oClasses.sNoFooter );
+					$this.addClass( ometiers.sNoFooter );
 				}
 				else if ( tfoot.length > 0 ) {
 					oSettings.nTFoot = tfoot[0];
@@ -1830,7 +1830,7 @@
 	{
 		_fnCompatMap( init, 'ordering',      'bSort' );
 		_fnCompatMap( init, 'orderMulti',    'bSortMulti' );
-		_fnCompatMap( init, 'orderClasses',  'bSortClasses' );
+		_fnCompatMap( init, 'ordermetiers',  'bSortmetiers' );
 		_fnCompatMap( init, 'orderCellsTop', 'bSortCellsTop' );
 		_fnCompatMap( init, 'order',         'aaSorting' );
 		_fnCompatMap( init, 'orderFixed',    'aaSortingFixed' );
@@ -2021,7 +2021,7 @@
 		var searchCols = oSettings.aoPreSearchCols;
 		searchCols[ iCol ] = $.extend( {}, DataTable.models.oSearch, searchCols[ iCol ] );
 	
-		// Use the default column options function to initialise classes etc
+		// Use the default column options function to initialise metiers etc
 		_fnColumnOptions( oSettings, iCol, $(nTh).data() );
 	}
 	
@@ -2036,7 +2036,7 @@
 	function _fnColumnOptions( oSettings, iCol, oOptions )
 	{
 		var oCol = oSettings.aoColumns[ iCol ];
-		var oClasses = oSettings.oClasses;
+		var ometiers = oSettings.ometiers;
 		var th = $(oCol.nTh);
 	
 		// Try to get width information from the DOM. We can't get it from CSS
@@ -2129,7 +2129,7 @@
 		if ( !oSettings.oFeatures.bSort )
 		{
 			oCol.bSortable = false;
-			th.addClass( oClasses.sSortableNone ); // Have to add class here as order event isn't called
+			th.addClass( ometiers.sSortableNone ); // Have to add class here as order event isn't called
 		}
 	
 		/* Check that the class assignment is correct for sorting */
@@ -2137,23 +2137,23 @@
 		var bDesc = $.inArray('desc', oCol.asSorting) !== -1;
 		if ( !oCol.bSortable || (!bAsc && !bDesc) )
 		{
-			oCol.sSortingClass = oClasses.sSortableNone;
+			oCol.sSortingClass = ometiers.sSortableNone;
 			oCol.sSortingClassJUI = "";
 		}
 		else if ( bAsc && !bDesc )
 		{
-			oCol.sSortingClass = oClasses.sSortableAsc;
-			oCol.sSortingClassJUI = oClasses.sSortJUIAscAllowed;
+			oCol.sSortingClass = ometiers.sSortableAsc;
+			oCol.sSortingClassJUI = ometiers.sSortJUIAscAllowed;
 		}
 		else if ( !bAsc && bDesc )
 		{
-			oCol.sSortingClass = oClasses.sSortableDesc;
-			oCol.sSortingClassJUI = oClasses.sSortJUIDescAllowed;
+			oCol.sSortingClass = ometiers.sSortableDesc;
+			oCol.sSortingClassJUI = ometiers.sSortJUIDescAllowed;
 		}
 		else
 		{
-			oCol.sSortingClass = oClasses.sSortable;
-			oCol.sSortingClassJUI = oClasses.sSortJUI;
+			oCol.sSortingClass = ometiers.sSortable;
+			oCol.sSortingClassJUI = ometiers.sSortJUI;
 		}
 	}
 	
@@ -3205,7 +3205,7 @@
 			}
 	
 			if ( data.DT_RowClass ) {
-				// Remove any classes added by DT_RowClass before
+				// Remove any metiers added by DT_RowClass before
 				var a = data.DT_RowClass.split(' ');
 				row.__rowc = row.__rowc ?
 					_unique( row.__rowc.concat( a ) ) :
@@ -3238,7 +3238,7 @@
 		var thead = oSettings.nTHead;
 		var tfoot = oSettings.nTFoot;
 		var createHeader = $('th, td', thead).length === 0;
-		var classes = oSettings.oClasses;
+		var metiers = oSettings.ometiers;
 		var columns = oSettings.aoColumns;
 	
 		if ( createHeader ) {
@@ -3271,7 +3271,7 @@
 			}
 	
 			_fnRenderer( oSettings, 'header' )(
-				oSettings, cell, column, classes
+				oSettings, cell, column, metiers
 			);
 		}
 	
@@ -3282,9 +3282,9 @@
 		/* ARIA role for the rows */
 		$(thead).children('tr').attr('role', 'row');
 	
-		/* Deal with the footer - add classes if required */
-		$(thead).children('tr').children('th, td').addClass( classes.sHeaderTH );
-		$(tfoot).children('tr').children('th, td').addClass( classes.sFooterTH );
+		/* Deal with the footer - add metiers if required */
+		$(thead).children('tr').children('th, td').addClass( metiers.sHeaderTH );
+		$(tfoot).children('tr').children('th, td').addClass( metiers.sFooterTH );
 	
 		// Cache the footer cells. Note that we only take the cells from the first
 		// row in the footer. If there is more than one row the user wants to
@@ -3429,8 +3429,8 @@
 		var i, iLen, n;
 		var anRows = [];
 		var iRowCount = 0;
-		var asStripeClasses = oSettings.asStripeClasses;
-		var iStripes = asStripeClasses.length;
+		var asStripemetiers = oSettings.asStripemetiers;
+		var iStripes = asStripemetiers.length;
 		var iOpenRows = oSettings.aoOpenRows.length;
 		var oLang = oSettings.oLanguage;
 		var iInitDisplayStart = oSettings.iInitDisplayStart;
@@ -3486,10 +3486,10 @@
 	
 				var nRow = aoData.nTr;
 	
-				/* Remove the old striping classes and then add the new one */
+				/* Remove the old striping metiers and then add the new one */
 				if ( iStripes !== 0 )
 				{
-					var sStripe = asStripeClasses[ iRowCount % iStripes ];
+					var sStripe = asStripemetiers[ iRowCount % iStripes ];
 					if ( aoData._sRowStripe != sStripe )
 					{
 						$(nRow).removeClass( aoData._sRowStripe ).addClass( sStripe );
@@ -3520,11 +3520,11 @@
 				sZero = oLang.sEmptyTable;
 			}
 	
-			anRows[ 0 ] = $( '<tr/>', { 'class': iStripes ? asStripeClasses[0] : '' } )
+			anRows[ 0 ] = $( '<tr/>', { 'class': iStripes ? asStripemetiers[0] : '' } )
 				.append( $('<td />', {
 					'valign':  'top',
 					'colSpan': _fnVisbleColumns( oSettings ),
-					'class':   oSettings.oClasses.sRowEmpty
+					'class':   oSettings.ometiers.sRowEmpty
 				} ).html( sZero ) )[0];
 		}
 	
@@ -3597,7 +3597,7 @@
 	 */
 	function _fnAddOptionsHtml ( oSettings )
 	{
-		var classes = oSettings.oClasses;
+		var metiers = oSettings.ometiers;
 		var table = $(oSettings.nTable);
 		var holding = $('<div/>').insertBefore( table ); // Holding element for speed
 		var features = oSettings.oFeatures;
@@ -3605,7 +3605,7 @@
 		// All DataTables are wrapped in a div
 		var insert = $('<div/>', {
 			id:      oSettings.sTableId+'_wrapper',
-			'class': classes.sWrapper + (oSettings.nTFoot ? '' : ' '+classes.sNoFooter)
+			'class': metiers.sWrapper + (oSettings.nTFoot ? '' : ' '+metiers.sNoFooter)
 		} );
 	
 		oSettings.nHolding = holding[0];
@@ -3640,11 +3640,11 @@
 					/* Replace jQuery UI constants @todo depreciated */
 					if ( sAttr == "H" )
 					{
-						sAttr = classes.sJUIHeader;
+						sAttr = metiers.sJUIHeader;
 					}
 					else if ( sAttr == "F" )
 					{
-						sAttr = classes.sJUIFooter;
+						sAttr = metiers.sJUIFooter;
 					}
 	
 					/* The attribute can be in the format of "#id.class", "#id" or "class" This logic
@@ -4210,12 +4210,12 @@
 	 */
 	function _fnFeatureHtmlFilter ( settings )
 	{
-		var classes = settings.oClasses;
+		var metiers = settings.ometiers;
 		var tableId = settings.sTableId;
 		var language = settings.oLanguage;
 		var previousSearch = settings.oPreviousSearch;
 		var features = settings.aanFeatures;
-		var input = '<input type="search" class="'+classes.sFilterInput+'"/>';
+		var input = '<input type="search" class="'+metiers.sFilterInput+'"/>';
 	
 		var str = language.sSearch;
 		str = str.match(/_INPUT_/) ?
@@ -4224,7 +4224,7 @@
 	
 		var filter = $('<div/>', {
 				'id': ! features.f ? tableId+'_filter' : null,
-				'class': classes.sFilter
+				'class': metiers.sFilter
 			} )
 			.append( $('<label/>' ).append( str ) );
 	
@@ -4639,7 +4639,7 @@
 			tid = settings.sTableId,
 			nodes = settings.aanFeatures.i,
 			n = $('<div/>', {
-				'class': settings.oClasses.sInfo,
+				'class': settings.ometiers.sInfo,
 				'id': ! nodes ? tid+'_info' : null
 			} );
 	
@@ -4852,7 +4852,7 @@
 	function _fnFeatureHtmlLength ( settings )
 	{
 		var
-			classes  = settings.oClasses,
+			metiers  = settings.ometiers,
 			tableId  = settings.sTableId,
 			menu     = settings.aLengthMenu,
 			d2       = Array.isArray( menu[0] ),
@@ -4862,7 +4862,7 @@
 		var select = $('<select/>', {
 			'name':          tableId+'_length',
 			'aria-controls': tableId,
-			'class':         classes.sLengthSelect
+			'class':         metiers.sLengthSelect
 		} );
 	
 		for ( var i=0, ien=lengths.length ; i<ien ; i++ ) {
@@ -4874,7 +4874,7 @@
 			);
 		}
 	
-		var div = $('<div><label/></div>').addClass( classes.sLength );
+		var div = $('<div><label/></div>').addClass( metiers.sLength );
 		if ( ! settings.aanFeatures.l ) {
 			div[0].id = tableId+'_length';
 		}
@@ -4924,7 +4924,7 @@
 			redraw = function( settings ) {
 				_fnDraw( settings );
 			},
-			node = $('<div/>').addClass( settings.oClasses.sPaging + type )[0],
+			node = $('<div/>').addClass( settings.ometiers.sPaging + type )[0],
 			features = settings.aanFeatures;
 	
 		if ( ! modern ) {
@@ -5053,7 +5053,7 @@
 	{
 		return $('<div/>', {
 				'id': ! settings.aanFeatures.r ? settings.sTableId+'_processing' : null,
-				'class': settings.oClasses.sProcessing
+				'class': settings.ometiers.sProcessing
 			} )
 			.html( settings.oLanguage.sProcessing )
 			.insertBefore( settings.nTable )[0];
@@ -5097,7 +5097,7 @@
 	
 		var scrollX = scroll.sX;
 		var scrollY = scroll.sY;
-		var classes = settings.oClasses;
+		var metiers = settings.ometiers;
 		var caption = table.children('caption');
 		var captionSide = caption.length ? caption[0]._captionSide : null;
 		var headerClone = $( table[0].cloneNode(false) );
@@ -5128,9 +5128,9 @@
 		 *        table - scroll foot table
 		 *          tfoot - tfoot
 		 */
-		var scroller = $( _div, { 'class': classes.sScrollWrapper } )
+		var scroller = $( _div, { 'class': metiers.sScrollWrapper } )
 			.append(
-				$(_div, { 'class': classes.sScrollHead } )
+				$(_div, { 'class': metiers.sScrollHead } )
 					.css( {
 						overflow: 'hidden',
 						position: 'relative',
@@ -5138,7 +5138,7 @@
 						width: scrollX ? size(scrollX) : '100%'
 					} )
 					.append(
-						$(_div, { 'class': classes.sScrollHeadInner } )
+						$(_div, { 'class': metiers.sScrollHeadInner } )
 							.css( {
 								'box-sizing': 'content-box',
 								width: scroll.sXInner || '100%'
@@ -5155,7 +5155,7 @@
 					)
 			)
 			.append(
-				$(_div, { 'class': classes.sScrollBody } )
+				$(_div, { 'class': metiers.sScrollBody } )
 					.css( {
 						position: 'relative',
 						overflow: 'auto',
@@ -5166,14 +5166,14 @@
 	
 		if ( footer ) {
 			scroller.append(
-				$(_div, { 'class': classes.sScrollFoot } )
+				$(_div, { 'class': metiers.sScrollFoot } )
 					.css( {
 						overflow: 'hidden',
 						border: 0,
 						width: scrollX ? size(scrollX) : '100%'
 					} )
 					.append(
-						$(_div, { 'class': classes.sScrollFootInner } )
+						$(_div, { 'class': metiers.sScrollFootInner } )
 							.append(
 								footerClone
 									.removeAttr('id')
@@ -6259,21 +6259,21 @@
 	
 	
 	/**
-	 * Set the sorting classes on table's body, Note: it is safe to call this function
-	 * when bSort and bSortClasses are false
+	 * Set the sorting metiers on table's body, Note: it is safe to call this function
+	 * when bSort and bSortmetiers are false
 	 *  @param {object} oSettings dataTables settings object
 	 *  @memberof DataTable#oApi
 	 */
-	function _fnSortingClasses( settings )
+	function _fnSortingmetiers( settings )
 	{
 		var oldSort = settings.aLastSort;
-		var sortClass = settings.oClasses.sSortColumn;
+		var sortClass = settings.ometiers.sSortColumn;
 		var sort = _fnSortFlatten( settings );
 		var features = settings.oFeatures;
 		var i, ien, colIdx;
 	
-		if ( features.bSort && features.bSortClasses ) {
-			// Remove old sorting classes
+		if ( features.bSort && features.bSortmetiers ) {
+			// Remove old sorting metiers
 			for ( i=0, ien=oldSort.length ; i<ien ; i++ ) {
 				colIdx = oldSort[i].src;
 	
@@ -9388,7 +9388,7 @@
 	
 		return this.iterator( 'table', function ( settings ) {
 			var orig      = settings.nTableWrapper.parentNode;
-			var classes   = settings.oClasses;
+			var metiers   = settings.ometiers;
 			var table     = settings.nTable;
 			var tbody     = settings.nTBody;
 			var thead     = settings.nTHead;
@@ -9430,19 +9430,19 @@
 	
 			settings.aaSorting = [];
 			settings.aaSortingFixed = [];
-			_fnSortingClasses( settings );
+			_fnSortingmetiers( settings );
 	
-			$( rows ).removeClass( settings.asStripeClasses.join(' ') );
+			$( rows ).removeClass( settings.asStripemetiers.join(' ') );
 	
-			$('th, td', thead).removeClass( classes.sSortable+' '+
-				classes.sSortableAsc+' '+classes.sSortableDesc+' '+classes.sSortableNone
+			$('th, td', thead).removeClass( metiers.sSortable+' '+
+				metiers.sSortableAsc+' '+metiers.sSortableDesc+' '+metiers.sSortableNone
 			);
 	
 			// Add the TR elements back into the table in their original order
 			jqTbody.children().detach();
 			jqTbody.append( rows );
 	
-			// Remove the DataTables generated nodes, events and classes
+			// Remove the DataTables generated nodes, events and metiers
 			var removedMethod = remove ? 'remove' : 'detach';
 			jqTable[ removedMethod ]();
 			jqWrapper[ removedMethod ]();
@@ -9456,11 +9456,11 @@
 				// so we can restore directly to that
 				jqTable
 					.css( 'width', settings.sDestroyWidth )
-					.removeClass( classes.sTable );
+					.removeClass( metiers.sTable );
 	
-				// If the were originally stripe classes - then we add them back here.
+				// If the were originally stripe metiers - then we add them back here.
 				// Note this is not fool proof (for example if not all rows had stripe
-				// classes - but it's a good effort without getting carried away
+				// metiers - but it's a good effort without getting carried away
 				ien = settings.asDestroyStripes.length;
 	
 				if ( ien ) {
@@ -10329,24 +10329,24 @@
 	
 	
 		/**
-		 * An array of CSS classes that should be applied to displayed rows. This
+		 * An array of CSS metiers that should be applied to displayed rows. This
 		 * array may be of any length, and DataTables will apply each class
 		 * sequentially, looping when required.
 		 *  @type array
-		 *  @default null <i>Will take the values determined by the `oClasses.stripe*`
+		 *  @default null <i>Will take the values determined by the `ometiers.stripe*`
 		 *    options</i>
 		 *
 		 *  @dtopt Option
-		 *  @name DataTable.defaults.stripeClasses
+		 *  @name DataTable.defaults.stripemetiers
 		 *
 		 *  @example
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "stripeClasses": [ 'strip1', 'strip2', 'strip3' ]
+		 *        "stripemetiers": [ 'strip1', 'strip2', 'strip3' ]
 		 *      } );
 		 *    } )
 		 */
-		"asStripeClasses": null,
+		"asStripemetiers": null,
 	
 	
 		/**
@@ -10666,25 +10666,25 @@
 	
 	
 		/**
-		 * Enable or disable the addition of the classes `sorting\_1`, `sorting\_2` and
+		 * Enable or disable the addition of the metiers `sorting\_1`, `sorting\_2` and
 		 * `sorting\_3` to the columns which are currently being sorted on. This is
 		 * presented as a feature switch as it can increase processing time (while
-		 * classes are removed and added) so for large data sets you might want to
+		 * metiers are removed and added) so for large data sets you might want to
 		 * turn this off.
 		 *  @type boolean
 		 *  @default true
 		 *
 		 *  @dtopt Features
-		 *  @name DataTable.defaults.orderClasses
+		 *  @name DataTable.defaults.ordermetiers
 		 *
 		 *  @example
 		 *    $(document).ready( function () {
 		 *      $('#example').dataTable( {
-		 *        "orderClasses": false
+		 *        "ordermetiers": false
 		 *      } );
 		 *    } );
 		 */
-		"bSortClasses": true,
+		"bSortmetiers": true,
 	
 	
 		/**
@@ -10715,7 +10715,7 @@
 		/**
 		 * This function is called when a TR element is created (and all TD child
 		 * elements have been inserted), or registered if using a DOM source, allowing
-		 * manipulation of the TR element (adding classes etc).
+		 * manipulation of the TR element (adding metiers etc).
 		 *  @type function
 		 *  @param {node} row "TR" element for the current row
 		 *  @param {array} data Raw data array for this row
@@ -11316,14 +11316,14 @@
 	
 	
 		/**
-		 * Classes that DataTables assigns to the various components and features
-		 * that it adds to the HTML table. This allows classes to be configured
+		 * metiers that DataTables assigns to the various components and features
+		 * that it adds to the HTML table. This allows metiers to be configured
 		 * during initialisation in addition to through the static
-		 * {@link DataTable.ext.oStdClasses} object).
+		 * {@link DataTable.ext.oStdmetiers} object).
 		 *  @namespace
-		 *  @name DataTable.defaults.classes
+		 *  @name DataTable.defaults.metiers
 		 */
-		"oClasses": {},
+		"ometiers": {},
 	
 	
 		/**
@@ -11926,8 +11926,8 @@
 		 *     </li>
 		 *     <li>The following constants are allowed:
 		 *       <ul>
-		 *         <li>'H' - jQueryUI theme "header" classes ('fg-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix')</li>
-		 *         <li>'F' - jQueryUI theme "footer" classes ('fg-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix')</li>
+		 *         <li>'H' - jQueryUI theme "header" metiers ('fg-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix')</li>
+		 *         <li>'F' - jQueryUI theme "footer" metiers ('fg-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix')</li>
 		 *       </ul>
 		 *     </li>
 		 *     <li>The following syntax is expected:
@@ -13127,7 +13127,7 @@
 			 * set a default use {@link DataTable.defaults}.
 			 *  @type boolean
 			 */
-			"bSortClasses": null,
+			"bSortmetiers": null,
 	
 			/**
 			 * State saving enablement flag.
@@ -13356,16 +13356,16 @@
 		"aaSortingFixed": [],
 	
 		/**
-		 * Classes to use for the striping of a table.
+		 * metiers to use for the striping of a table.
 		 * Note that this parameter will be set by the initialisation routine. To
 		 * set a default use {@link DataTable.defaults}.
 		 *  @type array
 		 *  @default []
 		 */
-		"asStripeClasses": null,
+		"asStripemetiers": null,
 	
 		/**
-		 * If restoring a table - we should restore its striping classes as well
+		 * If restoring a table - we should restore its striping metiers as well
 		 *  @type array
 		 *  @default []
 		 */
@@ -13747,11 +13747,11 @@
 		"_iRecordsDisplay": 0,
 	
 		/**
-		 * The classes to use for the table
+		 * The metiers to use for the table
 		 *  @type object
 		 *  @default {}
 		 */
-		"oClasses": {},
+		"ometiers": {},
 	
 		/**
 		 * Flag attached to the settings object so you can check in the draw
@@ -13951,7 +13951,7 @@
 		 *  @type object
 		 *  @default {}
 		 */
-		classes: {},
+		metiers: {},
 	
 	
 		/**
@@ -14431,7 +14431,7 @@
 		 *  @type object
 		 *  @deprecated Since v1.10
 		 */
-		oJUIClasses: {},
+		oJUImetiers: {},
 	
 	
 		/**
@@ -14454,12 +14454,12 @@
 		afnSortData:  _ext.order,
 		aoFeatures:   _ext.feature,
 		oApi:         _ext.internal,
-		oStdClasses:  _ext.classes,
+		oStdmetiers:  _ext.metiers,
 		oPagination:  _ext.pager
 	} );
 	
 	
-	$.extend( DataTable.ext.classes, {
+	$.extend( DataTable.ext.metiers, {
 		"sTable": "dataTable",
 		"sNoFooter": "no-footer",
 	
@@ -14468,7 +14468,7 @@
 		"sPageButtonActive": "current",
 		"sPageButtonDisabled": "disabled",
 	
-		/* Striping classes */
+		/* Striping metiers */
 		"sStripeOdd": "odd",
 		"sStripeEven": "even",
 	
@@ -14594,14 +14594,14 @@
 	$.extend( true, DataTable.ext.renderer, {
 		pageButton: {
 			_: function ( settings, host, idx, buttons, page, pages ) {
-				var classes = settings.oClasses;
+				var metiers = settings.ometiers;
 				var lang = settings.oLanguage.oPaginate;
 				var aria = settings.oLanguage.oAria.paginate || {};
 				var btnDisplay, btnClass, counter=0;
 	
 				var attach = function( container, buttons ) {
 					var i, ien, node, button, tabIndex;
-					var disabledClass = classes.sPageButtonDisabled;
+					var disabledClass = metiers.sPageButtonDisabled;
 					var clickHandler = function ( e ) {
 						_fnPageChange( settings, e.data.action, true );
 					};
@@ -14663,13 +14663,13 @@
 								default:
 									btnDisplay = settings.fnFormatNumber( button + 1 );
 									btnClass = page === button ?
-										classes.sPageButtonActive : '';
+										metiers.sPageButtonActive : '';
 									break;
 							}
 	
 							if ( btnDisplay !== null ) {
 								node = $('<a>', {
-										'class': classes.sPageButton+' '+btnClass,
+										'class': metiers.sPageButton+' '+btnClass,
 										'aria-controls': settings.sTableId,
 										'aria-label': aria[ button ],
 										'data-dt-idx': counter,
@@ -14914,7 +14914,7 @@
 	
 	$.extend( true, DataTable.ext.renderer, {
 		header: {
-			_: function ( settings, cell, column, classes ) {
+			_: function ( settings, cell, column, metiers ) {
 				// No additional mark-up required
 				// Attach a sort listener to update on sort - note that using the
 				// `DT` namespace will allow the event to be removed automatically
@@ -14929,23 +14929,23 @@
 	
 					cell
 						.removeClass(
-							classes.sSortAsc +' '+
-							classes.sSortDesc
+							metiers.sSortAsc +' '+
+							metiers.sSortDesc
 						)
 						.addClass( columns[ colIdx ] == 'asc' ?
-							classes.sSortAsc : columns[ colIdx ] == 'desc' ?
-								classes.sSortDesc :
+							metiers.sSortAsc : columns[ colIdx ] == 'desc' ?
+								metiers.sSortDesc :
 								column.sSortingClass
 						);
 				} );
 			},
 	
-			jqueryui: function ( settings, cell, column, classes ) {
+			jqueryui: function ( settings, cell, column, metiers ) {
 				$('<div/>')
-					.addClass( classes.sSortJUIWrapper )
+					.addClass( metiers.sSortJUIWrapper )
 					.append( cell.contents() )
 					.append( $('<span/>')
-						.addClass( classes.sSortIcon+' '+column.sSortingClassJUI )
+						.addClass( metiers.sSortIcon+' '+column.sSortingClassJUI )
 					)
 					.appendTo( cell );
 	
@@ -14958,25 +14958,25 @@
 					var colIdx = column.idx;
 	
 					cell
-						.removeClass( classes.sSortAsc +" "+classes.sSortDesc )
+						.removeClass( metiers.sSortAsc +" "+metiers.sSortDesc )
 						.addClass( columns[ colIdx ] == 'asc' ?
-							classes.sSortAsc : columns[ colIdx ] == 'desc' ?
-								classes.sSortDesc :
+							metiers.sSortAsc : columns[ colIdx ] == 'desc' ?
+								metiers.sSortDesc :
 								column.sSortingClass
 						);
 	
 					cell
-						.find( 'span.'+classes.sSortIcon )
+						.find( 'span.'+metiers.sSortIcon )
 						.removeClass(
-							classes.sSortJUIAsc +" "+
-							classes.sSortJUIDesc +" "+
-							classes.sSortJUI +" "+
-							classes.sSortJUIAscAllowed +" "+
-							classes.sSortJUIDescAllowed
+							metiers.sSortJUIAsc +" "+
+							metiers.sSortJUIDesc +" "+
+							metiers.sSortJUI +" "+
+							metiers.sSortJUIAscAllowed +" "+
+							metiers.sSortJUIDescAllowed
 						)
 						.addClass( columns[ colIdx ] == 'asc' ?
-							classes.sSortJUIAsc : columns[ colIdx ] == 'desc' ?
-								classes.sSortJUIDesc :
+							metiers.sSortJUIAsc : columns[ colIdx ] == 'desc' ?
+								metiers.sSortJUIDesc :
 								column.sSortingClassJUI
 						);
 				} );
@@ -15177,7 +15177,7 @@
 		_fnSortAria: _fnSortAria,
 		_fnSortListener: _fnSortListener,
 		_fnSortAttachListener: _fnSortAttachListener,
-		_fnSortingClasses: _fnSortingClasses,
+		_fnSortingmetiers: _fnSortingmetiers,
 		_fnSortData: _fnSortData,
 		_fnSaveState: _fnSaveState,
 		_fnLoadState: _fnLoadState,

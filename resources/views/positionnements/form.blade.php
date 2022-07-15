@@ -20,8 +20,20 @@
     <section class="content">
 
          <div class="row">
-            <div class="col-12 col-sm-8">
+            @if($users->imageuser)
+          <div class="col-12 col-sm-1">
+            <div class="form-group">
+                  <h6>
+                  <img src="{{ asset('storage/image/' .$users->imageuser) }}" alt="user-ImageUser" class="img-thumbnail" style="width: 150px; height: 150px;">
+                  </h6>
+            </div>
+          </div>
+          @endif
+
+            <div class="col-12 col-sm-7">
               <div class="form-group">
+                    <h6><strong> {{$users->nomuser}} {{$users->prenomuser}}</strong></h6>
+                    <h6><strong> </strong></h6>
               </div>
             </div>
 
@@ -54,78 +66,65 @@
          </div>
          <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
 
-         <div class="row">
-            <div class="col-12 col-sm-6">
-                @include('positionnements.form.tuteur')
-            </div>
-            <div class="col-12 col-sm-6">
-                @include('positionnements.form.entreprise')
-            </div>
-        </div>
+                @include('positionnements.form.tuteur_entreprise')
 
-                <!-- cadre general -->
-        <div class="card card-secondary direct-chat direct-chat-secondary">
-            <div class="card-header">
-                <h3 class="card-title">Positionnement</h3>
-                <div class="card-tools">
-                  <span data-toggle="tooltip" title="user" class="nav-icon fas fa-signal"></span>
-                </div>
-            </div>
+                <input type="number" hidden value="{{$users->id}}" name="user_id"/>
+                <input type="number" hidden value="{{$metiers->id}}" name="metier_id"/>
+                <input type="text" hidden value="{{$metiers->libellemetier}}" name="metier_libelle"/>
 
-            <!-- /.content-header -->
-            <div class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-12 my-2">
+                <div class="row">
+                    @foreach ($collections as $collection)
+                        <div class="col-12 col-sm-12">
+                            <div class="card card-info collapsed-card">
+                                <div class="card-header">
+                                    <h3 class="card-title">{{$collection['activite_libelle']}}</h3>
 
-                            <table id="exa" class="table table-bordered table-striped">
-                                <thead>
-                                    <th scope="col">Numero</th>
-                                    <th scope="col">Tâche</th>
-                                    <th scope="col">Positionnement_tâche</th>
-                                </thead>
-
-                                <input type="number" hidden value="{{$users->id}}" name="user_id"/>
-
-                                    <tbody>
-                                    @foreach($collections as $key=>$collection)
-                                    <tr>
-                                    <th scope="row" style="color:rgb(55, 144, 246);"> {{++$key}} </th>
-                                    <th scope="row" style="color:rgb(55, 144, 246);"> {{$collection['tache_libelle']}} </th>
-                                    <th>
-                                        <div class="form-group clearfix">
-                                            <div class="icheck-danger d-inline">
-                                            <input type="radio" id="radioDanger{{$collection['tache_id']}}" value="0" name="valeurpost_{{$collection['tache_id']}}" checked>
-                                            <label for="radioDanger{{$collection['tache_id']}}"></label>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="container-fluid">
+                                        @foreach($collection['taches'] as $tache)
+                                            <div class="row">
+                                                <div class="col-12 col-sm-10">
+                                                <label class="form-check-label"> <strong>{{$tache->libelletache}}</strong>  </label>
+                                                </div>
+                                                <div class="col-12 col-sm-2">
+                                                   <!--input class="form-check-input" type="checkbox" value="{{$tache->id}}" name="tache_id_{{$tache->id}}"-->
+                                                    <div class="form-group clearfix">
+                                                        <div class="icheck-danger d-inline">
+                                                        <input type="radio" id="radioDanger{{$tache->id}}" value="0" name="valeurpost_{{$tache->id}}" checked>
+                                                        <label for="radioDanger{{$tache->id}}"></label>
+                                                        </div>
+                                                        <div class="icheck-orange d-inline">
+                                                        <input type="radio" id="radioOrange{{$tache->id}}" value="1" name="valeurpost_{{$tache->id}}">
+                                                        <label for="radioOrange{{$tache->id}}"></label>
+                                                        </div>
+                                                        <div class="icheck-purple d-inline">
+                                                        <input type="radio" id="radioPurple{{$tache->id}}" value="2" name="valeurpost_{{$tache->id}}">
+                                                        <label for="radioPurple{{$tache->id}}"></label>
+                                                        </div>
+                                                        <div class="icheck-primary d-inline">
+                                                        <input type="radio" id="radioPrimary{{$tache->id}}" value="3" name="valeurpost_{{$tache->id}}">
+                                                        <label for="radioPrimary{{$tache->id}}"></label>
+                                                        </div>
+                                                        <div class="icheck-success d-inline">
+                                                        <input type="radio" id="radioSuccess{{$tache->id}}" value="4" name="valeurpost_{{$tache->id}}">
+                                                        <label for="radioSuccess{{$tache->id}}"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="icheck-orange d-inline">
-                                            <input type="radio" id="radioOrange{{$collection['tache_id']}}" value="1" name="valeurpost_{{$collection['tache_id']}}">
-                                            <label for="radioOrange{{$collection['tache_id']}}"></label>
-                                            </div>
-                                            <div class="icheck-purple d-inline">
-                                            <input type="radio" id="radioPurple{{$collection['tache_id']}}" value="2" name="valeurpost_{{$collection['tache_id']}}">
-                                            <label for="radioPurple{{$collection['tache_id']}}"></label>
-                                            </div>
-                                            <div class="icheck-primary d-inline">
-                                            <input type="radio" id="radioPrimary{{$collection['tache_id']}}" value="3" name="valeurpost_{{$collection['tache_id']}}">
-                                            <label for="radioPrimary{{$collection['tache_id']}}"></label>
-                                            </div>
-                                            <div class="icheck-success d-inline">
-                                            <input type="radio" id="radioSuccess{{$collection['tache_id']}}" value="4" name="valeurpost_{{$collection['tache_id']}}">
-                                            <label for="radioSuccess{{$collection['tache_id']}}"></label>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-
+                                            <p> <hr> </p>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-            </div>
-        </div>
-        <!-- /fin cadre -->
 
 </section>

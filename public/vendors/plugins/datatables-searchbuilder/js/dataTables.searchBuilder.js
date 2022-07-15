@@ -676,7 +676,7 @@
 		/**
 		 * Generate the HTML for a single day in the calendar - this is basically
 		 * and HTML cell with a button that has data attributes so we know what was
-		 * clicked on (if it is clicked on) and a bunch of classes for styling.
+		 * clicked on (if it is clicked on) and a bunch of metiers for styling.
 		 *
 		 * @param  {object} day Day object from the `_htmlMonth` method
 		 * @return {string}     HTML cell
@@ -687,22 +687,22 @@
 				return '<td class="empty"></td>';
 			}
 
-			var classes = [ 'selectable' ];
+			var metiers = [ 'selectable' ];
 			var classPrefix = this.c.classPrefix;
 
 			if ( day.disabled ) {
-				classes.push( 'disabled' );
+				metiers.push( 'disabled' );
 			}
 
 			if ( day.today ) {
-				classes.push( 'now' );
+				metiers.push( 'now' );
 			}
 
 			if ( day.selected ) {
-				classes.push( 'selected' );
+				metiers.push( 'selected' );
 			}
 
-			return '<td data-day="' + day.day + '" class="' + classes.join(' ') + '">' +
+			return '<td data-day="' + day.day + '" class="' + metiers.join(' ') + '">' +
 					'<button class="'+classPrefix+'-button '+classPrefix+'-day" type="button" ' +'data-year="' + day.year + '" data-month="' + day.month + '" data-day="' + day.day + '">' +
 						'<span>'+day.day+'</span>'+
 					'</button>' +
@@ -1439,7 +1439,7 @@
 	        if (!DataTable || !DataTable.versionCheck || !DataTable.versionCheck('1.10.0')) {
 	            throw new Error('SearchPane requires DataTables 1.10 or newer');
 	        }
-	        this.classes = $.extend(true, {}, Criteria.classes);
+	        this.metiers = $.extend(true, {}, Criteria.metiers);
 	        // Get options from user and any extra conditions/column types defined by plug-ins
 	        this.c = $.extend(true, {}, Criteria.defaults, $.fn.dataTable.ext.searchBuilder, opts);
 	        var i18n = this.c.i18n;
@@ -1460,53 +1460,53 @@
 	        };
 	        this.dom = {
 	            buttons: $('<div/>')
-	                .addClass(this.classes.buttonContainer),
+	                .addClass(this.metiers.buttonContainer),
 	            condition: $('<select disabled/>')
-	                .addClass(this.classes.condition)
-	                .addClass(this.classes.dropDown)
-	                .addClass(this.classes.italic)
+	                .addClass(this.metiers.condition)
+	                .addClass(this.metiers.dropDown)
+	                .addClass(this.metiers.italic)
 	                .attr('autocomplete', 'hacking'),
 	            conditionTitle: $('<option value="" disabled selected hidden/>')
 	                .text(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
 	            container: $('<div/>')
-	                .addClass(this.classes.container),
+	                .addClass(this.metiers.container),
 	            data: $('<select/>')
-	                .addClass(this.classes.data)
-	                .addClass(this.classes.dropDown)
-	                .addClass(this.classes.italic),
+	                .addClass(this.metiers.data)
+	                .addClass(this.metiers.dropDown)
+	                .addClass(this.metiers.italic),
 	            dataTitle: $('<option value="" disabled selected hidden/>')
 	                .text(this.s.dt.i18n('searchBuilder.data', i18n.data)),
 	            defaultValue: $('<select disabled/>')
-	                .addClass(this.classes.value)
-	                .addClass(this.classes.dropDown),
+	                .addClass(this.metiers.value)
+	                .addClass(this.metiers.dropDown),
 	            "delete": $('<button>&times</button>')
-	                .addClass(this.classes["delete"])
-	                .addClass(this.classes.button)
+	                .addClass(this.metiers["delete"])
+	                .addClass(this.metiers.button)
 	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle))
 	                .attr('type', 'button'),
 	            left: $('<button>\<</button>')
-	                .addClass(this.classes.left)
-	                .addClass(this.classes.button)
+	                .addClass(this.metiers.left)
+	                .addClass(this.metiers.button)
 	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle))
 	                .attr('type', 'button'),
 	            right: $('<button>\></button>')
-	                .addClass(this.classes.right)
-	                .addClass(this.classes.button)
+	                .addClass(this.metiers.right)
+	                .addClass(this.metiers.button)
 	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle))
 	                .attr('type', 'button'),
 	            value: [
-	                $('<select disabled/>').addClass(this.classes.value).addClass(this.classes.dropDown).addClass(this.classes.italic)
+	                $('<select disabled/>').addClass(this.metiers.value).addClass(this.metiers.dropDown).addClass(this.metiers.italic)
 	            ],
 	            valueTitle: $('<option value="--valueTitle--" selected/>').text(this.s.dt.i18n('searchBuilder.value', i18n.value))
 	        };
 	        // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
 	        if (this.c.greyscale) {
-	            $(this.dom.data).addClass(this.classes.greyscale);
-	            $(this.dom.condition).addClass(this.classes.greyscale);
-	            $(this.dom.defaultValue).addClass(this.classes.greyscale);
+	            $(this.dom.data).addClass(this.metiers.greyscale);
+	            $(this.dom.condition).addClass(this.metiers.greyscale);
+	            $(this.dom.defaultValue).addClass(this.metiers.greyscale);
 	            for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
 	                var val = _a[_i];
-	                $(val).addClass(this.classes.greyscale);
+	                $(val).addClass(this.metiers.greyscale);
 	            }
 	        }
 	        // For responsive design, adjust the criterias properties on the following events
@@ -1654,7 +1654,7 @@
 	        this._populateData();
 	        // If a data selection has previously been made attempt to find and select it
 	        if (loadedCriteria.data !== undefined) {
-	            var italic_1 = this.classes.italic;
+	            var italic_1 = this.metiers.italic;
 	            var data_1 = this.dom.data;
 	            $(this.dom.data).children('option').each(function () {
 	                if ($(this).text() === loadedCriteria.data) {
@@ -1686,7 +1686,7 @@
 	            // If the condition has been found and selected then the value can be populated and searched
 	            if (this.s.condition !== undefined) {
 	                $(this.dom.conditionTitle).remove();
-	                $(this.dom.condition).removeClass(this.classes.italic);
+	                $(this.dom.condition).removeClass(this.metiers.italic);
 	                this._populateValue(loadedCriteria);
 	            }
 	            else {
@@ -1703,7 +1703,7 @@
 	            .unbind('input change')
 	            .on('input change', function () {
 	            $(_this.dom.dataTitle).attr('selected', false);
-	            $(_this.dom.data).removeClass(_this.classes.italic);
+	            $(_this.dom.data).removeClass(_this.metiers.italic);
 	            _this.s.dataIdx = $(_this.dom.data).children('option:selected').val();
 	            _this.s.data = $(_this.dom.data).children('option:selected').text();
 	            _this.c.orthogonal = _this._getOptions().orthogonal;
@@ -1723,7 +1723,7 @@
 	            .unbind('input change')
 	            .on('input change', function () {
 	            $(_this.dom.conditionTitle).attr('selected', false);
-	            $(_this.dom.condition).removeClass(_this.classes.italic);
+	            $(_this.dom.condition).removeClass(_this.metiers.italic);
 	            var condDisp = $(_this.dom.condition).children('option:selected').val();
 	            // Find the condition that has been selected and store it internally
 	            for (var _i = 0, _a = Object.keys(_this.s.conditions); _i < _a.length; _i++) {
@@ -1781,7 +1781,7 @@
 	        if (buttonsLeft - valRight < 15 ||
 	            (hasLeft && leftOffset.top !== clearOffset.top) ||
 	            (hasRight && rightOffset.top !== clearOffset.top)) {
-	            $(this.dom.container).parent().addClass(this.classes.vertical);
+	            $(this.dom.container).parent().addClass(this.metiers.vertical);
 	            $(this.s.topGroup).trigger('dtsb-redrawContents');
 	        }
 	        else if (buttonsLeft -
@@ -1789,7 +1789,7 @@
 	                $(this.dom.data).outerWidth(true) +
 	                $(this.dom.condition).outerWidth(true) +
 	                valWidth) > 15) {
-	            $(this.dom.container).parent().removeClass(this.classes.vertical);
+	            $(this.dom.container).parent().removeClass(this.metiers.vertical);
 	            $(this.s.topGroup).trigger('dtsb-redrawContents');
 	        }
 	    };
@@ -1887,7 +1887,7 @@
 	                .attr('disabled', false)
 	                .empty()
 	                .append(this.dom.conditionTitle)
-	                .addClass(this.classes.italic);
+	                .addClass(this.metiers.italic);
 	            $(this.dom.conditionTitle)
 	                .attr('selected', true);
 	            var decimal = this.s.dt.settings()[0].oLanguage.sDecimal;
@@ -1923,14 +1923,14 @@
 	                        text: condName,
 	                        value: condition
 	                    })
-	                        .addClass(this.classes.option)
-	                        .addClass(this.classes.notItalic));
+	                        .addClass(this.metiers.option)
+	                        .addClass(this.metiers.notItalic));
 	                }
 	            }
 	        }
 	        // Otherwise we can just load them in
 	        else if (conditionsLength > 0) {
-	            $(this.dom.condition).empty().attr('disabled', false).addClass(this.classes.italic);
+	            $(this.dom.condition).empty().attr('disabled', false).addClass(this.metiers.italic);
 	            for (var _b = 0, _c = Object.keys(this.s.conditions); _b < _c.length; _b++) {
 	                var condition = _c[_b];
 	                var condName = this.s.conditions[condition].conditionName;
@@ -1941,11 +1941,11 @@
 	                    text: condName,
 	                    value: condition
 	                })
-	                    .addClass(this.classes.option)
-	                    .addClass(this.classes.notItalic);
+	                    .addClass(this.metiers.option)
+	                    .addClass(this.metiers.notItalic);
 	                if (this.s.condition !== undefined && this.s.condition === condName) {
 	                    $(newOpt).attr('selected', true);
-	                    $(this.dom.condition).removeClass(this.classes.italic);
+	                    $(this.dom.condition).removeClass(this.metiers.italic);
 	                }
 	                conditionOpts.push(newOpt);
 	            }
@@ -1953,7 +1953,7 @@
 	        else {
 	            $(this.dom.condition)
 	                .attr('disabled', true)
-	                .addClass(this.classes.italic);
+	                .addClass(this.metiers.italic);
 	            return;
 	        }
 	        for (var _d = 0, conditionOpts_1 = conditionOpts; _d < conditionOpts_1.length; _d++) {
@@ -1989,8 +1989,8 @@
 	                            text: opt.text,
 	                            value: opt.index
 	                        })
-	                            .addClass(_this.classes.option)
-	                            .addClass(_this.classes.notItalic));
+	                            .addClass(_this.metiers.option)
+	                            .addClass(_this.metiers.notItalic));
 	                    }
 	                }
 	            });
@@ -2007,12 +2007,12 @@
 	                    text: data.text,
 	                    value: data.index
 	                })
-	                    .addClass(this_1.classes.option)
-	                    .addClass(this_1.classes.notItalic);
+	                    .addClass(this_1.metiers.option)
+	                    .addClass(this_1.metiers.notItalic);
 	                if (this_1.s.data === data.text) {
 	                    this_1.s.dataIdx = data.index;
 	                    $(newOpt).attr('selected', true);
-	                    $(this_1.dom.data).removeClass(this_1.classes.italic);
+	                    $(this_1.dom.data).removeClass(this_1.metiers.italic);
 	                }
 	                $(this_1.dom.data).append(newOpt);
 	            };
@@ -2075,7 +2075,7 @@
 	        }
 	    };
 	    Criteria.version = '1.0.0';
-	    Criteria.classes = {
+	    Criteria.metiers = {
 	        button: 'dtsb-button',
 	        buttonContainer: 'dtsb-buttonContainer',
 	        condition: 'dtsb-condition',
@@ -2103,18 +2103,18 @@
 	        var column = $(that.dom.data).children('option:selected').val();
 	        var indexArray = that.s.dt.rows().indexes().toArray();
 	        var settings = that.s.dt.settings()[0];
-	        // Declare select element to be used with all of the default classes and listeners.
+	        // Declare select element to be used with all of the default metiers and listeners.
 	        var el = $('<select/>')
-	            .addClass(Criteria.classes.value)
-	            .addClass(Criteria.classes.dropDown)
-	            .addClass(Criteria.classes.italic)
+	            .addClass(Criteria.metiers.value)
+	            .addClass(Criteria.metiers.dropDown)
+	            .addClass(Criteria.metiers.italic)
 	            .append(that.dom.valueTitle)
 	            .on('input change', function () {
-	            $(this).removeClass(Criteria.classes.italic);
+	            $(this).removeClass(Criteria.metiers.italic);
 	            fn(that, this);
 	        });
 	        if (that.c.greyscale) {
-	            $(el).addClass(Criteria.classes.greyscale);
+	            $(el).addClass(Criteria.metiers.greyscale);
 	        }
 	        var added = [];
 	        var options = [];
@@ -2155,8 +2155,8 @@
 	                        filt.replace(/(<([^>]+)>)/ig, '') :
 	                        filt
 	                })
-	                    .addClass(that.classes.option)
-	                    .addClass(that.classes.notItalic);
+	                    .addClass(that.metiers.option)
+	                    .addClass(that.metiers.notItalic);
 	                var val = $(opt).val();
 	                // Check that this value has not already been added
 	                if (added.indexOf(val) === -1) {
@@ -2168,7 +2168,7 @@
 	                    // If this value was previously selected as indicated by preDefined, then select it again
 	                    if (preDefined !== null && opt.val() === preDefined[0]) {
 	                        opt.attr('selected', true);
-	                        $(el).removeClass(Criteria.classes.italic);
+	                        $(el).removeClass(Criteria.metiers.italic);
 	                    }
 	                }
 	            };
@@ -2229,11 +2229,11 @@
 	        if (preDefined === void 0) { preDefined = null; }
 	        // Declare the input element
 	        var el = $('<input/>')
-	            .addClass(Criteria.classes.value)
-	            .addClass(Criteria.classes.input)
+	            .addClass(Criteria.metiers.value)
+	            .addClass(Criteria.metiers.input)
 	            .on('input', function () { fn(that, this); });
 	        if (that.c.greyscale) {
-	            $(el).addClass(Criteria.classes.greyscale);
+	            $(el).addClass(Criteria.metiers.greyscale);
 	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
@@ -2249,19 +2249,19 @@
 	        // Declare all of the necessary jQuery elements
 	        var els = [
 	            $('<input/>')
-	                .addClass(Criteria.classes.value)
-	                .addClass(Criteria.classes.input)
+	                .addClass(Criteria.metiers.value)
+	                .addClass(Criteria.metiers.input)
 	                .on('input', function () { fn(that, this); }),
 	            $('<span>')
-	                .addClass(that.classes.joiner).text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
+	                .addClass(that.metiers.joiner).text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
 	            $('<input/>')
-	                .addClass(Criteria.classes.value)
-	                .addClass(Criteria.classes.input)
+	                .addClass(Criteria.metiers.value)
+	                .addClass(Criteria.metiers.input)
 	                .on('input', function () { fn(that, this); })
 	        ];
 	        if (that.c.greyscale) {
-	            $(els[0]).addClass(Criteria.classes.greyscale);
-	            $(els[2]).addClass(Criteria.classes.greyscale);
+	            $(els[0]).addClass(Criteria.metiers.greyscale);
+	            $(els[2]).addClass(Criteria.metiers.greyscale);
 	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
@@ -2281,15 +2281,15 @@
 	        if (preDefined === void 0) { preDefined = null; }
 	        // Declare date element using DataTables dateTime plugin
 	        var el = $('<input/>')
-	            .addClass(Criteria.classes.value)
-	            .addClass(Criteria.classes.input)
+	            .addClass(Criteria.metiers.value)
+	            .addClass(Criteria.metiers.input)
 	            .dtDateTime({
 	            attachTo: 'input',
 	            format: that.s.momentFormat ? that.s.momentFormat : undefined
 	        })
 	            .on('input change', function () { fn(that, this); });
 	        if (that.c.greyscale) {
-	            $(el).addClass(Criteria.classes.greyscale);
+	            $(el).addClass(Criteria.metiers.greyscale);
 	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
@@ -2308,19 +2308,19 @@
 	        // Declare all of the date elements that are required using DataTables dateTime plugin
 	        var els = [
 	            $('<input/>')
-	                .addClass(Criteria.classes.value)
-	                .addClass(Criteria.classes.input)
+	                .addClass(Criteria.metiers.value)
+	                .addClass(Criteria.metiers.input)
 	                .dtDateTime({
 	                attachTo: 'input',
 	                format: that.s.momentFormat ? that.s.momentFormat : undefined
 	            })
 	                .on('input change', function () { fn(that, this); }),
 	            $('<span>')
-	                .addClass(that.classes.joiner)
+	                .addClass(that.metiers.joiner)
 	                .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
 	            $('<input/>')
-	                .addClass(Criteria.classes.value)
-	                .addClass(Criteria.classes.input)
+	                .addClass(Criteria.metiers.value)
+	                .addClass(Criteria.metiers.input)
 	                .dtDateTime({
 	                attachTo: 'input',
 	                format: that.s.momentFormat ? that.s.momentFormat : undefined
@@ -2328,8 +2328,8 @@
 	                .on('input change', function () { fn(that, this); })
 	        ];
 	        if (that.c.greyscale) {
-	            $(els[0]).addClass(Criteria.classes.greyscale);
-	            $(els[2]).addClass(Criteria.classes.greyscale);
+	            $(els[0]).addClass(Criteria.metiers.greyscale);
+	            $(els[2]).addClass(Criteria.metiers.greyscale);
 	        }
 	        // If there are and preDefined values then add them
 	        if (preDefined !== null && preDefined.length > 0) {
@@ -2350,7 +2350,7 @@
 	        // Check each element to make sure that the selections are valid
 	        for (var _i = 0, el_1 = el; _i < el_1.length; _i++) {
 	            var element = el_1[_i];
-	            if ($(element).children('option:selected').length === $(element).children('option').length - $(element).children('option.' + Criteria.classes.notItalic).length &&
+	            if ($(element).children('option:selected').length === $(element).children('option').length - $(element).children('option.' + Criteria.metiers.notItalic).length &&
 	                $(element).children('option:selected').length === 1 &&
 	                $(element).children('option:selected')[0] === $(element).children('option:hidden')[0]) {
 	                allFilled = false;
@@ -2441,7 +2441,7 @@
 	        that.s.dt.draw();
 	        // Refocus the element and set the correct cursor position
 	        if (idx !== null) {
-	            $(that.dom.value[idx]).removeClass(that.classes.italic);
+	            $(that.dom.value[idx]).removeClass(that.metiers.italic);
 	            $(that.dom.value[idx]).focus();
 	            if (cursorPos !== null) {
 	                $(that.dom.value[idx])[0].setSelectionRange(cursorPos, cursorPos);
@@ -3210,7 +3210,7 @@
 	        if (!DataTable$1 || !DataTable$1.versionCheck || !DataTable$1.versionCheck('1.10.0')) {
 	            throw new Error('SearchBuilder requires DataTables 1.10 or newer');
 	        }
-	        this.classes = $$1.extend(true, {}, Group.classes);
+	        this.metiers = $$1.extend(true, {}, Group.metiers);
 	        // Get options from user
 	        this.c = $$1.extend(true, {}, Group.defaults, opts);
 	        this.s = {
@@ -3226,21 +3226,21 @@
 	        };
 	        this.dom = {
 	            add: $$1('<button/>')
-	                .addClass(this.classes.add)
-	                .addClass(this.classes.button)
+	                .addClass(this.metiers.add)
+	                .addClass(this.metiers.button)
 	                .attr('type', 'button'),
 	            clear: $$1('<button>&times</button>')
-	                .addClass(this.classes.button)
-	                .addClass(this.classes.clearGroup)
+	                .addClass(this.metiers.button)
+	                .addClass(this.metiers.clearGroup)
 	                .attr('type', 'button'),
 	            container: $$1('<div/>')
-	                .addClass(this.classes.group),
+	                .addClass(this.metiers.group),
 	            logic: $$1('<button/>')
-	                .addClass(this.classes.logic)
-	                .addClass(this.classes.button)
+	                .addClass(this.metiers.logic)
+	                .addClass(this.metiers.button)
 	                .attr('type', 'button'),
 	            logicContainer: $$1('<div/>')
-	                .addClass(this.classes.logicContainer)
+	                .addClass(this.metiers.logicContainer)
 	        };
 	        // A reference to the top level group is maintained throughout any subgroups and criteria that may be created
 	        if (this.s.topGroup === undefined) {
@@ -3462,7 +3462,7 @@
 	            criteria.c = crit.c;
 	            criteria.s = crit.s;
 	            criteria.s.depth = this.s.depth;
-	            criteria.classes = crit.classes;
+	            criteria.metiers = crit.metiers;
 	        }
 	        criteria.populate();
 	        var inserted = false;
@@ -3695,7 +3695,7 @@
 	            _this.s.toDrop = new Criteria(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index);
 	            _this.s.toDrop.s = criteria.s;
 	            _this.s.toDrop.c = criteria.c;
-	            _this.s.toDrop.classes = criteria.classes;
+	            _this.s.toDrop.metiers = criteria.metiers;
 	            _this.s.toDrop.populate();
 	            // The dropCriteria event mutates the reference to the index so need to store it
 	            var index = _this.s.toDrop.s.index;
@@ -3778,7 +3778,7 @@
 	            : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
 	        this.s.logic = this.c.logic === 'OR' ? 'OR' : 'AND';
 	        if (this.c.greyscale) {
-	            $$1(this.dom.logic).addClass(this.classes.greyscale);
+	            $$1(this.dom.logic).addClass(this.metiers.greyscale);
 	        }
 	        $$1(this.dom.logicContainer).append(this.dom.logic).append(this.dom.clear);
 	        // Only append the logic button immediately if this is a sub group,
@@ -3818,7 +3818,7 @@
 	        }
 	    };
 	    Group.version = '1.0.0';
-	    Group.classes = {
+	    Group.metiers = {
 	        add: 'dtsb-add',
 	        button: 'dtsb-button',
 	        clearGroup: 'dtsb-clearGroup',
@@ -3896,20 +3896,20 @@
 	            throw new Error('SearchBuilder requires DataTables 1.10 or newer');
 	        }
 	        var table = new DataTable$2.Api(builderSettings);
-	        this.classes = $$2.extend(true, {}, SearchBuilder.classes);
+	        this.metiers = $$2.extend(true, {}, SearchBuilder.metiers);
 	        // Get options from user
 	        this.c = $$2.extend(true, {}, SearchBuilder.defaults, opts);
 	        this.dom = {
 	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', this.c.i18n.clearAll) + '</button>')
-	                .addClass(this.classes.clearAll)
-	                .addClass(this.classes.button)
+	                .addClass(this.metiers.clearAll)
+	                .addClass(this.metiers.button)
 	                .attr('type', 'button'),
 	            container: $$2('<div/>')
-	                .addClass(this.classes.container),
+	                .addClass(this.metiers.container),
 	            title: $$2('<div/>')
-	                .addClass(this.classes.title),
+	                .addClass(this.metiers.title),
 	            titleRow: $$2('<div/>')
-	                .addClass(this.classes.titleRow),
+	                .addClass(this.metiers.titleRow),
 	            topGroup: undefined
 	        };
 	        this.s = {
@@ -4152,7 +4152,7 @@
 	        });
 	    };
 	    SearchBuilder.version = '1.0.1';
-	    SearchBuilder.classes = {
+	    SearchBuilder.metiers = {
 	        button: 'dtsb-button',
 	        clearAll: 'dtsb-clearAll',
 	        container: 'dtsb-searchBuilder',

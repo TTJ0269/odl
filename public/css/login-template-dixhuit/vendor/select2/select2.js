@@ -889,7 +889,7 @@ S2.define('select2/results',[
     this.ensureHighlightVisible();
   };
 
-  Results.prototype.setClasses = function () {
+  Results.prototype.setmetiers = function () {
     var self = this;
 
     this.data.current(function (selected) {
@@ -1025,7 +1025,7 @@ S2.define('select2/results',[
       self.append(params.data);
 
       if (container.isOpen()) {
-        self.setClasses();
+        self.setmetiers();
         self.highlightFirstItem();
       }
     });
@@ -1034,7 +1034,7 @@ S2.define('select2/results',[
       self.append(params.data);
 
       if (container.isOpen()) {
-        self.setClasses();
+        self.setmetiers();
       }
     });
 
@@ -1048,7 +1048,7 @@ S2.define('select2/results',[
         return;
       }
 
-      self.setClasses();
+      self.setmetiers();
       self.highlightFirstItem();
     });
 
@@ -1057,7 +1057,7 @@ S2.define('select2/results',[
         return;
       }
 
-      self.setClasses();
+      self.setmetiers();
       self.highlightFirstItem();
     });
 
@@ -1066,7 +1066,7 @@ S2.define('select2/results',[
       self.$results.attr('aria-expanded', 'true');
       self.$results.attr('aria-hidden', 'false');
 
-      self.setClasses();
+      self.setmetiers();
       self.ensureHighlightVisible();
     });
 
@@ -1474,7 +1474,7 @@ S2.define('select2/selection/base',[
   };
 
   BaseSelection.prototype.update = function (data) {
-    throw new Error('The `update` method must be defined in child classes.');
+    throw new Error('The `update` method must be defined in child metiers.');
   };
 
   return BaseSelection;
@@ -3001,19 +3001,19 @@ S2.define('select2/data/base',[
   Utils.Extend(BaseAdapter, Utils.Observable);
 
   BaseAdapter.prototype.current = function (callback) {
-    throw new Error('The `current` method must be defined in child classes.');
+    throw new Error('The `current` method must be defined in child metiers.');
   };
 
   BaseAdapter.prototype.query = function (params, callback) {
-    throw new Error('The `query` method must be defined in child classes.');
+    throw new Error('The `query` method must be defined in child metiers.');
   };
 
   BaseAdapter.prototype.bind = function (container, $container) {
-    // Can be implemented in subclasses
+    // Can be implemented in submetiers
   };
 
   BaseAdapter.prototype.destroy = function () {
-    // Can be implemented in subclasses
+    // Can be implemented in submetiers
   };
 
   BaseAdapter.prototype.generateResultId = function (container, data) {
@@ -3877,11 +3877,11 @@ S2.define('select2/dropdown',[
   };
 
   Dropdown.prototype.bind = function () {
-    // Should be implemented in subclasses
+    // Should be implemented in submetiers
   };
 
   Dropdown.prototype.position = function ($dropdown, $container) {
-    // Should be implmented in subclasses
+    // Should be implmented in submetiers
   };
 
   Dropdown.prototype.destroy = function () {
@@ -4180,7 +4180,7 @@ S2.define('select2/dropdown/attachBody',[
   };
 
   AttachBody.prototype.position = function (decorated, $dropdown, $container) {
-    // Clone all of the container classes
+    // Clone all of the container metiers
     $dropdown.attr('class', $container.attr('class'));
 
     $dropdown.removeClass('select2');
@@ -5657,29 +5657,29 @@ S2.define('select2/core',[
 S2.define('select2/compat/utils',[
   'jquery'
 ], function ($) {
-  function syncCssClasses ($dest, $src, adapter) {
-    var classes, replacements = [], adapted;
+  function syncCssmetiers ($dest, $src, adapter) {
+    var metiers, replacements = [], adapted;
 
-    classes = $.trim($dest.attr('class'));
+    metiers = $.trim($dest.attr('class'));
 
-    if (classes) {
-      classes = '' + classes; // for IE which returns object
+    if (metiers) {
+      metiers = '' + metiers; // for IE which returns object
 
-      $(classes.split(/\s+/)).each(function () {
-        // Save all Select2 classes
+      $(metiers.split(/\s+/)).each(function () {
+        // Save all Select2 metiers
         if (this.indexOf('select2-') === 0) {
           replacements.push(this);
         }
       });
     }
 
-    classes = $.trim($src.attr('class'));
+    metiers = $.trim($src.attr('class'));
 
-    if (classes) {
-      classes = '' + classes; // for IE which returns object
+    if (metiers) {
+      metiers = '' + metiers; // for IE which returns object
 
-      $(classes.split(/\s+/)).each(function () {
-        // Only adapt non-Select2 classes
+      $(metiers.split(/\s+/)).each(function () {
+        // Only adapt non-Select2 metiers
         if (this.indexOf('select2-') !== 0) {
           adapted = adapter(this);
 
@@ -5694,7 +5694,7 @@ S2.define('select2/compat/utils',[
   }
 
   return {
-    syncCssClasses: syncCssClasses
+    syncCssmetiers: syncCssmetiers
   };
 });
 
@@ -5702,7 +5702,7 @@ S2.define('select2/compat/containerCss',[
   'jquery',
   './utils'
 ], function ($, CompatUtils) {
-  // No-op CSS adapter that discards all classes by default
+  // No-op CSS adapter that discards all metiers by default
   function _containerAdapter (clazz) {
     return null;
   }
@@ -5744,7 +5744,7 @@ S2.define('select2/compat/containerCss',[
       containerCss = containerCss(this.$element);
     }
 
-    CompatUtils.syncCssClasses($container, this.$element, containerCssAdapter);
+    CompatUtils.syncCssmetiers($container, this.$element, containerCssAdapter);
 
     $container.css(containerCss);
     $container.addClass(containerCssClass);
@@ -5759,7 +5759,7 @@ S2.define('select2/compat/dropdownCss',[
   'jquery',
   './utils'
 ], function ($, CompatUtils) {
-  // No-op CSS adapter that discards all classes by default
+  // No-op CSS adapter that discards all metiers by default
   function _dropdownAdapter (clazz) {
     return null;
   }
@@ -5801,7 +5801,7 @@ S2.define('select2/compat/dropdownCss',[
       dropdownCss = dropdownCss(this.$element);
     }
 
-    CompatUtils.syncCssClasses($dropdown, this.$element, dropdownCssAdapter);
+    CompatUtils.syncCssmetiers($dropdown, this.$element, dropdownCssAdapter);
 
     $dropdown.css(dropdownCss);
     $dropdown.addClass(dropdownCssClass);

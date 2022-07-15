@@ -1,5 +1,14 @@
 @can('suivi_aed','App\Models\User')
     <li class="nav-item">
+        <a href="{{ route('ifads.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-school"></i>
+        <p>
+            IFAD
+        </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ route('apprenants.index') }}" class="nav-link">
         <i class="nav-icon fas fa-user"></i>
         <p>
@@ -13,6 +22,15 @@
         <i class="nav-icon fas fa-building"></i>
         <p>
             Entreprise
+        </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{{ route('metiers.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-chalkboard-teacher"></i>
+        <p>
+            Métier
         </p>
         </a>
     </li>
@@ -35,24 +53,6 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ route('ifads.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-school"></i>
-        <p>
-            IFAD
-        </p>
-        </a>
-    </li>
-
-    <!--li class="nav-item">
-        <a href="{{ route('classes.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-chalkboard-teacher"></i>
-        <p>
-            Classe
-        </p>
-        </a>
-    </li-->
-
     <!--li class="nav-item">
         <a href="{{ route('associations.index') }}" class="nav-link">
         <i class="nav-icon fas fa-clone"></i>
@@ -72,12 +72,29 @@
     </li>
 
     <li class="nav-item">
-        <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
+        <a href="#" class="nav-link">
         <i class="nav-icon fas fa-book-open"></i>
         <p>
             Fiche Positionnement
+            <i class="right fas fa-angle-left"></i>
         </p>
         </a>
+        <ul class="nav nav-treeview">
+
+        <li class="nav-item">
+            <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
+            <i class="nav-icon fas fa-folder-open"></i>
+            <p>Non archivé</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('fiches_archive_show') }}" class="nav-link">
+            <i class="nav-icon fas fa-folder"></i>
+            <p>Archivé</p>
+            </a>
+        </li>
+
+        </ul>
     </li>
 
     <li class="nav-item">

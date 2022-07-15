@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Mail\NotificationMail;
+use App\Events\NotificationEvent;
 use App\Models\User;
 use App\Models\Profil;
 use App\Models\Ifad;
@@ -121,24 +122,22 @@ class ApprenantController extends Controller
         if(User::where('email','=',request('email'))->select('id')->doesntExist())
         {
             /** Enregistrement de l'apprenant(e) **/
-            $apprenant = User::insertGetId([
+            $user = User::create([
                 'name'=> $name,
                 'email'=> request('email'),
-                'password' => Hash::make($password),
+                'password' => $password,
                 'profil_id'=> $profil_id,
                 'nomuser'=> request('nomuser'),
                 'prenomuser'=> request('prenomuser'),
                 'teluser'=> request('teluser'),
                 'imageuser'=> $imageuser,
-                'etat'=> 1,
-                'etatsup'=> 0,
-                'etatconnection'=> 0,
             ]);
-            if(Association::where('user_id','=',$apprenant)->where('ifad_id','=',$ifad_id)->select('*')->doesntExist())
+
+            if(Association::where('user_id','=',$user->id)->where('ifad_id','=',$ifad_id)->select('*')->doesntExist())
             {
                 /** Association d'un apprenant a un ifad **/
                 Association::create([
-                    'user_id' => $apprenant,
+                    'user_id' => $user->id,
                     'ifad_id'=> $ifad_id,
                     'datedebut'=> now(),
                     'datefin'=> null,
@@ -148,11 +147,7 @@ class ApprenantController extends Controller
 
             $this->historique(request('nomuser').' '.request('prenomuser'), 'Ajout');
 
-            /*$message = "Votre mot de passe est : ";
-
-            $useremail = ['email' => $emailuser , 'nomuser' => $username , 'prenomuser' => $userprenom, 'password' => $password, 'message' => $message];
-
-            Mail::to($useremail['email'])->send(new NotificationMail($useremail));*/
+            //event(new NotificationEvent($user));
 
             return redirect('apprenants')->with('message', 'Apprenant(e) bien ajouté(e).');
         }
@@ -300,7 +295,7 @@ class ApprenantController extends Controller
 
           return redirect('users');
       }*/
-     return redirect('users')->with('messagealert','Pas de suppression pour le moment');
+     return redirect('apprenants')->with('messagealert','Pas de suppression pour le moment');
     }
     catch(\Exception $exception)
     {

@@ -41,11 +41,15 @@
                       <thead>
                           <th scope="col">Numéro</th>
                           <th scope="col">Photo</th>
-                          <th scope="col">Apprenants</th>
+                          <th scope="col">Nom</th>
+                          <th scope="col">Prénom</th>
+                             @cannot('charge_suivi','App\Models\User')
                           <th scope="col">Entreprise</th>
+                             @endcannot
                           <th scope="col">Date début</th>
                           <th scope="col">Date fin</th>
-                          <th scope="col">Positionner</th>
+                          <th scope="col">Fiche de positionnement</th>
+                          <th scope="col">Observation</th>
                       </thead>
 
                           <tbody>
@@ -59,11 +63,20 @@
                           @else
                            <th scope="row"> -- Photo non trouvée -- </th>
                           @endif
-                          <th scope="row"> {{$suivi->user->nomuser}} {{$suivi->user->prenomuser}} </th>
+                          <th scope="row"> {{$suivi->user->nomuser}} </th>
+                          <th scope="row"> {{$suivi->user->prenomuser}} </th>
+                             @cannot('charge_suivi','App\Models\User')
                           <th scope="row"> {{$suivi->entreprise->libelleentreprise}} </th>
+                             @endcannot
                           <th scope="row"> {{$suivi->datedebut}} </th>
                           <th scope="row"> {{$suivi->datefin}} </th>
-                          <td> <a href="{{ route('positionnement_recup', ['user' => $suivi->user->id]) }}" style="color:rgb(55, 144, 246);"> Aller </a></td>
+                          <td> <a href="{{ route('positionnement_recup_metier', ['user' => $suivi->user->id]) }}" class="btn btn-primary"> Positionner </a></td>
+                            @can('admin','App\Models\User')
+                            <th><a href="{{ route('observation_create', ['user' => $suivi->user->id]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a></th>
+                            @endcan
+                            @can('charge_suivi','App\Models\User')
+                            <th><a href="{{ route('observation_create', ['user' => $suivi->user->id]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a></th>
+                            @endcan
                           </tr>
                           @endforeach
                           </tbody>

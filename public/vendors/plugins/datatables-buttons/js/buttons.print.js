@@ -91,7 +91,7 @@ DataTable.ext.buttons.print = {
 			$.extend( {decodeEntities: false}, config.exportOptions ) // XSS protection
 		);
 		var exportInfo = dt.buttons.exportInfo( config );
-		var columnClasses = dt
+		var columnmetiers = dt
 			.columns( config.exportOptions.columns )
 			.flatten()
 			.map( function (idx) {
@@ -107,8 +107,8 @@ DataTable.ext.buttons.print = {
 				var dataOut = d[i] === null || d[i] === undefined ?
 					'' :
 					d[i];
-				var classAttr = columnClasses[i] ?
-					'class="'+columnClasses[i]+'"' :
+				var classAttr = columnmetiers[i] ?
+					'class="'+columnmetiers[i]+'"' :
 					'';
 
 				str += '<'+tag+' '+classAttr+'>'+dataOut+'</'+tag+'>';

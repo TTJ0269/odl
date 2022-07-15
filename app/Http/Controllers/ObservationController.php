@@ -34,25 +34,13 @@ class ObservationController extends Controller
 
             if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
            {
-                $observations = DB::table('fiche_positionnements')
-                ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
-                ->select('observations.*','fiche_positionnements.libellefiche')
-                ->distinct('observations.id')
-                ->orderBy('observations.id','DESC')
-                ->get();
+                $observations = Observation::select('*')->orderBy('observations.id','DESC')->get();
 
                 return view('observations.index', compact('observations'));
            }
            elseif($profil_libelle == 'Chargé du suivi')
            {
-
-                $observations = DB::table('fiche_positionnements')
-                ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
-                ->select('observations.*','fiche_positionnements.libellefiche')
-                ->where('fiche_positionnements.responsable_suivi_id','=',$user_id)
-                ->distinct('observations.id')
-                ->orderBy('observations.id','DESC')
-                ->get();
+                $observations = Observation::where('responsable','=',Auth::user()->id)->select('*')->orderBy('observations.id','DESC')->get();
 
                 return view('observations.index', compact('observations'));
            }
@@ -67,14 +55,7 @@ class ObservationController extends Controller
                     $ifad_id = DB::table('associations')->where('associations.user_id','=',Auth::user()->id)
                     ->select('ifad_id')->get()->last()->ifad_id;
 
-                    $observations = DB::table('associations')
-                    ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
-                    ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
-                    ->where('associations.ifad_id','=',$ifad_id)
-                    ->select('observations.*','fiche_positionnements.libellefiche')
-                    ->distinct('observations.id')
-                    ->orderBy('observations.id','DESC')
-                    ->get();
+                    $observations = Observation::select('*')->orderBy('observations.id','DESC')->get();
 
                     return view('observations.index', compact('observations'));
                 }
@@ -87,18 +68,10 @@ class ObservationController extends Controller
                 }
                 else
                 {
-                    $ifad_id = DB::table('associations')->where('associations.user_id','=',Auth::user()->id)
-                    ->select('ifad_id')->get()->last()->ifad_id;
+                    $association = DB::table('associations')->where('associations.user_id','=',Auth::user()->id)
+                    ->select('id')->get()->last()->id;
 
-                    $observations = DB::table('associations')
-                    ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
-                    ->join('observations','fiche_positionnements.id','=','observations.fiche_positionnement_id')
-                    ->where('associations.ifad_id','=',$ifad_id)
-                    ->where('associations.user_id','=',Auth::user()->id)
-                    ->select('observations.*','fiche_positionnements.libellefiche')
-                    ->distinct('observations.id')
-                    ->orderBy('observations.id','DESC')
-                    ->get();
+                    $observations = Observation::where('association_id','=',$association->id)->select('*')->orderBy('observations.id','DESC')->get();
 
                     return view('observations.index', compact('observations'));
                 }
@@ -118,16 +91,22 @@ class ObservationController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function create(FichePositionnement $fiche_positionnement)
+     public function create(user $user)
      {
         $this->authorize('ad_re_su_ch', User::class);
          try
          {
+            if(DB::table('associations')->where('associations.user_id','=',$user->id)->select('associations.id')->doesntExist())
+            {
+                return back()->with('messagealert',"L'apprenant(e) n'est pas associé(e) à un IFAD");
+            }
+            else
+            {
+                $users = User::select('*')->where('id','=',$user->id)->get();
+                $observation = new Observation();
 
-            $fiche_positionnements = FichePositionnement::select('*')->where('id','=',$fiche_positionnement->id)->get();
-            $observation = new Observation();
-
-            return view('observations.create',compact('observation','fiche_positionnements'));
+                return view('observations.create',compact('observation','users'));
+            }
          }
          catch(\Exception $exception)
          {
@@ -147,18 +126,21 @@ class ObservationController extends Controller
         $this->authorize('ad_re_su_ch', User::class);
          try
          {
-            $users_id = (Auth::user())->id;
-            $fiche_positionnement_id = request('fiche_positionnement_id');
+            $users_id = Auth::user()->id;
+            $user_id = request('user_id');
+
+            $association = DB::table('associations')->where('associations.user_id','=',$user_id)->select('id')->get()->last()->id;
 
             $observation = Observation::create([
                     'descriptionobservation'=> request('descriptionobservation'),
-                    'fiche_positionnement_id'=> $fiche_positionnement_id,
+                    'association_id'=> $association,
+                    'responsable'=> Auth::user()->id,
                     'dateobservation'=> now(),
             ]);
 
             $this->historique(request('descriptionobservation'), 'Ajout');
 
-            return redirect('fiche_positionnements/show/'.$fiche_positionnement_id)->with('message', 'Observation bien envoyé.');
+            return back()->with('message', 'Observation bien envoyé.');
         }
         catch(\Exception $exception)
         {
@@ -199,8 +181,8 @@ class ObservationController extends Controller
         $this->authorize('ad_re_su_ch', User::class);
          try
          {
-            $fiche_positionnements = FichePositionnement::all();
-            return view('observations.edit', compact('observation','fiche_positionnements'));
+            $users = User::select('*')->get();
+            return view('observations.edit', compact('observation','users'));
          }
          catch(\Exception $exception)
         {

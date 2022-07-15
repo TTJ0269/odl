@@ -81,7 +81,7 @@
       },
       token: function(stream, _, style) {
         if (style == "variable") {
-          // Assume uppercase symbols are classes using variable-2
+          // Assume uppercase symbols are metiers using variable-2
           var isUpper = RegExp('^[_$]*[A-Z][a-zA-Z0-9_$]*$','g');
           if (isUpper.test(stream.current())) {
             return 'variable-2';

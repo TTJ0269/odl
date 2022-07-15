@@ -1,14 +1,5 @@
 @can('charge_suivi','App\Models\User')
     <li class="nav-item">
-        <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-book-open"></i>
-        <p>
-            Fiche Positionnement
-        </p>
-        </a>
-    </li>
-
-    <li class="nav-item">
         <a href="{{ route('positionnements.index') }}" class="nav-link">
         <i class="nav-icon fas fa-signal"></i>
         <p>
@@ -16,7 +7,15 @@
         </p>
         </a>
     </li>
-
+    
+    <li class="nav-item">
+        <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-book-open"></i>
+        <p>
+            Fiche Positionnement
+        </p>
+        </a>
+    </li>
 
     <li class="nav-item">
         <a href="{{ route('observations.index') }}" class="nav-link">

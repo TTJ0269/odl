@@ -28,4 +28,9 @@ class Association extends Model
          return $this->hasMany('App\Models\FichePositionnement');
      }
 
+     public function observations()
+     {
+         return $this->hasMany('App\Models\Observation');
+     }
+
 }

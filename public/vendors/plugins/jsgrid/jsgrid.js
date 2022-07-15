@@ -613,7 +613,7 @@
                 this._renderCells($result, item);
             }
 
-            $result.addClass(this._getRowClasses(item, itemIndex))
+            $result.addClass(this._getRowmetiers(item, itemIndex))
                 .data(JSGRID_ROW_DATA_KEY, item)
                 .on("click", $.proxy(function(e) {
                     this.rowClick({
@@ -637,11 +637,11 @@
             return $result;
         },
 
-        _getRowClasses: function(item, itemIndex) {
-            var classes = [];
-            classes.push(((itemIndex + 1) % 2) ? this.oddRowClass : this.evenRowClass);
-            classes.push(getOrApply(this.rowClass, this, item, itemIndex));
-            return classes.join(" ");
+        _getRowmetiers: function(item, itemIndex) {
+            var metiers = [];
+            metiers.push(((itemIndex + 1) % 2) ? this.oddRowClass : this.evenRowClass);
+            metiers.push(getOrApply(this.rowClass, this, item, itemIndex));
+            return metiers.join(" ");
         },
 
         _attachRowHover: function($row) {

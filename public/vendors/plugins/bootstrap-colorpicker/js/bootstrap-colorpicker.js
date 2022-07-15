@@ -3241,7 +3241,7 @@ var Colorpicker = function () {
 }();
 
 /**
- * Colorpicker extension classes, indexed by extension name
+ * Colorpicker extension metiers, indexed by extension name
  *
  * @static
  * @type {Object} a map between the extension name and its class
@@ -3779,17 +3779,17 @@ var SliderHandler = function () {
     value: function bind() {
       var sliders = this.colorpicker.options.horizontal ? this.colorpicker.options.slidersHorz : this.colorpicker.options.sliders;
 
-      var sliderClasses = [];
+      var slidermetiers = [];
 
       for (var sliderName in sliders) {
         if (!sliders.hasOwnProperty(sliderName)) {
           continue;
         }
 
-        sliderClasses.push(sliders[sliderName].selector);
+        slidermetiers.push(sliders[sliderName].selector);
       }
 
-      this.colorpicker.picker.find(sliderClasses.join(', ')).on('mousedown.colorpicker touchstart.colorpicker', _jquery2.default.proxy(this.pressed, this));
+      this.colorpicker.picker.find(slidermetiers.join(', ')).on('mousedown.colorpicker touchstart.colorpicker', _jquery2.default.proxy(this.pressed, this));
     }
 
     /**
@@ -4033,7 +4033,7 @@ var PopupHandler = function () {
 
     /**
      * Binds the different colorpicker elements to the focus/mouse/touch events so it reacts in order to show or
-     * hide the colorpicker popup accordingly. It also adds the proper classes.
+     * hide the colorpicker popup accordingly. It also adds the proper metiers.
      */
     value: function bind() {
       var cp = this.colorpicker;

@@ -11,7 +11,7 @@
 })(function(CodeMirror) {
   "use strict";
 
-  var pseudoClasses = {"active":1, "after":1, "before":1, "checked":1, "default":1,
+  var pseudometiers = {"active":1, "after":1, "before":1, "checked":1, "default":1,
     "disabled":1, "empty":1, "enabled":1, "first-child":1, "first-letter":1,
     "first-line":1, "first-of-type":1, "focus":1, "hover":1, "in-range":1,
     "indeterminate":1, "invalid":1, "lang":1, "last-child":1, "last-of-type":1,
@@ -46,7 +46,7 @@
 
     var st = inner.state.state;
     if (st == "pseudo" || token.type == "variable-3") {
-      add(pseudoClasses);
+      add(pseudometiers);
     } else if (st == "block" || st == "maybeprop") {
       add(spec.propertyKeywords);
     } else if (st == "prop" || st == "parens" || st == "at" || st == "params") {
