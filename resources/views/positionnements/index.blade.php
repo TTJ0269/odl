@@ -68,9 +68,17 @@
                              @cannot('charge_suivi','App\Models\User')
                           <th scope="row"> {{$suivi->entreprise->libelleentreprise}} </th>
                              @endcannot
-                          <th scope="row"> {{$suivi->datedebut}} </th>
-                          <th scope="row"> {{$suivi->datefin}} </th>
-                          <td> <a href="{{ route('positionnement_recup_metier', ['user' => $suivi->user->id]) }}" class="btn btn-primary"> Positionner </a></td>
+                            @if($suivi->datedebut)
+                             <th scope="row"> {{$suivi->datedebut}}</th>
+                            @else
+                            <th scope="row"> Pas définie</th>
+                            @endif
+                            @if($suivi->datefin)
+                            <th scope="row">{{$suivi->datefin}}</th>
+                            @else
+                            <th scope="row"> Pas définie</th>
+                            @endif
+                          <td> <a href="{{ route('positionnement_recup_metier', ['suivi' => $suivi->id]) }}" class="btn btn-primary"> Positionner </a></td>
                             @can('admin','App\Models\User')
                             <th><a href="{{ route('observation_create', ['user' => $suivi->user->id]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a></th>
                             @endcan

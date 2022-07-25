@@ -20,11 +20,11 @@
     <section class="content">
 
          <div class="row">
-            @if($users->imageuser)
+            @if($suivis->user->imageuser)
           <div class="col-12 col-sm-1">
             <div class="form-group">
                   <h6>
-                  <img src="{{ asset('storage/image/' .$users->imageuser) }}" alt="user-ImageUser" class="img-thumbnail" style="width: 150px; height: 150px;">
+                  <img src="{{ asset('storage/image/' .$suivis->user->imageuser) }}" alt="user-ImageUser" class="img-thumbnail" style="width: 150px; height: 150px;">
                   </h6>
             </div>
           </div>
@@ -32,7 +32,7 @@
 
             <div class="col-12 col-sm-7">
               <div class="form-group">
-                    <h6><strong> {{$users->nomuser}} {{$users->prenomuser}}</strong></h6>
+                    <h6><strong> {{$suivis->user->nomuser}} {{$suivis->user->prenomuser}}</strong></h6>
                     <h6><strong> </strong></h6>
               </div>
             </div>
@@ -66,9 +66,7 @@
          </div>
          <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
 
-                @include('positionnements.form.tuteur_entreprise')
-
-                <input type="number" hidden value="{{$users->id}}" name="user_id"/>
+                <input type="number" hidden value="{{$suivis->id}}" name="suivi_id"/>
                 <input type="number" hidden value="{{$metiers->id}}" name="metier_id"/>
                 <input type="text" hidden value="{{$metiers->libellemetier}}" name="metier_libelle"/>
 

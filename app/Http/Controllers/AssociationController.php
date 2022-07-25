@@ -80,7 +80,6 @@ class AssociationController extends Controller
          ->join('users','profils.id','=','users.profil_id')
          ->where('profils.libelleprofil','=','Apprenant')
          ->orWhere('profils.libelleprofil','=','DG_IFAD')
-         ->orWhere('profils.libelleprofil','=','Chargé du suivi')
          ->select('users.*','profils.libelleprofil')
          ->get();
 

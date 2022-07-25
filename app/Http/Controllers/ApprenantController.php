@@ -106,7 +106,7 @@ class ApprenantController extends Controller
         $username=request('nomuser');
         $userprenom=request('prenomuser');
         $ifad_id = request('ifad_id');
-        $name = request('nomuser').' '.request('prenomuser');
+        $name = request('name');
         $password = request('prenomuser').'@'.request('teluser');  //request('password')
         $imageuser = null;
 
@@ -119,13 +119,21 @@ class ApprenantController extends Controller
             $imageuser = $filename;
         }
 
-        if(User::where('email','=',request('email'))->select('id')->doesntExist())
+        if(request('email') != null && User::where('email','=',request('email'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Ce mail existe déjà.");
+        }
+        elseif(request('teluser') != null && User::where('teluser','=',request('teluser'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Ce numéro de téléphone existe déjà.");
+        }
+        else
         {
             /** Enregistrement de l'apprenant(e) **/
             $user = User::create([
                 'name'=> $name,
                 'email'=> request('email'),
-                'password' => $password,
+                'password' => Hash::make($password), // si le mail sera envoyé alors ça $password NB: le mot de passe est crypté dans l'envoye du mail,
                 'profil_id'=> $profil_id,
                 'nomuser'=> request('nomuser'),
                 'prenomuser'=> request('prenomuser'),
@@ -152,7 +160,6 @@ class ApprenantController extends Controller
             return redirect('apprenants')->with('message', 'Apprenant(e) bien ajouté(e).');
         }
 
-        return back()->with('messagealert',"Le mail existe déjà.");
     }
     else
     {
@@ -220,13 +227,24 @@ class ApprenantController extends Controller
  public function update(User $apprenant, Request  $request)
  {
     $this->authorize('ad_re_su', User::class);
-    $this->validator();
    try
    {
         $ifad_id = request('ifad_id');
 
         $association = Association::where('user_id','=',$apprenant->id)->select('*')->get()->last();
 
+        if(request('email') != null && $apprenant->email != request('email') && User::where('email','=',request('email'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Le mail ".request('email')." existe déjà.");
+        }
+        elseif(request('teluser') != null && $apprenant->teluser != request('teluser') && User::where('teluser','=',request('teluser'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Le numéro de téléphone ".request('teluser')." existe déjà.");
+        }
+        elseif(request('name') != null && $apprenant->name != request('name') && User::where('name','=',request('name'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Le login ".request('name')." existe déjà.");
+        }
         if($request->file('image'))
         {
             $file=$request->file('image');
@@ -236,6 +254,7 @@ class ApprenantController extends Controller
             $imageuser = $filename;
 
             $apprenant->update([
+                'name'=> request('name'),
                 'nomuser'=> request('nomuser'),
                 'prenomuser'=> request('prenomuser'),
                 'email'=> request('email'),
@@ -247,7 +266,7 @@ class ApprenantController extends Controller
         else
         {
             $apprenant->update([
-                'nomuser'=> request('nomuser'),
+                'name'=> request('name'),
                 'prenomuser'=> request('prenomuser'),
                 'email'=> request('email'),
                 'teluser'=> request('teluser'),
@@ -308,9 +327,8 @@ class ApprenantController extends Controller
      return request()->validate([
          'nomuser'=>'required',
          'prenomuser'=>'required',
-         'email'=>'required|email|min:4',
          'ifad_id'=>'required|integer',
-         'teluser'=>'integer',
+         'name'=>'required|unique:users',
      ]);
  }
 

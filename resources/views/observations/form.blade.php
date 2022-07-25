@@ -21,7 +21,7 @@
   <div class="card-header">
     <h3 class="card-title">Observation</h3>
     <div class="card-tools">
-      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-file"></span>
+      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-comments"></span>
     </div>
   </div>
   <!-- /fin cadre -->
@@ -33,7 +33,7 @@
             <div class="col-sm-12">
                 @foreach ($users as $user)
                     <div class="text-center">
-                       <h4> Observation de l' apprenant(e): {{ $user->nomuser }} {{ $user->prenomuser }}</h4>
+                       <h4> Observation de l'apprenant(e): {{ $user->nomuser }} {{ $user->prenomuser }}</h4>
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-append">

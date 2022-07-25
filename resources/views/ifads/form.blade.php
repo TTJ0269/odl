@@ -37,12 +37,17 @@
                 <div class="form-group row">
                       <label for="text" class="col-sm-2 col-form-label">Libelle</label>
                           <div class="col-sm-10">
-                      <input type="text" class="form-control @error('libelleifad') is-invalid @enderror" name="libelleifad" placeholder="Rentrez le libelle..." value="{{ old('libelleifad') ?? $ifad->libelleifad }}" autofocus  required/>
-                      @error('libelleifad')
-                          <div class="invalid-feedback">
-                              {{ $errors->first('libelleifad')}}
+                            <div class="input-group mb-3">
+                                <div class="input-group-append">
+                                  <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
+                                </div>
+                                <input type="text" class="form-control @error('libelleifad') is-invalid @enderror" name="libelleifad" placeholder="Rentrez le libelle..." value="{{ old('libelleifad') ?? $ifad->libelleifad }}" autofocus  required/>
+                                @error('libelleifad')
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('libelleifad')}}
+                                    </div>
+                                @enderror
                           </div>
-                      @enderror
                       </div>
                   </div>
 

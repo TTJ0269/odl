@@ -38,12 +38,17 @@
                         <div class="col-12 col-sm-6">
                             <label for="text" class="col-sm-2 col-form-label">Libelle</label>
                             <div class="col-sm-10">
-                            <input type="text" class="form-control @error('libelleactivite') is-invalid @enderror" name="libelleactivite" placeholder="Rentrez le libelle..." value="{{ old('libelleactivite') ?? $activite->libelleactivite }}" autofocus  required/>
-                            @error('libelleactivite')
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('libelleactivite')}}
-                                </div>
-                            @enderror
+                                <div class="input-group mb-3">
+                                    <div class="input-group-append">
+                                      <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control @error('libelleactivite') is-invalid @enderror" name="libelleactivite" placeholder="Rentrez le libelle..." value="{{ old('libelleactivite') ?? $activite->libelleactivite }}" autofocus  required/>
+                                    @error('libelleactivite')
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('libelleactivite')}}
+                                        </div>
+                                    @enderror
+                                 </div>
                             </div>
                         </div>
 
@@ -74,7 +79,7 @@
                                 <select class="custom-select select2bs4  @error('metier_id') is-invalid @enderror" name="metier_id">
                                     <option selected disabled> Sélectionner un métier</option>
                                     @foreach($metiers as $metier)
-                                    <option value="{{ $metier->id}}"> {{ $metier->libellemetier }}</option>
+                                    <option value="{{ $metier->id }}" {{ $activite->metier_id == $metier->id ? 'selected' : ''}}> {{ $metier->libellemetier }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -89,12 +94,17 @@
                         <div class="col-12 col-sm-6">
                             <label for="text" class="col-sm-2 col-form-label">Catégorie</label>
                         <div class="col-sm-10">
-                        <input type="text" class="form-control @error('categorie') is-invalid @enderror" name="categorie" placeholder="Rentrez la categorie..." value="{{ old('categorie') ?? $activite->categorie }}"/>
-                        @error('categorie')
-                            <div class="invalid-feedback">
-                                {{ $errors->first('categorie')}}
+                            <div class="input-group mb-3">
+                                <div class="input-group-append">
+                                  <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
+                                </div>
+                                <input type="text" class="form-control @error('categorie') is-invalid @enderror" name="categorie" placeholder="Rentrez la categorie..." value="{{ old('categorie') ?? $activite->categorie }}"/>
+                                @error('categorie')
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('categorie')}}
+                                    </div>
+                                @enderror
                             </div>
-                        @enderror
                         </div>
                     </div>
                   </div>

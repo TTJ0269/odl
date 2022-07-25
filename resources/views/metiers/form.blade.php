@@ -36,11 +36,12 @@
         <div class="col-sm-10">
           <div class="input-group mb-3">
               <div class="input-group-append">
-                <span class="input-group-text"><i class="fas fa-text-height"></i></span>
+                <span class="input-group-text"><i class="fas fa-school"></i></span>
               </div>
               <select class="custom-select select2bs4  @error('ifad_id') is-invalid @enderror" name="ifad_id">
+                 <option selected disabled>Sélectionner un IFAD</option>
                 @foreach($ifads as $ifad)
-                <option value="{{ $ifad->id}}" {{ $metier->ifad_id = $ifad->id ? 'selected' : ''}}> {{ $ifad->libelleifad }}</option>
+                <option value="{{ $ifad->id}}" {{ $metier->ifad_id == $ifad->id ? 'selected' : ''}}> {{ $ifad->libelleifad }}</option>
                 @endforeach
               </select>
            </div>
@@ -55,12 +56,17 @@
     <div class="form-group row">
          <label for="text" class="col-sm-2 col-form-label">Libelle</label>
              <div class="col-sm-10">
-         <input type="text" class="form-control @error('libellemetier') is-invalid @enderror" name="libellemetier" placeholder="Rentrez le libelle..." value="{{ old('libellemetier') ?? $metier->libellemetier }}" autofocus  required/>
-         @error('libellemetier')
-             <div class="invalid-feedback">
-                 {{ $errors->first('libellemetier')}}
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
+                    </div>
+                    <input type="text" class="form-control @error('libellemetier') is-invalid @enderror" name="libellemetier" placeholder="Rentrez le libelle..." value="{{ old('libellemetier') ?? $metier->libellemetier }}" autofocus  required/>
+                    @error('libellemetier')
+                        <div class="invalid-feedback">
+                            {{ $errors->first('libellemetier')}}
+                        </div>
+                    @enderror
              </div>
-         @enderror
          </div>
      </div>
 

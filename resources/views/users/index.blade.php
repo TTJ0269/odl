@@ -32,6 +32,16 @@
   </div>
   <!-- /fin cadre -->
 
+  @can('admin','App\Models\User')
+  <div class="row">
+     <div class="col-12">
+        <a href="{{ route('import_user_index')}}" class="btn btn-success float-left"><i class="fas fa-folder-open"></i> Import Excel</a>
+        <a href="{{ route('export_user')}}" class="btn btn-success float-right"><i class="fas fa-folder-open"></i> Export Excel</a>
+        <a href="{{ route('export_user_cvs')}}" class="btn btn-success float-right"><i class="fas fa-folder-open"></i> Export CVS</a>
+     </div>
+ </div>
+  @endcan
+
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
@@ -42,6 +52,7 @@
                                   <hr>
                                 <thead>
                                     <th scope="col">Numero</th>
+                                    <th scope="col">Login</th>
                                     <th scope="col">Nom</th>
                                     <th scope="col">Téléphone</th>
                                     <th scope="col">Email</th>
@@ -52,9 +63,18 @@
                                     @foreach($users as $key=>$user)
                                     <tr>
                                     <th scope="row"> {{++$key}} </th>
+                                    <td> <a href="{{ route('users.show', ['user' => $user->id]) }}" style="color:rgb(55, 144, 246);"> {{$user->name}} </a> </td>
                                     <th scope="row"> {{$user->nomuser}} {{$user->prenomuser}} </th>
+                                    @if($user->teluser)
                                     <th scope="row"> {{$user->teluser}} </th>
-                                    <td> <a href="{{ route('users.show', ['user' => $user->id]) }}" style="color:rgb(55, 144, 246);"> {{$user->email}} </a> </td>
+                                    @else
+                                    <th scope="row"> -- Aucune valeur trouvée -- </th>
+                                    @endif
+                                    @if($user->email)
+                                    <th scope="row"> {{$user->email}} </th>
+                                    @else
+                                    <th scope="row"> -- Aucune valeur trouvée -- </th>
+                                    @endif
                                     <th scope="row"> {{$user->profil->libelleprofil}} </th>
                                     </tr>
                                     @endforeach

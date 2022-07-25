@@ -82,14 +82,31 @@ class SuiviController extends Controller
  {
     $this->authorize('ad_re_su', User::class);
     $this->validator();
-   try
-   {
-      $entreprise_id = request('entreprise_id');
-      $user_id = request('user_id');
-      $datedebut = request('datedebut');
-      $datefin = request('datefin');
+   /*try
+   {*/
+        $entreprise_id = request('entreprise_id');
+        $user_id = request('user_id');
+        $datedebut = request('datedebut');
+        $datefin = request('datefin');
 
-      if(Date::make($datedebut) > Date::make($datefin))
+        /*$entreprise = Entreprise::where('id','=',$entreprise_id)->select('*')->first();
+        $tuteur_suivi = User::where('email','=',$entreprise->emailentreprise)->select('*')->first();*/
+
+        $nbre = count(request('user_id'));
+
+        for ($i=0; $i < $nbre; $i++) {
+            Suivi::create([
+                'user_id' => (int)request('user_id')[$i],
+                'entreprise_id'=> $entreprise_id,
+                'tuteur_suivi_id' => 1,
+                'datedebut'=> null,
+                'datefin'=> null,
+            ]);
+        }
+
+      return redirect('suivis/create')->with('message', 'Informations bien enregistrées.');
+
+     /* if(Date::make($datedebut) > Date::make($datefin))
       {
         return back()->with('messagealert', "Date début supérieure à la date de fin ");
       }
@@ -128,13 +145,13 @@ class SuiviController extends Controller
         //Mail::to($sendemail['email'])->send(new UserMail($sendemail));
 
         return redirect('suivis/create')->with('message', 'Informations bien entregistrées.');
-      }
+      }*/
 
-  }
+  /*}
   catch(\Exception $exception)
   {
       return redirect('erreur')->with('messageerreur',$exception->getMessage());
-  }
+  }*/
 
  }
 
@@ -244,7 +261,7 @@ class SuiviController extends Controller
         ]);
     }
 
-    private function creation()
+    /*private function creation()
     {
         $entreprise_id = request('entreprise_id');
         $user_id = request('user_id');
@@ -261,10 +278,10 @@ class SuiviController extends Controller
                     'user_id' => (int)request('user_id')[$i],
                     'entreprise_id'=> $entreprise_id,
                     'tuteur_suivi_id' => $tuteur_suivi->id,
-                    'datedebut'=> $datedebut,
-                    'datefin'=> $datefin,
+                    'datedebut'=> null,
+                    'datefin'=> null,
                 ]);
             }
-    }
+    }*/
 
 }

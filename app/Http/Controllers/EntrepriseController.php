@@ -126,7 +126,7 @@ class EntrepriseController extends Controller
                     ]);
 
                 /** Création info connection entreprise **/
-                    $user = User::create([
+                    /*$user = User::create([
                         'name'=> request('libelleentreprise'),
                         'email'=> request('emailentreprise'),
                         'password' => Hash::make($password),
@@ -135,7 +135,7 @@ class EntrepriseController extends Controller
                         'prenomuser'=> null,
                         'teluser'=> request('telentreprise'),
                         'imageuser'=> $entreprise_logo,
-                    ]);
+                    ]);*/
 
                     $this->historique(request('libelleentreprise'), 'Ajout');
 

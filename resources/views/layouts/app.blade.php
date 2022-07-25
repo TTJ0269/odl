@@ -7,44 +7,24 @@
 
  <!-- statistique -->
  <!--<link rel="stylesheet" type="text/css" href="{{ asset('css/mystyle.css') }}">-->
-  <link rel="stylesheet" href="{{ asset('statistiquechart.css') }}"
- integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w=="
- crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ asset('vendors/plugins/fontawesome-free/css/all.min.css') }}">
 
-  <!-- Ekko Lightbox -->
-  <link rel="stylesheet" href="{{ asset('vendors/plugins/ekko-lightbox/ekko-lightbox.css') }}">
-
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="{{ asset('vendors/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
   <!-- iCheck -->
   <link rel="stylesheet" href="{{ asset('vendors/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="{{ asset('vendors/plugins/jqvmap/jqvmap.min.css') }}">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{ asset('vendors/plugins/fontawesome-free/css/all.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('vendors/dist/css/adminlte.min.css') }}">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{ asset('vendors/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-   <!-- summernote -->
-  <link rel="stylesheet" href="{{ asset('vendors/plugins/summernote/summernote-bs4.min.css') }}">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="{{ asset('vendors/plugins/daterangepicker/daterangepicker.css') }}">
 
   <!-- Select2 -->
   <!--link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /-->
-
   <link rel="stylesheet" href="{{ asset('vendors/plugins/select2/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('vendors/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
-
-  <!-- Bootstrap4 Duallistbox -->
-  <link rel="stylesheet" href="{{ asset('vendors/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
 
   <!-- DataTables -->
   <link rel="stylesheet" href="{{ asset('vendors/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -96,16 +76,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"> </script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('vendors/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-<!-- statistique -->
-<script src="{{ asset('js/statistiquechart.js') }}"
-integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg=="
-crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
-<!-- Ekko Lightbox -->
-<script src="{{ asset('vendors/plugins/ekko-lightbox/ekko-lightbox.min.js') }}"></script>
 <!-- jQuery -->
 <script src="{{ asset('vendors/plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap 4 -->
@@ -114,23 +88,6 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('vendors/dist/js/adminlte.min.js') }}"></script>
 <!-- ChartJS -->
 <script src="{{ asset('vendors/plugins/chart.js/Chart.min.js') }}"></script>
-<!-- Sparkline -->
-<script src="{{ asset('vendors/plugins/sparklines/sparkline.js') }}"></script>
-<!-- JQVMap -->
-<script src="{{ asset('vendors/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-<script src="{{ asset('vendors/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-
-<!-- jQuery Knob Chart -->
-<script src="{{ asset('vendors/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
-<!-- daterangepicker -->
-<script src="{{ asset('vendors/plugins/moment/moment.min.js') }}"></script>
-<script src="{{ asset('vendors/plugins/daterangepicker/daterangepicker.js') }}"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="{{ asset('vendors/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-
-<script src="{{ asset('vendors/plugins/summernote/summernote-bs4.min.js') }}"></script>
-<!-- overlayScrollbars -->
-<script src="{{ asset('vendors/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 
 <!-- DataTables  & Plugins -->
 <script src="{{ asset('vendors/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -150,9 +107,6 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!--script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script-->
 
 <script src="{{ asset('vendors/plugins/select2/js/select2.full.min.js') }}"></script>
-
-<!-- Bootstrap4 Duallistbox -->
-<script src="{{ asset('vendors/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js') }}"></script>
 
 <script type="text/javascript">
 const currentLocation = location.href;
@@ -221,7 +175,7 @@ $('.select2bs4').select2({
     });
 </script>
 
-<script type="text/javascript">
+<!--script type="text/javascript">
     $(document).ready(function () {
         $('#ifad').on('change', function () {
             var ifadId = this.value;
@@ -230,7 +184,7 @@ $('.select2bs4').select2({
                 url: '{{ route('get_ifad') }}?ifad_id='+ifadId,
                 type: 'get',
                 success: function (res) {
-                    $('#metier').html('<option value="">Sélectionner une metier</option>');
+                    $('#metier').html('<option value="">Sélectionner un metier</option>');
                     $.each(res, function (key, value) {
                         $('#metier').append('<option value="' + value
                             .id + '">' +''+ value.libellemetier +'</option>');
@@ -239,7 +193,7 @@ $('.select2bs4').select2({
             });
         });
     });
-</script>
+</script-->
 
 <script type="text/javascript">
     $(document).ready(function () {

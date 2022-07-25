@@ -27,6 +27,15 @@
     </li>
 
     <li class="nav-item">
+        <a href="{{ route('appartenances.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-user"></i>
+        <p>
+            Tuteur/Tutrice
+        </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ route('entreprises.index') }}" class="nav-link">
         <i class="nav-icon fas fa-building"></i>
         <p>
@@ -84,7 +93,7 @@
         <a href="{{ route('suivis.index') }}" class="nav-link">
         <i class="nav-icon fas fa-crop-alt"></i>
         <p>
-            Stage
+            PFMP
         </p>
         </a>
     </li>

@@ -63,6 +63,11 @@ class User extends Authenticatable
          return $this->hasMany('App\Models\Suivi');
      }
 
+     public function appartenance()
+     {
+         return $this->hasMany('App\Models\Appartenance');
+     }
+
      public function preference()
      {
          return $this->hasMany('App\Models\Preference');

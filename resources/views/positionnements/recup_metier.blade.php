@@ -46,7 +46,7 @@
                         <form action="{{ route('positionnement_create') }}" method="POST" enctype="multipart/form-data">
                           @csrf
 
-                          <input type="number" name="user_id" hidden value="{{$user->id}}"/>
+                          <input type="number" name="suivi_id" hidden value="{{$suivi->id}}"/>
                          <div class="form-group row">
                            <label for="name" class="col-sm-2 col-form-label">Métier</label>
                              <div class="col-sm-10">

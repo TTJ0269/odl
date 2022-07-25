@@ -81,11 +81,21 @@ class UserController extends Controller
  public function store(Request  $request)
  {
     $this->authorize('admin', User::class);
+    $this->validator();
    try
    {
       $password = strtotime(now());  //request('password')
 
       $imageuser = null;
+
+        if(request('email') != null && User::where('email','=',request('email'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Ce mail existe déjà.");
+        }
+        elseif(request('teluser') != null && User::where('teluser','=',request('teluser'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Ce numéro de téléphone existe déjà.");
+        }
 
         if($request->file('image'))
         {
@@ -176,19 +186,34 @@ class UserController extends Controller
     $this->authorize('admin', User::class);
    try
    {
-        $user->update([
-            'name'=> request('name'),
-            'nomuser'=> request('nomuser'),
-            'prenomuser'=> request('prenomuser'),
-            'email'=> request('email'),
-            'profil_id'=> request('profil_id'),
-            'teluser'=> request('teluser'),
-            //'password'=> Hash::make(135792468),
-            ]);
+        if(request('email') != null && $user->email != request('email') && User::where('email','=',request('email'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Le mail ".request('email')." existe déjà.");
+        }
+        elseif(request('teluser') != null && $user->teluser != request('teluser') && User::where('teluser','=',request('teluser'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Le numéro de téléphone ".request('teluser')." existe déjà.");
+        }
+        elseif(request('name') != null && $user->name != request('name') && User::where('name','=',request('name'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Le login ".request('name')." existe déjà.");
+        }
+        else
+        {
+            $user->update([
+                'name'=> request('name'),
+                'nomuser'=> request('nomuser'),
+                'prenomuser'=> request('prenomuser'),
+                'email'=> request('email'),
+                'profil_id'=> request('profil_id'),
+                'teluser'=> request('teluser'),
+                //'password'=> Hash::make(135792468),
+                ]);
 
-        $this->historique(request('nomuser').' '.request('prenomuser'), 'Modification');
+            $this->historique(request('nomuser').' '.request('prenomuser'), 'Modification');
 
-        return redirect('users/' . $user->id);
+            return redirect('users/' . $user->id);
+        }
 
     }
     catch(\Exception $exception)
@@ -233,13 +258,10 @@ class UserController extends Controller
  private  function validator()
  {
      return request()->validate([
-         'name'=>'required',
+         'name'=>'required|unique:users',
          'nomuser'=>'required',
          'prenomuser'=>'required',
-         'password'=>'required',
-         'email'=>'required|email|min:8',
          'profil_id'=>'required|integer',
-         'teluser'=>'integer',
      ]);
  }
 

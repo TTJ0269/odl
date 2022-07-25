@@ -4,12 +4,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Stage</h1>
+            <h1 class="m-0">PFMP</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-              <li class="breadcrumb-item active">Stage</li>
+              <li class="breadcrumb-item active">PFMP</li>
             </ol>
            </div><!-- /.col -->
         </div><!-- /.row -->
@@ -19,7 +19,7 @@
  <!-- cadre general -->
  <div class="card card-secondary direct-chat direct-chat-secondary">
   <div class="card-header">
-    <h3 class="card-title">Stage</h3>
+    <h3 class="card-title">Apprenant(e) en PFMP (Période de Formation en Milieu Professionnel)</h3>
     <div class="card-tools">
       <span data-toggle="tooltip" title="users" class="nav-icon fas fa-users"></span>
     </div>
@@ -36,7 +36,7 @@
         <div class="col-sm-10">
           <div class="input-group mb-3">
               <div class="input-group-append">
-                <span class="input-group-text"><i class="fas fa-text-height"></i></span>
+                <span class="input-group-text"><i class="fas fa-building"></i></span>
               </div>
               <select class="custom-select select2bs4  @error('entreprise_id') is-invalid @enderror" name="entreprise_id">
                  <option selected disabled>Sélectionner une entreprise</option>
@@ -76,7 +76,7 @@
           </div>
       </div>
 
-      <div class="form-group row">
+      <!--<div class="form-group row">
         <label for="text" class="col-sm-2 col-form-label">Date début</label>
         <div class="col-sm-10">
           <div class="input-group mb-3">
@@ -91,9 +91,9 @@
               @enderror
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="form-group row">
+      <!--<div class="form-group row">
         <label for="text" class="col-sm-2 col-form-label">Date Fin</label>
         <div class="col-sm-10">
           <div class="input-group mb-3">
@@ -108,7 +108,7 @@
               @enderror
           </div>
         </div>
-      </div>
+      </div> -->
 
     </div>
 </div>

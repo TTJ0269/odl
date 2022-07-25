@@ -16,7 +16,7 @@
           <!-- Email Address -->
 
           <div class="input-group mb-3">
-            <input type="email" class="form-control" name="email" :value="old('email')" placeholder="Email" required autofocus />
+            <input type="text" class="form-control" name="login" :value="old('email')" placeholder="Login ou Email" required autofocus />
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>

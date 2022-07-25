@@ -13,9 +13,14 @@ class Entreprise extends Model
 
     protected $attributes=['etatsup'=> 0];
 
-    public function suivis()
+     public function suivis()
      {
          return $this->hasMany('App\Models\Suivi');
+     }
+
+     public function appartenance()
+     {
+         return $this->hasMany('App\Models\Appartenance');
      }
 
 }

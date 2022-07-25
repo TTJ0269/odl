@@ -16,6 +16,7 @@ use App\Models\Metier;
 use App\Models\Ifad;
 use App\Models\Suivi;
 use App\Models\Entreprise;
+use App\Models\Appartenance;
 use App\Models\Historique;
 
 class PositionnementController extends Controller
@@ -43,11 +44,11 @@ class PositionnementController extends Controller
            }
            else
            {
-               if(Entreprise::where('emailentreprise','=',$user_email)->select('id')->exists())
+               if(Appartenance::where('user_id','=',Auth::user()->id)->select('id')->exists())
                {
-                    $entreprise = Entreprise::where('emailentreprise','=',$user_email)->select('*')->first();
+                    $entreprise = Appartenance::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
 
-                    $suivis = Suivi::where('entreprise_id','=',$entreprise->id)->select('*')->orderBy('id','DESC')->get();
+                    $suivis = Suivi::where('entreprise_id','=',$entreprise->entreprise_id)->select('*')->orderBy('id','DESC')->get();
 
                     return view('positionnements.index', compact('suivis'));
                }
@@ -64,7 +65,7 @@ class PositionnementController extends Controller
         }
     }
 
-    public function recup_metier(User $user)
+    public function recup_metier(Suivi $suivi)
     {
         if(Metier::select('*')->doesntExist())
         {
@@ -72,26 +73,26 @@ class PositionnementController extends Controller
         }
         else
         {
-            if(DB::table('associations')->where('associations.user_id','=',$user->id)->select('associations.id')->doesntExist())
+            if(DB::table('associations')->where('associations.user_id','=',$suivi->user_id)->select('associations.id')->doesntExist())
             {
                 return back()->with('messagealert',"L'apprenant(e) n'est pas associé à un IFAD");
             }
             else
             {
-                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$user->nomuser." ".$user->prenomuser;
+                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$suivi->user->nomuser." ".$suivi->user->prenomuser;
 
                 if(FichePositionnement::where('libellefiche','=',$fiche_positionnement)->select('id')->exists())
                 {
-                    return redirect('positionnements')->with('messagealert',"L'apprenant(e) ".$user->nomuser." ".$user->prenomuser." a déjà été positionné(e) aujourd'hui");
+                    return redirect('positionnements')->with('messagealert',"L'apprenant(e) ".$suivi->user->nomuser." ".$suivi->user->prenomuser." a déjà été positionné(e) aujourd'hui");
                 }
                 else
                 {
-                    $ifad_id = DB::table('associations')->where('associations.user_id','=',$user->id)
+                    $ifad_id = DB::table('associations')->where('associations.user_id','=',$suivi->user_id)
                     ->select('ifad_id')->get()->last()->ifad_id;
 
                     $metiers = Metier::where('ifad_id','=',$ifad_id)->select('*')->get();
 
-                    return view('positionnements.recup_metier',compact('metiers','user'));
+                    return view('positionnements.recup_metier',compact('metiers','suivi'));
                 }
             }
         }
@@ -140,11 +141,11 @@ class PositionnementController extends Controller
             $user_id = (Auth::user()->id);
             $profil = (Auth::user()->profil_id);
 
-            $recup_user_id = request('user_id');
+            $recup_suivi_id = request('suivi_id');
             $metier_id = request('metier_id');
 
             //dd($user , $metier);
-            if($recup_user_id == null)
+            if($recup_suivi_id == null)
             {
                 return back()->with('messagealert', "Sélectionner un(e) apprenant(e).");
             }
@@ -163,7 +164,7 @@ class PositionnementController extends Controller
                 {
                     $positionnement = new Positionnement();
 
-                    $users = User::select('*')->where('id','=',$recup_user_id)->first();
+                    $suivis = Suivi::select('*')->where('id','=',$recup_suivi_id)->first();
 
                     $metiers = Metier::select('*')->where('id','=',$metier_id)->first();
 
@@ -191,7 +192,7 @@ class PositionnementController extends Controller
                         $i++;
                     }
 
-                    return view('positionnements.create',compact('collections','users','metiers'));
+                    return view('positionnements.create',compact('collections','suivis','metiers'));
                 }
             }
 
@@ -209,53 +210,43 @@ class PositionnementController extends Controller
       {
             $auth = Auth::user()->id;
             $auth_email = Auth::user()->email;
-            $tel_entreprise = request('tel_entreprise');
-            $adresse_entreprise = request('adresse_entreprise');
-            $nom_tuteur = request('nom_tuteur');
-            $prenom_tuteur = request('prenom_tuteur');
-            $tel_tuteur = request('tel_tuteur');
-            $user_id = request('user_id');
+            $nom_tuteur =  Auth::user()->nomuser;//request('nom_tuteur');
+            $prenom_tuteur = Auth::user()->prenomuser; //request('prenom_tuteur');
+            $tel_tuteur = Auth::user()->teluser; //request('tel_tuteur');
+            $suivi_id = request('suivi_id');
             $metier_id = request('metier_id');
             $metier_libelle = request('metier_libelle');
 
-        if(Entreprise::where('emailentreprise','=',$auth_email)->select('id')->exists())
+        if(Appartenance::where('user_id','=',Auth::user()->id)->select('id')->exists())
         {
-            $entreprise_recup = Entreprise::where('emailentreprise','=',$auth_email)->select('*')->first();
+            $entreprise_recup = Appartenance::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
 
-            $entreprise = Entreprise::where('emailentreprise','=',$entreprise_recup->emailentreprise)->select('*')->first();
+            $entreprise = Entreprise::where('id','=',$entreprise_recup->entreprise_id)->select('*')->first();
 
             $nom_entreprise      = $entreprise->libelleentreprise;
             $mail_entreprise     = $entreprise->emailentreprise;
-            $tel_entreprise      = request('tel_entreprise');
-            $adresse_entreprise  = request('adresse_entreprise');
+            $tel_entreprise      = $entreprise->telentreprise;
+            $adresse_entreprise  = $entreprise->adresseentreprise;
 
-            if($tel_entreprise == null)
+            /** date debut suivi **/
+            if(Suivi::where('id','=',$suivi_id)->select('datedebut')->first()->datedebut == null)
             {
-                $tel_entreprise = $entreprise->telentreprise;
+                DB::table('suivis')->where('suivis.id','=',$suivi_id)->update(['suivis.datedebut' => now()]);
             }
-            if($adresse_entreprise == null)
-            {
-                $adresse_entreprise = $entreprise->adresseentreprise;
-            }
-
-            $user = DB::table('entreprises')
-                   ->where('entreprises.id','=',$entreprise->id)
-                   ->update(['entreprises.telentreprise' => $tel_entreprise,
-                             'entreprises.adresseentreprise' => $adresse_entreprise
-                    ]);
         }
         else
         {
-            $tel_entreprise = request('tel_entreprise');
-            $adresse_entreprise = request('adresse_entreprise');
+            $tel_entreprise = null;
+            $adresse_entreprise = null;
             $nom_entreprise = null;
             $mail_entreprise = null;
         }
 
-        $users = User::select('*')->where('id','=',$user_id)->first();
+        $suivi = Suivi::select('*')->where('id','=',$suivi_id)->first();
+        $users = User::select('*')->where('id','=',$suivi->user_id)->first();
 
         $association = DB::table('associations')
-        ->where('associations.user_id','=',$user_id)
+        ->where('associations.user_id','=',$suivi->user_id)
         ->select('associations.id')->get()->last();
 
         $responsable_suivi_id = Auth::user()->id;

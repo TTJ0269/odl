@@ -40,12 +40,12 @@
                 <div class="col-sm-10">
                   <div class="input-group mb-3">
                       <div class="input-group-append">
-                        <span class="input-group-text"><i class="fas fa-text-height"></i></span>
+                        <span class="input-group-text"><i class="fas fa-copy"></i></span>
                       </div>
                       <select class="custom-select select2bs4 @error('activite_id') is-invalid @enderror" name="activite_id">
                         <option selected disabled> Sélectionner une activité</option>
                         @foreach($activites as $activite)
-                        <option value="{{ $activite->id}}"> {{ $activite->libelleactivite }}</option>
+                        <option value="{{ $activite->id }}" {{ $tach->activite_id == $activite->id ? 'selected' : ''}}> {{ $activite->libelleactivite }}</option>
                         @endforeach
                       </select>
                    </div>
@@ -62,7 +62,7 @@
                   <div class="col-sm-10">
                       <div class="input-group mb-3">
                           <div class="input-group-append">
-                            <span class="input-group-text"><i class="fas fa-tenge"></i></span>
+                            <span class="input-group-text"><i class="fas fa-signature"></i></span>
                           </div>
                           <input type="text" onkeypress="return event.charCode != 39" class="form-control @error('libelletache') is-invalid @enderror" name="libelletache"  placeholder="Libelle" value="{{ old('libelletache') ?? $tach->libelletache }}" required autofocus/>
                           @error('libelletache')

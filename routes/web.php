@@ -21,6 +21,9 @@ use App\Http\Controllers\HistoriqueController;
 use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\TacheController;
 use App\Http\Controllers\ApprenantController;
+use App\Http\Controllers\AppartenanceController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +82,9 @@ Route::resource('/ifads', IfadController::class);
 /*** routes generales pour metier ***/
 Route::resource('/metiers', MetierController::class);
 
+/*** routes generales pour appartenance  pour les tuteurs***/
+Route::resource('/appartenances', AppartenanceController::class);
+
 /*** routes generales pour Association ***/
 Route::resource('/associations', AssociationController::class);
 Route::get('/get_ifad', [AssociationController::class, 'getIfad'])->name('get_ifad');
@@ -107,7 +113,7 @@ Route::get('/fiche_desarchive/{fiche_positionnement}', [FichePositionnementContr
 Route::resource('/positionnements', PositionnementController::class);
 Route::get('/positionnement/create', [PositionnementController::class, 'index'])->name('positionnement_index');
 Route::post('/positionnement/create', [PositionnementController::class, 'create'])->name('positionnement_create');
-Route::get('/positionnement/recup_metier/{user}', [PositionnementController::class, 'recup_metier'])->name('positionnement_recup_metier');
+Route::get('/positionnement/recup_metier/{suivi}', [PositionnementController::class, 'recup_metier'])->name('positionnement_recup_metier');
 //Route::get('/positionnement/recup', [PositionnementController::class, 'index'])->name('positionnement_recup_index');
 //Route::post('/positionnement/recup', [PositionnementController::class, 'recup'])->name('positionnement_recup');
 Route::get('/get_index', [PositionnementController::class, 'getUser'])->name('get_index');
@@ -142,6 +148,16 @@ Route::get('/statistique/{fiche_positionnement}', [StatistiqueController::class,
 /** Historique **/
 Route::get('/historiques', [HistoriqueController::class, 'index'])->name('historique_index');
 
+/** Exportation **/
+Route::get('/export_user', [ExportController::class, 'export_user'])->name('export_user');
+Route::get('/export_user_cvs', [ExportController::class, 'export_user_csv'])->name('export_user_cvs');
+
+
+/** Importation **/
+Route::get('/import_user', [ImportController::class, 'import_user_index'])->name('import_user_index');
+Route::post('/import_user', [ImportController::class, 'import_user_store'])->name('import_user_store');
+
+
 /*** routes generales pour apprenant ***/
 Route::resource('/apprenants', ApprenantController::class);
 
@@ -152,4 +168,4 @@ Route::get('/hoho', function () {
 
 Route::get('/pie', [ChartController::class, 'pie'])->name('chart.pie');
 
-//Route::get('/first', [ChartController::class, 'first'])->name('first');
+Route::get('/first', [ChartController::class, 'first'])->name('first');
