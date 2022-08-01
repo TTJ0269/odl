@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Mail\NotificationMail;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 class PasswordResetLinkController extends Controller
@@ -46,6 +47,8 @@ class PasswordResetLinkController extends Controller
                 $useremail = ['email' => $user_email->email , 'nomuser' => $user_email->nomuser , 'prenomuser' => $user_email->prenomuser, 'password' => $password, 'message' => $message];
 
                 Mail::to($useremail['email'])->send(new NotificationMail($useremail));
+
+                DB::table('users')->where('email','=',$email)->update(['users.password' => Hash::make($password)]);
 
                 return redirect('new-password')->with('message', 'Nouveau mot de passe bien envoyé à votre boite mail.');
             }

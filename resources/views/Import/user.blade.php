@@ -51,6 +51,21 @@
 
                     <div class="row">
 
+                        <!--div class="col-12 col-sm-6">
+                            <label for="text">IFAD</label>
+                                  <select class="custom-select select2bs4  @error('ifad_id') is-invalid @enderror" name="ifad_id">
+                                     <option selected disabled>Sélectionner un IFAD</option>
+                                    @foreach($ifads as $ifad)
+                                    <option value="{{ $ifad->id}}"> {{ $ifad->libelleifad }}</option>
+                                    @endforeach
+                                  </select>
+                                  @error('ifad_id')
+                                  <div class="invalid-feedback">
+                                      {{ $errors->first('ifad_id')}}
+                                  </div>
+                                @enderror
+                          </div-->
+
                             <div class="col-12 col-sm-6">
                             <label for="file">Fichier</label>
                             <input type="file" name="file" class="@error('file') is-invalid @enderror" accept=".xlsx,.xls,.csv" id="validatedCustomFile">

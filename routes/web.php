@@ -157,6 +157,17 @@ Route::get('/export_user_cvs', [ExportController::class, 'export_user_csv'])->na
 Route::get('/import_user', [ImportController::class, 'import_user_index'])->name('import_user_index');
 Route::post('/import_user', [ImportController::class, 'import_user_store'])->name('import_user_store');
 
+/** Importation user , activite , tache **/
+Route::get('/import_index', [ImportController::class, 'import_index'])->name('import_index');
+Route::get('/import_activite_tache', [ImportController::class, 'import_index'])->name('import_activite_tache_index');
+Route::get('/import_user_ifad', [ImportController::class, 'import_index'])->name('import_user_ifad_index');
+Route::post('/import_activite_tache', [ImportController::class, 'import_activite_tache_store'])->name('import_activite_tache_store');
+Route::post('/import_user_ifad', [ImportController::class, 'import_user_ifad_store'])->name('import_user_ifad_store');
+
+/** Importation fichier user , activite , tache **/
+Route::get('/fichier_user', [ImportController::class, 'referentiel_user'])->name('referentiel_user');
+Route::get('/fichier_activite_tache', [ImportController::class, 'referentiel_metier'])->name('referentiel_metier');
+
 
 /*** routes generales pour apprenant ***/
 Route::resource('/apprenants', ApprenantController::class);

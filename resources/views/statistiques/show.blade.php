@@ -23,29 +23,29 @@
        <div class="container">
 
         <div class="text-center">
-            <img src="{{ asset('storage/imageifad/aedsuivi.png') }}" class="img elevation" style="width: 400px; height: 200px;" alt="AED Image">
+            <img src="{{ asset('storage/imageifad/aedsuivi.png') }}" class="img elevation" style="width: 200px; height: 100px;" alt="AED Image">
         </div>
 
             <br>
             <div class="row">
                 <div class="col-12 col-sm-6">
                   <div class="form-group">
-                    <h5> Fiche de positionnement </h5>
-                    <h5> {{$fiche_positionnement->association->ifad->libelleifad}} </h5>
-                    <h5> Métier: {{$fiche_positionnement->metier_apprenant}} </h5>
-                    <h5> Apprenant(e): {{$fiche_positionnement->association->user->nomuser}} {{$fiche_positionnement->association->user->prenomuser}} </h5>
-                    <h5>Date de l'évaluation: {{$fiche_positionnement->dateenregistrement}} </h5>
+                    <h6> Fiche de positionnement </h6>
+                    <h6> {{$fiche_positionnement->association->ifad->libelleifad}} </h6>
+                    <h6> Métier: {{$fiche_positionnement->metier_apprenant}} </h6>
+                    <h6> Apprenant(e): {{$fiche_positionnement->association->user->nomuser}} {{$fiche_positionnement->association->user->prenomuser}} </h6>
+                    <h6> Date de l'évaluation: {{$fiche_positionnement->dateenregistrement}} </h6>
                   </div>
                 </div>
 
                   <div class="col-12 col-sm-6">
                     <div class="form-group float-right">
-                        <h5> Entreprise: {{$fiche_positionnement->nom_entreprise}} </h5>
-                        <h5> Tél-Entreprise: {{$fiche_positionnement->tel_entreprise}} </h5>
-                        <h5> Mail-Entreprise: {{$fiche_positionnement->email_entreprise}} </h5>
-                        <h5> Adresse-Entreprise: {{$fiche_positionnement->adresse_entreprise}} </h5>
-                        <h5> Tuteur: {{$fiche_positionnement->nom_tuteur}} {{$fiche_positionnement->prenom_tuteur}}</h5>
-                        <h5> Tél-Tuteur: {{$fiche_positionnement->tel_tuteur}} </h5>
+                        <h6> Entreprise: {{$fiche_positionnement->nom_entreprise}} </h6>
+                        <h6> Tél-Entreprise: {{$fiche_positionnement->tel_entreprise}} </h6>
+                        <h6> Mail-Entreprise: {{$fiche_positionnement->email_entreprise}} </h6>
+                        <h6> Adresse-Entreprise: {{$fiche_positionnement->adresse_entreprise}} </h6>
+                        <h6> Tuteur: {{$fiche_positionnement->nom_tuteur}} {{$fiche_positionnement->prenom_tuteur}} </h6>
+                        <h6> Tél-Tuteur: {{$fiche_positionnement->tel_tuteur}} </h6>
                     </div>
                   </div>
            </div>
@@ -63,7 +63,6 @@
                     </div>
                     <div class="card-body">
                         <div class="chart">
-                        <a href="#"> </a>
                             <canvas id="activite{{$collection['activite_id']}}"></canvas>
                         </div>
                     </div>

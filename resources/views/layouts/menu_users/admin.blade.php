@@ -143,6 +143,15 @@
         </a>
     </li>
 
+    <li class="nav-item">
+        <a href="{{ route('import_index') }}" class="nav-link">
+        <i class="nav-icon fas fa-file-download"></i>
+        <p>
+            Importation
+        </p>
+        </a>
+    </li>
+
     <!--li class="nav-item">
         <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-pie"></i>
