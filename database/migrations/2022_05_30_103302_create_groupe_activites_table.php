@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMetiersTable extends Migration
+class CreateGroupeActivitesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateMetiersTable extends Migration
      */
     public function up()
     {
-        Schema::create('metiers', function (Blueprint $table) {
+        Schema::create('groupe_activites', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('libellemetier');
-            $table->string('niveaumetier')->nullable();
+            $table->string('identifiantgroupe', 10)->nullable();
+            $table->string('libellegroupe')->unique();
             $table->integer('etatsup');
             $table->timestamps();
 
-            $table->unsignedBigInteger('ifad_id');
-            $table->foreign('ifad_id')->references('id')->on('ifads')->onDelete('cascade');
+            $table->unsignedBigInteger('metier_id');
+            $table->foreign('metier_id')->references('id')->on('metiers')->onDelete('cascade');
         });
     }
 
@@ -32,6 +32,6 @@ class CreateMetiersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('metiers');
+        Schema::dropIfExists('groupe_activites');
     }
 }

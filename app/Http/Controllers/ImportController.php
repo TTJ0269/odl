@@ -9,6 +9,7 @@ use App\Imports\UserIfadImport;
 use App\Models\Profil;
 use App\Models\User;
 use App\Models\Ifad;
+use App\Models\GroupeActivite;
 use App\Models\Metier;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
@@ -67,14 +68,14 @@ class ImportController extends Controller
             {
                 return back()->with('messagealert',"Le profil Apprenant n'existe pas encore.");
             }
-            elseif(Metier::select('id')->exists())
+            elseif(GroupeActivite::select('id')->exists())
             {
-                $metiers = Metier::select('*')->get();
+                $groupe_activites = GroupeActivite::select('*')->get();
                 $ifads = Ifad::select('*')->get();
 
-                return view('Import.form',compact('metiers','ifads'));
+                return view('Import.form',compact('groupe_activites','ifads'));
             }
-            return back()->with('messagealert',"Ajouter au moins un métier.");
+            return back()->with('messagealert',"Ajouter au moins un groupe d'activité à un métier.");
         }
         catch(\Exception $exception)
         {
@@ -113,19 +114,22 @@ class ImportController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-            $metier = request('metier_id');
-            Session::put('metier_id',$metier);
 
-            if($metier == null)
+            $groupe_activite = request('groupe_activite_id');
+            Session::put('groupe_activite_id',$groupe_activite);
+
+            //dd($groupe_activite);
+
+            if($groupe_activite == null)
             {
-                return back()->with('messagealert','Sélectionner un métier');
+                return back()->with('messagealert',"Sélectionner un groupe d'activité");
             }
             if($request->file == null)
             {
                 return back()->with('messagealert','Sélectionner un fichier');
             }
 
-            //$valeur = ['file' => $request->file , 'metier' => $metier];
+            //$valeur = ['file' => $request->file , 'groupe_activite' => $groupe_activite];
 
             Excel::import(new ActiviteTacheImport, $request->file('file'));
             return back()->with('message','Importation éffectuée avec succées');

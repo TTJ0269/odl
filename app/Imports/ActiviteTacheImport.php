@@ -37,15 +37,15 @@ class ActiviteTacheImport implements ToCollection, WithHeadingRow //, WithValida
     {
         //$profil = Profil::where('libelleprofil','=','Apprenant')->select('*')->first();
 
-         $metier_id = Session::get('metier_id');
-         Session::forget('metier_id');
+         $groupe_activite_id = Session::get('groupe_activite_id');
+         Session::forget('groupe_activite_id');
 
         foreach($rows as $row)
         {
             $data_activite = [
                 'identifiantactivite' => $row['identifiant_activite'],
                 'libelleactivite' => $row['activite'],
-                'metier_id' => (int)$metier_id,
+                'groupe_activite_id' => (int)$groupe_activite_id,
             ];
 
             if($row['activite'] != null)
@@ -59,7 +59,10 @@ class ActiviteTacheImport implements ToCollection, WithHeadingRow //, WithValida
                 'activite_id' => $acitivite->id,
             ];
 
-            $tache = Tache::create($data_tache);
+            if($row['tache'] != null)
+            {
+              $tache = Tache::create($data_tache);
+            }
         }
     }
 

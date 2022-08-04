@@ -70,22 +70,22 @@
                         </div>
 
                         <div class="col-12 col-sm-6">
-                            <label for="text" class="col-sm-2 col-form-label">Métier</label>
+                            <label for="text" class="col-sm-2 col-form-label">Groupe d'activité</label>
                             <div class="col-sm-10">
                             <div class="input-group mb-3">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="nav-icon fas fa-chalkboard-teacher"></i></span>
                                 </div>
-                                <select class="custom-select select2bs4  @error('metier_id') is-invalid @enderror" name="metier_id">
-                                    <option selected disabled> Sélectionner un métier</option>
-                                    @foreach($metiers as $metier)
-                                    <option value="{{ $metier->id }}" {{ $activite->metier_id == $metier->id ? 'selected' : ''}}> {{ $metier->libellemetier }}</option>
+                                <select class="custom-select select2bs4  @error('groupe_activite_id') is-invalid @enderror" name="groupe_activite_id">
+                                    <option selected disabled> Sélectionner un groupe d'activité</option>
+                                    @foreach($groupe_activites as $groupe_activite)
+                                    <option value="{{ $groupe_activite->id }}" {{ $activite->groupe_activite_id == $groupe_activite->id ? 'selected' : ''}}> {{ $groupe_activite->libellegroupe }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                                @error('metier_id')
+                                @error('groupe_activite_id')
                                 <div class="invalid-feedback">
-                                    {{ $errors->first('metier_id')}}
+                                    {{ $errors->first('groupe_activite_id')}}
                                 </div>
                                 @enderror
                             </div>

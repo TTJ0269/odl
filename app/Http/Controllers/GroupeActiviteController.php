@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Metier;
+use App\Models\Ifad;
+use App\Models\User;
 use App\Models\GroupeActivite;
 use App\Models\Activite;
-use App\Models\Tache;
-use App\Models\User;
 use App\Models\Historique;
 
-class ActiviteController extends Controller
+class GroupeActiviteController extends Controller
 {
     public function __construct()
     {
@@ -22,15 +23,15 @@ class ActiviteController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-     // Afficher les types utilisateurs
+     // Afficher les metiers
      public function index()
      {
         $this->authorize('ad_re_su', User::class);
        try
        {
-            $activites = Activite::select('*')->orderBy('id','DESC')->get();
+            $groupe_activites = GroupeActivite::select('*')->get();
 
-            return view('activites.index', compact('activites'));
+            return view('groupe_activites.index', compact('groupe_activites'));
         }
         catch(\Exception $exception)
        {
@@ -49,10 +50,11 @@ class ActiviteController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
-          $groupe_activites = GroupeActivite::select('*')->get();
-          $activite = new Activite();
 
-          return view('activites.create',compact('activite','groupe_activites'));
+          $groupe_activite = new GroupeActivite();
+          $metiers = Metier::select('*')->get();
+
+          return view('groupe_activites.create',compact('groupe_activite','metiers'));
         }
         catch(\Exception $exception)
        {
@@ -71,29 +73,18 @@ class ActiviteController extends Controller
      {
         $this->authorize('ad_re_su', User::class);
         $this->validator();
-       try
-       {
-        if(Activite::where('libelleactivite','=',request('libelleactivite'))->select('id')->doesntExist())
+        try
         {
-            $libelle = request('libelleactivite');
+          $groupe_activite = GroupeActivite::create($this->validator());
 
-            $activite = Activite::create([
-                'libelleactivite'=> request('libelleactivite'),
-                'identifiantactivite'=> request('identifiantactivite'),
-                'groupe_activite_id'=> request('groupe_activite_id'),
-                'categorie'=> request('categorie'),
-            ]);
+          $this->historique(request('libellegroupe'), 'Ajout');
 
-            $this->historique(request('libelleactivite'), 'Ajout');
-
-            return redirect('activites/create')->with('message', 'Activité bien ajoutée.');
+          return redirect('groupe_activites')->with('message', "Groupe d'activité bien ajouté.");
         }
-        return back()->with('messagealert',"Cette activité existe déjà.");
-      }
-      catch(\Exception $exception)
-      {
-          return redirect('erreur')->with('messageerreur',$exception->getMessage());
-      }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
      }
 
       /**
@@ -103,12 +94,12 @@ class ActiviteController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function show(Activite $activite)
+     public function show(GroupeActivite $groupe_activite)
      {
         $this->authorize('ad_re_su', User::class);
        try
-       {
-          return view('activites.show',compact('activite'));
+        {
+          return view('groupe_activites.show',compact('groupe_activite'));
         }
         catch(\Exception $exception)
        {
@@ -123,13 +114,14 @@ class ActiviteController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function edit(Activite $activite)
+     public function edit(GroupeActivite $groupe_activite)
      {
         $this->authorize('ad_re_su', User::class);
-       try
-       {
-          $groupe_activites = GroupeActivite::select('*')->get();
-          return view('activites.edit', compact('activite','groupe_activites'));
+        try
+        {
+          $metiers = Metier::select('*')->get();
+
+          return view('groupe_activites.edit', compact('groupe_activite','metiers'));
         }
         catch(\Exception $exception)
        {
@@ -145,22 +137,19 @@ class ActiviteController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function update(Activite $activite)
+     public function update(GroupeActivite $groupe_activite)
      {
         $this->authorize('ad_re_su', User::class);
         $this->validator();
        try
        {
-          $activite->update([
-              'libelleactivite'=> request('libelleactivite'),
-              'identifiantactivite'=> request('identifiantactivite'),
-              'groupe_activite_id'=> request('groupe_activite_id'),
-              'categorie'=> request('categorie'),
-          ]);
+          $groupe_libelle = request('libellegroupe');
 
-          $this->historique(request('libelleactivite'), 'Modification');
+          $groupe_activite->update($this->validator());
 
-          return redirect('activites/' . $activite->id)->with('message',"Modification effectuée avec succès.");
+          $this->historique($groupe_libelle, 'Modification');
+
+          return redirect('groupe_activites/' . $groupe_activite->id);
         }
         catch(\Exception $exception)
        {
@@ -175,37 +164,35 @@ class ActiviteController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function destroy(activite $activite)
+     public function destroy(GroupeActivite $groupe_activite)
      {
         $this->authorize('ad_re_su', User::class);
-       try
-       {
-        if(Tache::where('activite_id','=',$activite->id)->select('id')->exists())
+        try
         {
-           return back()->with('messagealert',"Suppression pas possible. Cette activité est référencée dans une autre table.");
+            if(Activite::where('groupe_activite_id','=',$groupe_activite->id)->doesntExist())
+            {
+              $groupe_activite->delete();
+
+              $this->historique($groupe_activite->libellegroupe, 'Suppression');
+
+              return redirect('groupe_activites')->with('messagealert','Suppression éffectuée');
+            }
+
+            return redirect('metiers')->with('messagealert',"Ce groupe d'activité est referencé dans une autre table");
         }
-        else
+          catch(\Exception $exception)
         {
-            $activite->delete();
-
-            $this->historique($activite->libelleactivite, 'Suppression');
-
-            return redirect('activites')->with('messagealert','Suppression éffectuée');
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
         }
-       }
-        catch(\Exception $exception)
-       {
-           return redirect('erreur')->with('messageerreur',$exception->getMessage());
-       }
+
      }
 
      private  function validator()
      {
          return request()->validate([
-             'libelleactivite'=>'required|min:2',
-             'identifiantactivite'=>'max:10',
-             'groupe_activite_id'=>'required|integer',
-             'categorie'=>'max:255',
+             'identifiantgroupe'=>'max:10',
+             'libellegroupe'=>'required|min:2',
+             'metier_id' => 'required'
          ]);
      }
 
@@ -216,7 +203,7 @@ class ActiviteController extends Controller
         /** historiques des actions sur le systeme **/
         $historique = Historique::create([
         'user_action'=> $auth_user,
-        'table'=> 'Activite',
+        'table'=> 'Groupe Activite',
         'attribute' => $attribute,
         'action'=> $action
         ]);

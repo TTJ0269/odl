@@ -10,6 +10,7 @@ use App\Models\Profil;
 use App\Models\User;
 use App\Models\Positionnement;
 use App\Models\FichePositionnement;
+use App\Models\GroupeActivite;
 use App\Models\Activite;
 use App\Models\Tache;
 use App\Models\Metier;
@@ -103,26 +104,22 @@ class PositionnementController extends Controller
      *
      * @return json
      */
-    public function getUser(Request $request)
+    public function getGroupeActivite(Request $request)
     {
         try
         {
           $user_id = (Auth::user()->id);
 
-            $users = DB::table('profils')
-            ->join('users','profils.id','=','users.profil_id')
-            ->join('associations','users.id','=','associations.user_id')
-            ->join('ifads','ifads.id','=','associations.ifad_id')
-            ->select('users.id','users.nomuser','users.prenomuser')
-            ->where('profils.libelleprofil', 'Apprenant')
-            ->where('ifads.id', $request->ifad_id)
-            ->distinct('users.id')
-            ->orderBy('users.id')
+            $groupe_activites = DB::table('groupe_activites')
+            ->select('groupe_activites.id','groupe_activites.identifiantgroupe','groupe_activites.libellegroupe')
+            ->where('groupe_activites.metier_id', $request->metier_id)
+            ->distinct('groupe_activites.id')
+            ->orderBy('groupe_activites.id')
             ->get();
 
-            if (count($users) > 0)
+            if (count($groupe_activites) > 0)
             {
-                return response()->json($users);
+                return response()->json($groupe_activites);
             }
 
         }
@@ -142,23 +139,24 @@ class PositionnementController extends Controller
             $profil = (Auth::user()->profil_id);
 
             $recup_suivi_id = request('suivi_id');
-            $metier_id = request('metier_id');
+            $groupe_activite_id = request('groupe_activite_id');
+            //dd($groupe_activite_id);
 
-            //dd($user , $metier);
             if($recup_suivi_id == null)
             {
                 return back()->with('messagealert', "Sélectionner un(e) apprenant(e).");
             }
-            elseif($metier_id == null)
+            elseif($groupe_activite_id == null)
             {
-                return back()->with('messagealert', "Sélectionner un métier.");
+                return back()->with('messagealert', "Sélectionner un groupe d'activité.");
             }
             else
             {
-                if(DB::table('activites')->join('taches','activites.id','=','taches.activite_id')
-                ->where('activites.metier_id','=',$metier_id)->select('taches.id')->doesntExist())
+                if(DB::table('groupe_activites')->join('activites','groupe_activites.id','=','activites.groupe_activite_id')
+                ->join('taches','activites.id','=','taches.activite_id')
+                ->where('activites.groupe_activite_id','=',$groupe_activite_id)->select('taches.id')->doesntExist())
                 {
-                  return back()->with('messagealert', "Ajouter au moins une tâche à ce métier.");
+                  return back()->with('messagealert', "Ajouter au moins une tâche à ce groupe.");
                 }
                 else
                 {
@@ -166,10 +164,10 @@ class PositionnementController extends Controller
 
                     $suivis = Suivi::select('*')->where('id','=',$recup_suivi_id)->first();
 
-                    $metiers = Metier::select('*')->where('id','=',$metier_id)->first();
+                    $groupe_activites = GroupeActivite::select('*')->where('id','=',$groupe_activite_id)->first();
 
                     /** selection des activites metiers par activites **/
-                    $activites = Activite::where('metier_id','=',$metier_id)->select('*')->orderBy('id')->distinct('id')->get();
+                    $activites = Activite::where('groupe_activite_id','=',$groupe_activite_id)->select('*')->orderBy('id')->distinct('id')->get();
 
                     $i = 0;
                     foreach($activites as $activite)
@@ -182,7 +180,7 @@ class PositionnementController extends Controller
                         ->join('taches','activites.id','=','taches.activite_id')
                         ->select('taches.*','activites.id as id_activite')
                         ->where('activites.id','=',$tab_activite_id[$i])
-                        ->where('activites.metier_id','=',$metier_id)
+                        ->where('activites.groupe_activite_id','=',$groupe_activite_id)
                         ->orderBy('activites.id')
                         ->distinct('activites.id')
                         ->get();
@@ -192,7 +190,7 @@ class PositionnementController extends Controller
                         $i++;
                     }
 
-                    return view('positionnements.create',compact('collections','suivis','metiers'));
+                    return view('positionnements.create',compact('collections','suivis','groupe_activites'));
                 }
             }
 
@@ -214,7 +212,7 @@ class PositionnementController extends Controller
             $prenom_tuteur = Auth::user()->prenomuser; //request('prenom_tuteur');
             $tel_tuteur = Auth::user()->teluser; //request('tel_tuteur');
             $suivi_id = request('suivi_id');
-            $metier_id = request('metier_id');
+            $groupe_activite_id = request('groupe_activite_id');
             $metier_libelle = request('metier_libelle');
 
         if(Appartenance::where('user_id','=',Auth::user()->id)->select('id')->exists())
@@ -253,8 +251,10 @@ class PositionnementController extends Controller
         $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$users->nomuser." ".$users->prenomuser;
 
         /** Recuperation des valeurs **/
-        $taches = DB::table('activites')->join('taches','activites.id','=','taches.activite_id')
-        ->where('activites.metier_id','=',$metier_id)->select('taches.*')->get();
+        $taches = DB::table('groupe_activites')
+        ->join('activites','groupe_activites.id','=','activites.groupe_activite_id')
+        ->join('taches','activites.id','=','taches.activite_id')
+        ->where('activites.groupe_activite_id','=',$groupe_activite_id)->select('taches.*')->get();
 
             $nombre_tache = 0;
             $t = 1;

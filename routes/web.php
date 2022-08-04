@@ -18,6 +18,7 @@ use App\Http\Controllers\ProfilUserController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\FicheLongueController;
 use App\Http\Controllers\HistoriqueController;
+use App\Http\Controllers\GroupeActiviteController;
 use App\Http\Controllers\ActiviteController;
 use App\Http\Controllers\TacheController;
 use App\Http\Controllers\ApprenantController;
@@ -73,6 +74,9 @@ Route::resource('/entreprises', EntrepriseController::class);
 /*** routes generales pour Activite ***/
 Route::resource('/activites', ActiviteController::class);
 
+/*** routes generales pour GroupeActivite ***/
+Route::resource('/groupe_activites', GroupeActiviteController::class);
+
 /*** routes generales pour Tache ***/
 Route::resource('/taches', TacheController::class);
 
@@ -117,6 +121,7 @@ Route::get('/positionnement/recup_metier/{suivi}', [PositionnementController::cl
 //Route::get('/positionnement/recup', [PositionnementController::class, 'index'])->name('positionnement_recup_index');
 //Route::post('/positionnement/recup', [PositionnementController::class, 'recup'])->name('positionnement_recup');
 Route::get('/get_index', [PositionnementController::class, 'getUser'])->name('get_index');
+Route::get('/get_groupe_activite', [PositionnementController::class, 'getGroupeActivite'])->name('get_groupe_activite');
 
 /*** routes generales pour Observation ***/
 Route::resource('/observations', ObservationController::class);

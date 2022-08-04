@@ -19,8 +19,8 @@ class Activite extends Model
          return $this->hasMany('App\Models\Tache');
      }
 
-     public function metier()
+     public function groupe_activite()
     {
-        return $this->belongsTo('App\Models\Metier');
+        return $this->belongsTo('App\Models\GroupeActivite');
     }
 }

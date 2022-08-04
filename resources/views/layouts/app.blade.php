@@ -175,25 +175,25 @@ $('.select2bs4').select2({
     });
 </script>
 
-<!--script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
-        $('#ifad').on('change', function () {
-            var ifadId = this.value;
-            $('#metier').html('');
+        $('#metier').on('change', function () {
+            var metierId = this.value;
+            $('#groupeactivite').html('');
             $.ajax({
-                url: '{{ route('get_ifad') }}?ifad_id='+ifadId,
+                url: '{{ route('get_groupe_activite') }}?metier_id='+metierId,
                 type: 'get',
                 success: function (res) {
-                    $('#metier').html('<option value="">Sélectionner un metier</option>');
+                    $('#groupeactivite').html('<option value="">Sélectionner un groupe activité</option>');
                     $.each(res, function (key, value) {
-                        $('#metier').append('<option value="' + value
-                            .id + '">' +''+ value.libellemetier +'</option>');
+                        $('#groupeactivite').append('<option value="' + value
+                            .id + '">' +''+ value.libellegroupe +'</option>');
                     });
                 }
             });
         });
     });
-</script-->
+</script>
 
 <script type="text/javascript">
     $(document).ready(function () {

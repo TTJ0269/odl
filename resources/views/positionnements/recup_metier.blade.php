@@ -54,7 +54,7 @@
                                      <div class="input-group-append">
                                        <span class="input-group-text"><i class="fas fa-chalkboard-teacher"></i></span>
                                      </div>
-                                       <select class="custom-select select2bs4" name="metier_id" id="metier_id">
+                                       <select class="custom-select select2bs4" name="metier_id" id="metier">
                                            <option selected disabled>Sélectionner un métier</option>
                                            @foreach ($metiers as $metier)
                                            <option value="{{ $metier->id }}"> {{ $metier->libellemetier }} </option>
@@ -63,6 +63,18 @@
                                  </div>
                              </div>
                          </div>
+
+                         <div class="form-group row">
+                            <label for="name" class="col-sm-2 col-form-label">Groupe d'activité</label>
+                              <div class="col-sm-10">
+                                  <div class="input-group mb-3">
+                                      <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-book-open"></i></span>
+                                      </div>
+                                          <select class="custom-select select2bs4" name="groupe_activite_id" id="groupeactivite"></select>
+                                  </div>
+                              </div>
+                          </div>
 
 
                        <div class="text-center">

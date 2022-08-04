@@ -67,8 +67,8 @@
          <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
 
                 <input type="number" hidden value="{{$suivis->id}}" name="suivi_id"/>
-                <input type="number" hidden value="{{$metiers->id}}" name="metier_id"/>
-                <input type="text" hidden value="{{$metiers->libellemetier}}" name="metier_libelle"/>
+                <input type="number" hidden value="{{$groupe_activites->id}}" name="groupe_activite_id"/>
+                <input type="text" hidden value="{{$groupe_activites->metier->libellemetier}}" name="metier_libelle"/>
 
                 <div class="row">
                     @foreach ($collections as $collection)
