@@ -21,7 +21,7 @@
                                 <div class="input-group-append">
                                 <span class="input-group-text"><i class="nav-icon fas fa-school"></i></span>
                                 </div>
-                                <select class="custom-select select2bs4  @error('ifad_id') is-invalid @enderror" name="ifad_id">
+                                <select class="custom-select select2bs4  @error('ifad_id') is-invalid @enderror" name="ifad_id" id="ifad">
                                     <option selected disabled>Sélectionner un IFAD</option>
                                     @foreach($ifads as $ifad)
                                     <option value="{{ $ifad->id}}"> {{ $ifad->libelleifad }}</option>
@@ -35,6 +35,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label for="text" class="col-sm-2 col-form-label">Classe</label>
+                        <div class="col-sm-10">
+                          <div class="input-group mb-3">
+                              <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-text-height"></i></span>
+                              </div>
+                              <select class="custom-select select2bs4" name="classe_id" id="classe"></select>
+                           </div>
+                         </div>
+                      </div>
 
                         <div class="form-group row">
                         <label for="file" class="col-sm-2 col-form-label">Fichier</label>

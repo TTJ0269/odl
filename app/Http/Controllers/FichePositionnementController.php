@@ -11,6 +11,7 @@ use App\Models\Metier;
 use App\Models\Profil;
 use App\Models\User;
 use App\Models\Association;
+use App\Models\Rattacher;
 use App\Models\Entreprise;
 use App\Models\Historique;
 
@@ -39,7 +40,9 @@ class FichePositionnementController extends Controller
            {
                 $fiche_positionnements = DB::table('users')
                 ->join('associations','users.id','=','associations.user_id')
-                ->join('ifads','ifads.id','=','associations.ifad_id')
+                ->join('classes','classes.id','=','associations.classe_id')
+                ->join('metiers','metiers.id','=','classes.metier_id')
+                ->join('ifads','ifads.id','=','metiers.ifad_id')
                 ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
                 ->where('fiche_positionnements.etat','=',0)
                 ->select('fiche_positionnements.*','ifads.libelleifad')
@@ -53,7 +56,9 @@ class FichePositionnementController extends Controller
            {
                 $fiche_positionnements = DB::table('users')
                 ->join('associations','users.id','=','associations.user_id')
-                ->join('ifads','ifads.id','=','associations.ifad_id')
+                ->join('classes','classes.id','=','associations.classe_id')
+                ->join('metiers','metiers.id','=','classes.metier_id')
+                ->join('ifads','ifads.id','=','metiers.ifad_id')
                 ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
                 ->where('fiche_positionnements.responsable_suivi_id','=',$user_id)
                 ->select('fiche_positionnements.*','ifads.libelleifad')
@@ -63,22 +68,50 @@ class FichePositionnementController extends Controller
 
                 return view('fiche_positionnements.index', compact('fiche_positionnements'));
            }
+           elseif($profil_libelle == 'Formateur_IFAD')
+           {
+                if(Rattacher::where('user_id','=',Auth::user()->id)->select('*')->doesntExist())
+                {
+                    return back()->with('messagealert', "Vous n'est pas rattaché(e) à un Métier.");
+                }
+                else
+                {
+                    $formateurs = Rattacher::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
+
+                    $fiche_positionnements = DB::table('users')
+                    ->join('associations','users.id','=','associations.user_id')
+                    ->join('classes','classes.id','=','associations.classe_id')
+                    ->join('metiers','metiers.id','=','classes.metier_id')
+                    ->join('ifads','ifads.id','=','metiers.ifad_id')
+                    ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
+                    ->where('metiers.id','=',$formateurs->metier_id)
+                    ->select('fiche_positionnements.*','ifads.libelleifad')
+                    ->distinct('fiche_positionnements.id')
+                    ->orderBy('fiche_positionnements.id','DESC')
+                    ->get();
+
+                    return view('fiche_positionnements.index', compact('fiche_positionnements'));
+                }
+           }
            elseif($profil_libelle == 'DG_IFAD')
            {
-              if(DB::table('associations')->where('associations.user_id','=',Auth::user()->id)->select('associations.id')->doesntExist())
+                if(DB::table('rattachers')->where('rattachers.user_id','=',Auth::user()->id)->select('rattachers.id')->doesntExist())
                 {
                     return back()->with('messagealert',"Vous n'est pas associé à un IFAD");
                 }
                 else
                 {
-                    $ifad_id = DB::table('associations')->where('associations.user_id','=',Auth::user()->id)
-                    ->select('ifad_id')->get()->last()->ifad_id;
+                    $ifad_id = DB::table('rattachers')
+                    ->where('rattachers.user_id','=',Auth::user()->id)
+                    ->select('rattachers.ifad_id')->get()->last()->ifad_id;
 
                     $fiche_positionnements = DB::table('users')
                     ->join('associations','users.id','=','associations.user_id')
-                    ->join('ifads','ifads.id','=','associations.ifad_id')
+                    ->join('classes','classes.id','=','associations.classe_id')
+                    ->join('metiers','metiers.id','=','classes.metier_id')
+                    ->join('ifads','ifads.id','=','metiers.ifad_id')
                     ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
-                    ->where('associations.ifad_id','=',$ifad_id)
+                    ->where('metiers.ifad_id','=',$ifad_id)
                     ->select('fiche_positionnements.*','ifads.libelleifad')
                     ->distinct('fiche_positionnements.id')
                     ->orderBy('fiche_positionnements.id','DESC')
@@ -95,14 +128,19 @@ class FichePositionnementController extends Controller
                 }
                 else
                 {
-                    $ifad_id = DB::table('associations')->where('associations.user_id','=',Auth::user()->id)
-                    ->select('ifad_id')->get()->last()->ifad_id;
+                    $ifad_id = DB::table('associations')
+                    ->join('classes','classes.id','=','associations.classe_id')
+                    ->join('metiers','metiers.id','=','classes.metier_id')
+                    ->where('associations.user_id','=',Auth::user()->id)
+                    ->select('metiers.ifad_id')->get()->last()->ifad_id;
 
                     $fiche_positionnements = DB::table('users')
                     ->join('associations','users.id','=','associations.user_id')
-                    ->join('ifads','ifads.id','=','associations.ifad_id')
+                    ->join('classes','classes.id','=','associations.classe_id')
+                    ->join('metiers','metiers.id','=','classes.metier_id')
+                    ->join('ifads','ifads.id','=','metiers.ifad_id')
                     ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
-                    ->where('associations.ifad_id','=',$ifad_id)
+                    ->where('metiers.ifad_id','=',$ifad_id)
                     ->where('associations.user_id','=',Auth::user()->id)
                     ->select('fiche_positionnements.*','ifads.libelleifad')
                     ->distinct('fiche_positionnements.id')
@@ -220,7 +258,7 @@ class FichePositionnementController extends Controller
 
      public function edit(FichePositionnement $fiche_positionnement)
      {
-        $this->authorize('ad_re_su_ch', User::class);
+        $this->authorize('ad_re_su_ch_fo', User::class);
         try
         {
             $user_id = (Auth::user()->id);
@@ -273,7 +311,7 @@ class FichePositionnementController extends Controller
 
      public function update(FichePositionnement $fiche_positionnement)
      {
-        $this->authorize('ad_re_su_ch', User::class);
+        $this->authorize('ad_re_su_ch_fo', User::class);
          try
          {
             /** Recuperation des valeurs **/

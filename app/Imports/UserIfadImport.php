@@ -29,8 +29,8 @@ class UserIfadImport implements ToCollection ,WithHeadingRow, WithValidation //T
     {
         $profil = Profil::where('libelleprofil','=','Apprenant')->select('*')->first();
 
-        $ifad_id = Session::get('ifad');
-        Session::forget('ifad');
+        $classe_id = Session::get('classe');
+        Session::forget('classe');
 
         foreach($rows as $row)
         {
@@ -47,12 +47,12 @@ class UserIfadImport implements ToCollection ,WithHeadingRow, WithValidation //T
 
             $user = User::create($data);
 
-            if(Association::where('user_id','=',$user->id)->where('ifad_id','=',$ifad_id)->select('*')->doesntExist())
+            if(Association::where('user_id','=',$user->id)->where('classe_id','=',$classe_id)->select('*')->doesntExist())
             {
                 /** Association d'un apprenant a un ifad **/
                 Association::create([
                     'user_id' => $user->id,
-                    'ifad_id'=> (int)$ifad_id,
+                    'classe_id'=> (int)$classe_id,
                     'datedebut'=> now(),
                     'datefin'=> null,
                 ]);

@@ -77,6 +77,19 @@ class ProfilPolicy
         }
     }
 
+    public function formateur_ifad(User $user)
+    {
+        try
+        {
+            if(Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Formateur_IFAD')->exists()){return true;}
+            return false;
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }
+
     public function apprenant(User $user)
     {
         try
@@ -90,15 +103,16 @@ class ProfilPolicy
         }
     }
 
-    public function ad_re_su_ch(User $user)
+    public function ad_re_su_ch_fo(User $user)
     {
-        //ad_re_su = administrateur,responsable,suivi aed et chargé du suivi;
+        //ad_re_su = administrateur,responsable,suivi aed,chargé du suivi et le formateur à l'IFAD;
         try
         {
             if(Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Administrateur')->exists() ||
                Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Responsable pédagogique')->exists() ||
                Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Suivi_AED')->exists() ||
-               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Chargé du suivi')->exists())
+               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Chargé du suivi')->exists() ||
+               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Formateur_IFAD')->exists())
            {return true;}
             return false;
         }

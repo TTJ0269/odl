@@ -22,4 +22,14 @@ class metier extends Model
      {
          return $this->hasMany('App\Models\GroupeActivite');
      }
+
+     public function classes()
+     {
+         return $this->hasMany('App\Models\Classe');
+     }
+
+     public function rattachers()
+     {
+         return $this->hasMany('App\Models\Rattacher');
+     }
 }

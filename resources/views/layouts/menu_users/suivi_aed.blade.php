@@ -9,19 +9,19 @@
     </li>
 
     <li class="nav-item">
-        <a href="{{ route('apprenants.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-user"></i>
+        <a href="{{ route('metiers.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-chalkboard-teacher"></i>
         <p>
-            Apprenant
+            Métier
         </p>
         </a>
     </li>
 
     <li class="nav-item">
-        <a href="{{ route('appartenances.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-user"></i>
+        <a href="{{ route('classes.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-door-open"></i>
         <p>
-            Tuteur/Tutrice
+            Classe
         </p>
         </a>
     </li>
@@ -36,19 +36,37 @@
     </li>
 
     <li class="nav-item">
-        <a href="{{ route('metiers.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-chalkboard-teacher"></i>
+        <a href="{{ route('autre_user') }}" class="nav-link">
+        <i class="nav-icon fas fa-user"></i>
         <p>
-            Métier
+            Utilisateur
         </p>
         </a>
     </li>
+
+    <!--li class="nav-item">
+        <a href="{{ route('apprenants.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-user"></i>
+        <p>
+            Apprenant
+        </p>
+        </a>
+    </li-->
+
+    <!--li class="nav-item">
+        <a href="{{ route('appartenances.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-user"></i>
+        <p>
+            Tuteur/Tutrice
+        </p>
+        </a>
+    </li-->
 
     <li class="nav-item">
         <a href="{{ route('groupe_activites.index') }}" class="nav-link">
         <i class="nav-icon fas fa-bookmark"></i>
         <p>
-            Groupe Activité
+            Fonction <!-- Fonction = Groupe d'activite-->
         </p>
         </a>
     </li>
@@ -124,7 +142,7 @@
         </a>
     </li>
 
-    <!--li class="nav-item">
+    <li class="nav-item">
         <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-pie"></i>
         <p>
@@ -137,10 +155,10 @@
         <li class="nav-item">
             <a href="{{ route('statistique_index') }}" class="nav-link">
             <i class="nav-icon fas fa-chart-line"></i>
-            <p>Statistique</p>
+            <p>Radars de positionnement</p>
             </a>
         </li>
 
         </ul>
-    </li-->
+    </li>
 @endcan

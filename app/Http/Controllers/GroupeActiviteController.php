@@ -52,7 +52,7 @@ class GroupeActiviteController extends Controller
        {
 
           $groupe_activite = new GroupeActivite();
-          $metiers = Metier::select('*')->get();
+          $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
 
           return view('groupe_activites.create',compact('groupe_activite','metiers'));
         }
@@ -119,7 +119,7 @@ class GroupeActiviteController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-          $metiers = Metier::select('*')->get();
+          $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
 
           return view('groupe_activites.edit', compact('groupe_activite','metiers'));
         }

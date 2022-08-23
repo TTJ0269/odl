@@ -42,9 +42,11 @@ class ApprenantController extends Controller
             $apprenants = DB::table('profils')
             ->join('users','profils.id','=','users.profil_id')
             ->join('associations','users.id','=','associations.user_id')
-            ->join('ifads','ifads.id','=','associations.ifad_id')
+            ->join('classes','classes.id','=','associations.classe_id')
+            ->join('metiers','metiers.id','=','classes.metier_id')
+            ->join('ifads','ifads.id','=','metiers.ifad_id')
             ->where('profils.libelleprofil','=','Apprenant')
-            ->select('users.*','ifads.id as ifad_id','ifads.libelleifad')
+            ->select('users.*','ifads.id as ifad_id','ifads.libelleifad','classes.id as id_classe','classes.libelleclasse','metiers.id as id_metier','metiers.libellemetier')
             ->orderBy('users.id','DESC')
             ->get();
 
@@ -105,7 +107,8 @@ class ApprenantController extends Controller
         $emailuser = request('email');
         $username=request('nomuser');
         $userprenom=request('prenomuser');
-        $ifad_id = request('ifad_id');
+        $numero_matricule=request('numero_matricule');
+        $classe_id = request('classe_id');
         $name = request('name');
         $password = request('prenomuser').'@'.request('teluser');  //request('password')
         $imageuser = null;
@@ -119,7 +122,15 @@ class ApprenantController extends Controller
             $imageuser = $filename;
         }
 
-        if(request('email') != null && User::where('email','=',request('email'))->select('id')->exists())
+        if($classe_id == null)
+        {
+            return back()->with('messagealert',"Sélectionner une classe.");
+        }
+        elseif(request('numero_matricule') != null && User::where('numero_matricule','=',request('numero_matricule'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Ce numéro matricule existe déjà.");
+        }
+        elseif(request('email') != null && User::where('email','=',request('email'))->select('id')->exists())
         {
             return back()->with('messagealert',"Ce mail existe déjà.");
         }
@@ -131,6 +142,7 @@ class ApprenantController extends Controller
         {
             /** Enregistrement de l'apprenant(e) **/
             $user = User::create([
+                'numero_matricule'=> request('numero_matricule'),
                 'name'=> $name,
                 'email'=> request('email'),
                 'password' => Hash::make($password), // si le mail sera envoyé alors ça $password NB: le mot de passe est crypté dans l'envoye du mail,
@@ -141,17 +153,16 @@ class ApprenantController extends Controller
                 'imageuser'=> $imageuser,
             ]);
 
-            if(Association::where('user_id','=',$user->id)->where('ifad_id','=',$ifad_id)->select('*')->doesntExist())
+            if(Association::where('user_id','=',$user->id)->where('classe_id','=',$classe_id)->select('*')->doesntExist())
             {
                 /** Association d'un apprenant a un ifad **/
                 Association::create([
                     'user_id' => $user->id,
-                    'ifad_id'=> $ifad_id,
+                    'classe_id'=> $classe_id,
                     'datedebut'=> now(),
                     'datefin'=> null,
                 ]);
             }
-
 
             $this->historique(request('nomuser').' '.request('prenomuser'), 'Ajout');
 
@@ -229,13 +240,21 @@ class ApprenantController extends Controller
     $this->authorize('ad_re_su', User::class);
    try
    {
-        $ifad_id = request('ifad_id');
+        $classe_id = request('classe_id');
 
         $association = Association::where('user_id','=',$apprenant->id)->select('*')->get()->last();
 
+        if($classe_id == null)
+        {
+            return back()->with('messagealert',"Sélectionner une classe");
+        }
         if(request('email') != null && $apprenant->email != request('email') && User::where('email','=',request('email'))->select('id')->exists())
         {
             return back()->with('messagealert',"Le mail ".request('email')." existe déjà.");
+        }
+        elseif(request('numero_matricule') != null && User::where('numero_matricule','=',request('numero_matricule'))->select('id')->exists())
+        {
+            return back()->with('messagealert',"Ce numéro matricule existe déjà.");
         }
         elseif(request('teluser') != null && $apprenant->teluser != request('teluser') && User::where('teluser','=',request('teluser'))->select('id')->exists())
         {
@@ -259,6 +278,7 @@ class ApprenantController extends Controller
                 'prenomuser'=> request('prenomuser'),
                 'email'=> request('email'),
                 'teluser'=> request('teluser'),
+                'numero_matricule'=> request('numero_matricule'),
                 'imageuser'=> $imageuser,
                 //'password'=> Hash::make(135792468),
             ]);
@@ -270,13 +290,14 @@ class ApprenantController extends Controller
                 'prenomuser'=> request('prenomuser'),
                 'email'=> request('email'),
                 'teluser'=> request('teluser'),
+                'numero_matricule'=> request('numero_matricule'),
                 //'password'=> Hash::make(135792468),
             ]);
         }
 
 
         /** Actualisation Association d'un apprenant a un ifad **/
-        $associat = DB::table('associations')->where('associations.id','=',$association->id)->update(['associations.ifad_id'=> $ifad_id]);
+        $associat = DB::table('associations')->where('associations.id','=',$association->id)->update(['associations.classe_id'=> $classe_id]);
 
         $this->historique(request('nomuser').' '.request('prenomuser'), 'Modification');
 
@@ -327,7 +348,7 @@ class ApprenantController extends Controller
      return request()->validate([
          'nomuser'=>'required',
          'prenomuser'=>'required',
-         'ifad_id'=>'required|integer',
+         'classe_id'=>'required|integer',
          'name'=>'required|unique:users',
      ]);
  }

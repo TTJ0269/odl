@@ -43,6 +43,11 @@
                             </form>
                             <hr>
                             <p><strong>Libelle :</strong> {{$ifad->libelleifad}}</p>
+                            <p>
+                            @if($ifad->logoifad)
+                            <img src="{{ asset('storage/imageifad/' .$ifad->logoifad) }}" alt="user-ImageUser" class="img-thumbnail" width="400">
+                            @endif
+                            </p>
                     </div>
                 </div>
             </div>

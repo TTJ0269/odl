@@ -82,8 +82,8 @@ class SuiviController extends Controller
  {
     $this->authorize('ad_re_su', User::class);
     $this->validator();
-   /*try
-   {*/
+   try
+   {
         $entreprise_id = request('entreprise_id');
         $user_id = request('user_id');
         $datedebut = request('datedebut');
@@ -94,7 +94,14 @@ class SuiviController extends Controller
 
         $nbre = count(request('user_id'));
 
-        for ($i=0; $i < $nbre; $i++) {
+        for ($i=0; $i < $nbre; $i++)
+        {
+
+            if(Suivi::where('user_id','=',(int)request('user_id')[$i])->where('entreprise_id','=',$entreprise_id)->select('*')->exists())
+            {
+              Suivi::where('user_id','=',(int)request('user_id')[$i])->where('entreprise_id','=',$entreprise_id)->update(['datefin' => now()]);
+            }
+
             Suivi::create([
                 'user_id' => (int)request('user_id')[$i],
                 'entreprise_id'=> $entreprise_id,
@@ -102,7 +109,9 @@ class SuiviController extends Controller
                 'datedebut'=> null,
                 'datefin'=> null,
             ]);
+
         }
+
 
       return redirect('suivis/create')->with('message', 'Informations bien enregistrées.');
 
@@ -147,11 +156,11 @@ class SuiviController extends Controller
         return redirect('suivis/create')->with('message', 'Informations bien entregistrées.');
       }*/
 
-  /*}
-  catch(\Exception $exception)
-  {
-      return redirect('erreur')->with('messageerreur',$exception->getMessage());
-  }*/
+    }
+    catch(\Exception $exception)
+    {
+        return redirect('erreur')->with('messageerreur',$exception->getMessage());
+    }
 
  }
 

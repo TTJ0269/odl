@@ -20,11 +20,11 @@
     <section class="content">
 
          <div class="row">
-            @if($suivis->user->imageuser)
+            @if($user->imageuser)
           <div class="col-12 col-sm-1">
             <div class="form-group">
                   <h6>
-                  <img src="{{ asset('storage/image/' .$suivis->user->imageuser) }}" alt="user-ImageUser" class="img-thumbnail" style="width: 150px; height: 150px;">
+                  <img src="{{ asset('storage/image/' .$user->imageuser) }}" alt="user-ImageUser" class="img-thumbnail" style="width: 150px; height: 150px;">
                   </h6>
             </div>
           </div>
@@ -32,7 +32,7 @@
 
             <div class="col-12 col-sm-7">
               <div class="form-group">
-                    <h6><strong> {{$suivis->user->nomuser}} {{$suivis->user->prenomuser}}</strong></h6>
+                    <h6><strong> {{$user->nomuser}} {{$user->prenomuser}}</strong></h6>
                     <h6><strong> </strong></h6>
               </div>
             </div>
@@ -66,63 +66,89 @@
          </div>
          <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
 
-                <input type="number" hidden value="{{$suivis->id}}" name="suivi_id"/>
-                <input type="number" hidden value="{{$groupe_activites->id}}" name="groupe_activite_id"/>
-                <input type="text" hidden value="{{$groupe_activites->metier->libellemetier}}" name="metier_libelle"/>
+                <input type="number" hidden value="{{$user->id}}" name="user_id"/>
+                <input type="number" hidden value="{{$metiers->id}}" name="metier_id"/>
+                <input type="text" hidden value="{{$metiers->libellemetier}}" name="metier_libelle"/>
 
                 <div class="row">
-                    @foreach ($collections as $collection)
-                        <div class="col-12 col-sm-12">
-                            <div class="card card-info collapsed-card">
-                                <div class="card-header">
-                                    <h3 class="card-title">{{$collection['activite_libelle']}}</h3>
+                    @foreach($collections as $collection)
 
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                        <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
+                    <div class="col-12 col-sm-12">
+                        <div class="card card-info collapsed-card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{$collection['focntion_libelle']}}</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-plus"></i>
+                                    </button>
                                 </div>
-                                <div class="card-body">
-                                    <div class="container-fluid">
-                                        @foreach($collection['taches'] as $tache)
-                                            <div class="row">
-                                                <div class="col-12 col-sm-10">
-                                                <label class="form-check-label"> <strong>{{$tache->libelletache}}</strong>  </label>
+                            </div>
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    @foreach($collection['activites'] as $activite)
+                                        <div class="col-12 col-sm-12">
+                                            <div class="card card- collapsed-card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title"> <strong style="color:rgb(12, 27, 72);"> {{$activite['activite_libelle']}} </strong></h3>
+
+                                                    <div class="card-tools">
+                                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                        <i class="fas fa-plus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="col-12 col-sm-2">
-                                                   <!--input class="form-check-input" type="checkbox" value="{{$tache->id}}" name="tache_id_{{$tache->id}}"-->
-                                                    <div class="form-group clearfix">
-                                                        <div class="icheck-danger d-inline">
-                                                        <input type="radio" id="radioDanger{{$tache->id}}" value="0" name="valeurpost_{{$tache->id}}" checked>
-                                                        <label for="radioDanger{{$tache->id}}"></label>
-                                                        </div>
-                                                        <div class="icheck-orange d-inline">
-                                                        <input type="radio" id="radioOrange{{$tache->id}}" value="1" name="valeurpost_{{$tache->id}}">
-                                                        <label for="radioOrange{{$tache->id}}"></label>
-                                                        </div>
-                                                        <div class="icheck-purple d-inline">
-                                                        <input type="radio" id="radioPurple{{$tache->id}}" value="2" name="valeurpost_{{$tache->id}}">
-                                                        <label for="radioPurple{{$tache->id}}"></label>
-                                                        </div>
-                                                        <div class="icheck-primary d-inline">
-                                                        <input type="radio" id="radioPrimary{{$tache->id}}" value="3" name="valeurpost_{{$tache->id}}">
-                                                        <label for="radioPrimary{{$tache->id}}"></label>
-                                                        </div>
-                                                        <div class="icheck-success d-inline">
-                                                        <input type="radio" id="radioSuccess{{$tache->id}}" value="4" name="valeurpost_{{$tache->id}}">
-                                                        <label for="radioSuccess{{$tache->id}}"></label>
-                                                        </div>
+                                                <div class="card-body">
+                                                    <div class="container-fluid">
+                                                        @foreach($activite['taches'] as $tache)
+                                                            <div class="row">
+                                                                <div class="col-12 col-sm-10">
+                                                                <label class="form-check-label"> <strong>{{$tache->libelletache}}</strong>  </label>
+                                                                </div>
+                                                                <div class="col-12 col-sm-2">
+                                                                <!--input class="form-check-input" type="checkbox" value="{{$tache->id}}" name="tache_id_{{$tache->id}}"-->
+                                                                    <div class="form-group clearfix">
+                                                                        <div class="icheck-danger d-inline">
+                                                                        <input type="radio" id="radioDanger{{$tache->id}}" value="0" name="valeurpost_{{$tache->id}}" {{ $tache->valeurpost == "0" ? 'checked' : '' }} {{ $tache->valeurpost > "0" ? 'disabled' : '' }}>
+                                                                        <label for="radioDanger{{$tache->id}}"></label>
+                                                                        </div>
+                                                                        <div class="icheck-orange d-inline">
+                                                                        <input type="radio" id="radioOrange{{$tache->id}}" value="1" name="valeurpost_{{$tache->id}}" {{ $tache->valeurpost == "1" ? 'checked' : '' }} {{ $tache->valeurpost > "1" ? 'disabled' : '' }}>
+                                                                        <label for="radioOrange{{$tache->id}}"></label>
+                                                                        </div>
+                                                                        <div class="icheck-purple d-inline">
+                                                                        <input type="radio" id="radioPurple{{$tache->id}}" value="2" name="valeurpost_{{$tache->id}}" {{ $tache->valeurpost == "2" ? 'checked' : '' }} {{ $tache->valeurpost > "2" ? 'disabled' : '' }}>
+                                                                        <label for="radioPurple{{$tache->id}}"></label>
+                                                                        </div>
+                                                                        <div class="icheck-primary d-inline">
+                                                                        <input type="radio" id="radioPrimary{{$tache->id}}" value="3" name="valeurpost_{{$tache->id}}" {{ $tache->valeurpost == "3" ? 'checked' : '' }} {{ $tache->valeurpost > "3" ? 'disabled' : '' }}>
+                                                                        <label for="radioPrimary{{$tache->id}}"></label>
+                                                                        </div>
+                                                                        <div class="icheck-success d-inline">
+                                                                        <input type="radio" id="radioSuccess{{$tache->id}}" value="4" name="valeurpost_{{$tache->id}}" {{ $tache->valeurpost == "4" ? 'checked' : '' }} {{ $tache->valeurpost > "4" ? 'disabled' : '' }}>
+                                                                        <label for="radioSuccess{{$tache->id}}"></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <p> <hr> </p>
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p> <hr> </p>
-                                        @endforeach
-                                    </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    </div>
+                   @endforeach
                 </div>
 
 </section>
+
+
+
+
+
+

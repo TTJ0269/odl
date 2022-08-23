@@ -21,9 +21,9 @@ class CreateAssociationsTable extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('ifad_id');
+            $table->unsignedBigInteger('classe_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('ifad_id')->references('id')->on('ifads')->onDelete('cascade');
+            $table->foreign('classe_id')->references('id')->on('classes')->onDelete('cascade');
         });
     }
 

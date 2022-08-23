@@ -177,17 +177,37 @@ $('.select2bs4').select2({
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#metier').on('change', function () {
-            var metierId = this.value;
-            $('#groupeactivite').html('');
+        $('#ifad').on('change', function () {
+            var ifadId = this.value;
+            $('#classe').html('');
             $.ajax({
-                url: '{{ route('get_groupe_activite') }}?metier_id='+metierId,
+                url: '{{ route('get_ifad') }}?ifad_id='+ifadId,
                 type: 'get',
                 success: function (res) {
-                    $('#groupeactivite').html('<option value="">Sélectionner un groupe activité</option>');
+                    $('#classe').html('<option value="">Sélectionner une classe</option>');
                     $.each(res, function (key, value) {
-                        $('#groupeactivite').append('<option value="' + value
-                            .id + '">' +''+ value.libellegroupe +'</option>');
+                        $('#classe').append('<option value="' + value
+                            .id + '">' +''+ value.libelleclasse +'</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#metier').on('change', function () {
+            var metierId = this.value;
+            $('#classe').html('');
+            $.ajax({
+                url: '{{ route('get_classe') }}?metier_id='+metierId,
+                type: 'get',
+                success: function (res) {
+                    $('#classe').html('<option value="">Sélectionner une classe</option>');
+                    $.each(res, function (key, value) {
+                        $('#classe').append('<option value="' + value
+                            .id + '">' +''+ value.libelleclasse +'</option>');
                     });
                 }
             });

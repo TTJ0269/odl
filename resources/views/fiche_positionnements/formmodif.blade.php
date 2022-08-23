@@ -83,11 +83,11 @@
                                                     <th scope="row">
                                                       <div class="col-12">
                                                         <select class="form-control" name="positionnement_{{$tache_positionnement->id}}" id="tache_positionnement">
-                                                            <option value="0" {{ $tache_positionnement->valeurpost == "0" ? 'selected' : '' }}> 0 </option>
-                                                            <option value="1" {{ $tache_positionnement->valeurpost == "1" ? 'selected' : '' }}> 1 </option>
-                                                            <option value="2" {{ $tache_positionnement->valeurpost == "2" ? 'selected' : '' }}> 2 </option>
-                                                            <option value="3" {{ $tache_positionnement->valeurpost == "3" ? 'selected' : '' }}> 3 </option>
-                                                            <option value="4" {{ $tache_positionnement->valeurpost == "4" ? 'selected' : '' }}> 4 </option>
+                                                            <option value="0" {{ $tache_positionnement->valeurpost == "0" ? 'selected' : '' }}  {{ $tache_positionnement->valeurpost > "0" ? 'disabled' : '' }}> 0 </option>
+                                                            <option value="1" {{ $tache_positionnement->valeurpost == "1" ? 'selected' : '' }}  {{ $tache_positionnement->valeurpost > "1" ? 'disabled' : '' }}> 1 </option>
+                                                            <option value="2" {{ $tache_positionnement->valeurpost == "2" ? 'selected' : '' }}  {{ $tache_positionnement->valeurpost > "2" ? 'disabled' : '' }}> 2 </option>
+                                                            <option value="3" {{ $tache_positionnement->valeurpost == "3" ? 'selected' : '' }}  {{ $tache_positionnement->valeurpost > "3" ? 'disabled' : '' }}> 3 </option>
+                                                            <option value="4" {{ $tache_positionnement->valeurpost == "4" ? 'selected' : '' }}  {{ $tache_positionnement->valeurpost > "4" ? 'disabled' : '' }}> 4 </option>
                                                           </select>
                                                       </div>
                                                     </th>

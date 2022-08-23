@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Metier;
 use App\Models\Ifad;
 use App\Models\User;
+use App\Models\GroupeActivite;
 use App\Models\Activite;
 use App\Models\Historique;
 
@@ -28,7 +29,7 @@ class MetierController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
-            $metiers = Metier::select('*')->get();
+            $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
 
             return view('metiers.index', compact('metiers'));
         }
@@ -49,7 +50,6 @@ class MetierController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
-
           $metier = new Metier();
           $ifads = Ifad::select('*')->get();
 
@@ -71,13 +71,25 @@ class MetierController extends Controller
      public function store()
      {
         $this->authorize('ad_re_su', User::class);
+        $this->validator();
         try
         {
-          $metier = Metier::create($this->validator());
+            if(Metier::where('libellemetier','=','Aucun_metier')->select('id')->doesntExist())
+            {
+               Metier::create([
+                'libellemetier'=>'Aucun_metier',
+                'niveaumetier'=>'Aucun',
+                'ifad_id' => request('ifad_id')
+               ]);
+            }
 
-          $this->historique(request('libellemetier'), 'Ajout');
+            $metier = Metier::create($this->validator());
 
-          return redirect('metiers')->with('message', 'metier bien ajoutée.');
+            $this->historique(request('libellemetier'), 'Ajout');
+
+            return redirect('metiers')->with('message', 'metier bien ajoutée.');
+
+
         }
         catch(\Exception $exception)
         {
@@ -138,6 +150,7 @@ class MetierController extends Controller
      public function update(Metier $metier)
      {
         $this->authorize('ad_re_su', User::class);
+        $this->validator();
        try
        {
           $metier_libelle = request('libellemetier');
@@ -166,7 +179,7 @@ class MetierController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-            if(Activite::where('metier_id','=',$metier->id)->doesntExist())
+            if(GroupeActivite::where('metier_id','=',$metier->id)->doesntExist())
             {
               $metier->delete();
 
@@ -188,6 +201,7 @@ class MetierController extends Controller
      {
          return request()->validate([
              'libellemetier'=>'required|min:2',
+             'niveaumetier'=>'max:150',
              'ifad_id' => 'required'
          ]);
      }

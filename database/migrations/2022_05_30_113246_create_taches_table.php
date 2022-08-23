@@ -16,7 +16,7 @@ class CreateTachesTable extends Migration
         Schema::create('taches', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('identifianttache',10)->nullable();
-            $table->string('libelletache')->unique();
+            $table->string('libelletache');
             $table->integer('etatsup');
             $table->timestamps();
 

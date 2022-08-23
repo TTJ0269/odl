@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Association;
 use App\Models\User;
 use App\Models\Ifad;
-use App\Models\Metier;
+use App\Models\Classe;
 
 class AssociationController extends Controller
 {
@@ -45,9 +45,9 @@ class AssociationController extends Controller
         {
             $ifads = DB::table('ifads')
             ->join('metiers','ifads.id','=','metiers.ifad_id')
-            ->select('metiers.id','metiers.libellemetier')
+            ->join('classes','metiers.id','=','classes.metier_id')
+            ->select('classes.id','classes.libelleclasse')
             ->where('ifads.id', $request->ifad_id)
-            ->where('metiers.libellemetier','not like',"%Aucune%")
             ->orderBy('ifads.id')
             ->get();
 
@@ -79,11 +79,10 @@ class AssociationController extends Controller
          $users = DB::table('profils')
          ->join('users','profils.id','=','users.profil_id')
          ->where('profils.libelleprofil','=','Apprenant')
-         ->orWhere('profils.libelleprofil','=','DG_IFAD')
          ->select('users.*','profils.libelleprofil')
          ->get();
 
-         //$metiers = metier::select('*')->get();
+         //$classes = Classe::select('*')->get();
 
          return view('associations.create',compact('association','users','ifads'));
 
@@ -105,31 +104,29 @@ class AssociationController extends Controller
      public function store()
      {
         $this->authorize('ad_re_su', User::class);
-
+        //$this->validator();
        try
        {
-           /** ici il peut arriver qu'un utilisateur ne soit pas dans aucune metier
-            * pour cela aucune_le libelle de l'IFAD ont creer prealablement comme metier **/
-             $ifad_id = request('ifad_id');
-            if($ifad_id == null)
-             {
-                  return back()->with('messagealert', "Sélectionner un IFAD");
-             }
-            elseif(Association::where('user_id','=',request('user_id'))->where('ifad_id','=',$ifad_id)->select('*')->exists())
+           /** ici il peut arriver qu'un utilisateur ne soit pas dans aucune classe
+            * pour cela aucune_le libelle de l'IFAD ont creer prealablement comme classe **/
+         $ifad_id = request('ifad_id');
+         $classe_id = request('classe_id');
+
+         if(Association::where('user_id','=',request('user_id'))
+         ->where('classe_id','=',$classe_id)->doesntExist())
+         {
+            $this->creation();
+
+            return redirect('associations/create')->with('message', 'Informations bien enregistrées.');
+         }
+         else
+         {
+            $assocition_verification = Association::where('user_id','=',request('user_id'))
+            ->where('classe_id','=',$classe_id)->select('*')->get()->last();
+
+            if($assocition_verification->datefin == null)
             {
-                $assocition_verification = Association::where('user_id','=',request('user_id'))
-                ->where('ifad_id','=',$ifad_id)->select('*')->get()->last();
-
-                if($assocition_verification->datefin == null)
-                {
-                return back()->with('messagealert', "Veuillez définir la fin de l'association de cet utilisateur");
-                }
-                else
-                {
-                    $this->creation();
-
-                    return redirect('associations/create')->with('message', 'Informations bien enregistrées.');
-                }
+              return back()->with('messagealert', "Veuillez définir la fin de l'association de cet utilisateur");
             }
             else
             {
@@ -137,6 +134,8 @@ class AssociationController extends Controller
 
                 return redirect('associations/create')->with('message', 'Informations bien enregistrées.');
             }
+
+         }
 
       }
       catch(\Exception $exception)
@@ -180,6 +179,7 @@ class AssociationController extends Controller
        {
          $users = User::select('*')->get();
          $ifads = Ifad::select('*')->get();
+         //$classes = Classe::select('*')->get();
 
         return view('associations.edit', compact('association','users','ifads'));
        }
@@ -245,23 +245,25 @@ class AssociationController extends Controller
      {
          return request()->validate([
             'user_id'=> 'required|integer',
-            'ifad_id' =>'required|integer',
+            'classe_id' =>'required|integer',
          ]);
      }
 
      private function creation()
      {
         $ifad_id = request('ifad_id');
+        $classe_id = request('classe_id');
 
         $nbre = count(request('user_id'));
 
-            for ($i=0; $i < $nbre; $i++) {
-                Association::create([
-                    'user_id' => (int)request('user_id')[$i],
-                    'ifad_id'=> $ifad_id,
-                    'datedebut'=> now(),
-                    'datefin'=> request('datefin'),
-                ]);
-            }
+        for ($i=0; $i < $nbre; $i++) {
+            Association::create([
+                'user_id' => request('user_id')[$i],
+                'classe_id'=> $classe_id,
+                'datedebut'=> now(),
+                'datefin'=> request('datefin'),
+            ]);
+        }
+
      }
 }

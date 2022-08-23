@@ -75,7 +75,7 @@ class ImportController extends Controller
 
                 return view('Import.form',compact('groupe_activites','ifads'));
             }
-            return back()->with('messagealert',"Ajouter au moins un groupe d'activité à un métier.");
+            return back()->with('messagealert',"Ajouter au moins un groupe d'activité (Fonction) à un métier.");
         }
         catch(\Exception $exception)
         {
@@ -88,12 +88,12 @@ class ImportController extends Controller
         $this->authorize('ad_re_su', User::class);
         try
         {
-            $ifad = request('ifad_id');
-            Session::put('ifad',$ifad);
+            $classe = request('classe_id');
+            Session::put('classe',$classe);
 
-            if($ifad == null)
+            if($classe == null)
             {
-                return back()->with('messagealert','Sélectionner un IFAD');
+                return back()->with('messagealert','Sélectionner une classe');
             }
             if($request->file == null)
             {

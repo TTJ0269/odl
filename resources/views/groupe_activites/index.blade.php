@@ -7,24 +7,24 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Groupe d'activité</h1>
+            <h1 class="m-0">Fonction</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-              <li class="breadcrumb-item active">Groupe d'activité</li>
+              <li class="breadcrumb-item active">Fonction</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-    <a href="{{ route('groupe_activites.create') }}" class="btn btn-primary my-3"><i class="fas fa-plus-circle"></i><span> Nouveau </span></a>
+    <a href="{{ route('groupe_activites.create') }}" class="btn btn-primary my-3"><i class="fas fa-plus-circle"></i><span> Nouvelle fonction </span></a>
 
     <!-- cadre general -->
     <div class="card card-secondary direct-chat direct-chat-secondary">
   <div class="card-header">
-    <h3 class="card-title">Liste des groupes d'activités</h3>
+    <h3 class="card-title">Liste des fonctions</h3>
     <div class="card-tools">
       <span data-toggle="tooltip" title="user" class="nav-icon fas fa-bookmark"></span>
     </div>

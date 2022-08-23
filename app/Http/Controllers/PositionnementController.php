@@ -15,7 +15,10 @@ use App\Models\Activite;
 use App\Models\Tache;
 use App\Models\Metier;
 use App\Models\Ifad;
+use App\Models\Classe;
 use App\Models\Suivi;
+use App\Models\Rattacher;
+use App\Models\Association;
 use App\Models\Entreprise;
 use App\Models\Appartenance;
 use App\Models\Historique;
@@ -29,7 +32,7 @@ class PositionnementController extends Controller
 
     public function index()
     {
-        $this->authorize('ad_re_su_ch', User::class);
+        $this->authorize('ad_re_su_ch_fo', User::class);
         try
         {
             $user_email = (Auth::user()->email);
@@ -37,27 +40,18 @@ class PositionnementController extends Controller
 
             $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
 
-            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
+
+           if($profil_libelle == 'Formateur_IFAD')
            {
-                $suivis = Suivi::select('*')->orderBy('id','DESC')->get();
+                if(Rattacher::where('user_id','=',Auth::user()->id)->select('*')->doesntExist())
+                {
+                    return back()->with('messagealert', "Vous n'est pas rattaché(e) à un Métier.");
+                }
+            }
 
-                return view('positionnements.index', compact('suivis'));
-           }
-           else
-           {
-               if(Appartenance::where('user_id','=',Auth::user()->id)->select('id')->exists())
-               {
-                    $entreprise = Appartenance::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
+            $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
 
-                    $suivis = Suivi::where('entreprise_id','=',$entreprise->entreprise_id)->select('*')->orderBy('id','DESC')->get();
-
-                    return view('positionnements.index', compact('suivis'));
-               }
-               else
-               {
-                   return back()->with('messagealert', "Pas de droit nécessaire.");
-               }
-           }
+            return view('positionnements.index_apprenant_classe', compact('metiers'));
 
         }
         catch(\Exception $exception)
@@ -66,60 +60,22 @@ class PositionnementController extends Controller
         }
     }
 
-    public function recup_metier(Suivi $suivi)
-    {
-        if(Metier::select('*')->doesntExist())
-        {
-           return back()->with('messagealert', "Ajouter au moins un métier.");
-        }
-        else
-        {
-            if(DB::table('associations')->where('associations.user_id','=',$suivi->user_id)->select('associations.id')->doesntExist())
-            {
-                return back()->with('messagealert',"L'apprenant(e) n'est pas associé à un IFAD");
-            }
-            else
-            {
-                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$suivi->user->nomuser." ".$suivi->user->prenomuser;
-
-                if(FichePositionnement::where('libellefiche','=',$fiche_positionnement)->select('id')->exists())
-                {
-                    return redirect('positionnements')->with('messagealert',"L'apprenant(e) ".$suivi->user->nomuser." ".$suivi->user->prenomuser." a déjà été positionné(e) aujourd'hui");
-                }
-                else
-                {
-                    $ifad_id = DB::table('associations')->where('associations.user_id','=',$suivi->user_id)
-                    ->select('ifad_id')->get()->last()->ifad_id;
-
-                    $metiers = Metier::where('ifad_id','=',$ifad_id)->select('*')->get();
-
-                    return view('positionnements.recup_metier',compact('metiers','suivi'));
-                }
-            }
-        }
-    }
-
     /**
      * return states list.
      *
      * @return json
      */
-    public function getGroupeActivite(Request $request)
+    public function getClasse(Request $request)
     {
         try
         {
           $user_id = (Auth::user()->id);
 
-            $groupe_activites = DB::table('groupe_activites')
-            ->select('groupe_activites.id','groupe_activites.identifiantgroupe','groupe_activites.libellegroupe')
-            ->where('groupe_activites.metier_id', $request->metier_id)
-            ->distinct('groupe_activites.id')
-            ->orderBy('groupe_activites.id')
-            ->get();
+            $classes = Classe::where('metier_id', $request->metier_id)->select('*')->distinct('id')->orderBy('id')->get();
 
-            if (count($groupe_activites) > 0)
+            if (count($classes) > 0)
             {
-                return response()->json($groupe_activites);
+                return response()->json($classes);
             }
 
         }
@@ -129,68 +85,355 @@ class PositionnementController extends Controller
         }
     }
 
-    public function create()
+    public function getApprenant(Request $request)
     {
-        $this->authorize('ad_re_su_ch', User::class);
+       /* try
+        {
+            $user_email = (Auth::user()->email);
+            $profil_id = (Auth::user()->profil_id);
+
+            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+
+            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
+           {
+                //$suivis = Suivi::select('*')->where('datefin','=',null)->orderBy('id','DESC')->get();
+
+                $users =  DB::table('profils')
+                ->join('users','profils.id','=','users.profil_id')
+                ->join('associations','users.id','=','associations.user_id')
+                ->join('classes','classes.id','=','associations.classe_id')
+                ->join('metiers','metiers.id','=','classes.metier_id')
+                ->where('profils.libelleprofil','=','Apprenant')
+                ->where('classes.id','=',$request->classe_id)
+                ->select('users.*','classes.libelleclasse','metiers.id as ood')
+                ->distinct('users.id')->orderBy('users.id','DESC')->get();
+
+                if (count($users) > 0)
+                {
+                    return response()->json($users);
+                }
+
+           }
+           elseif($profil_libelle == 'Chargé du suivi')
+           {
+               if(Appartenance::where('user_id','=',Auth::user()->id)->select('id')->exists())
+               {
+                    $entreprise = Appartenance::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
+
+                    //$suivis = Suivi::where('entreprise_id','=',$entreprise->entreprise_id)->where('datefin','=',null)->select('*')->orderBy('id','DESC')->get();
+
+                    $suivis =  DB::table('entreprises')
+                    ->join('suivis','entreprises.id','=','suivis.entreprise_id')
+                    ->join('users','users.id','=','suivis.user_id')
+                    ->join('associations','users.id','=','associations.user_id')
+                    ->join('classes','classes.id','=','associations.classe_id')
+                    ->join('metiers','metiers.id','=','classes.metier_id')
+                    ->where('entreprises.id','=',$entreprise->entreprise_id)
+                    ->where('suivis.datefin','=',null)
+                    ->where('classes.id','=',$request->classe_id)
+                    ->select('suivis.*','users.id as id_user','users.nomuser','users.prenomuser','users.imageuser','entreprises.libelleentreprise','classes.libelleclasse')
+                    ->distinct('suivis.id')->orderBy('id','DESC')->get();
+
+                    if(count($suivis) > 0)
+                    {
+                        return response()->json($suivis);
+                    }
+               }
+               else
+               {
+                   return back()->with('messagealert', "Pas de droit nécessaire.");
+               }
+           }
+           else
+           {
+                $formateurs = Rattacher::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
+
+                //dd($formateurs);
+
+                $users =  DB::table('profils')
+                ->join('users','profils.id','=','users.profil_id')
+                ->join('associations','users.id','=','associations.user_id')
+                ->join('classes','classes.id','=','associations.classe_id')
+                ->join('metiers','metiers.id','=','classes.metier_id')
+                ->where('profils.libelleprofil','=','Apprenant')
+                ->where('metiers.id','=',$formateurs->metier_id)
+                ->where('classes.id','=',$request->classe_id)
+                ->select('users.*','classes.libelleclasse','metiers.id as ood')
+                ->distinct('users.id')->orderBy('users.id','DESC')->get();
+
+                if (count($users) > 0)
+                {
+                    return response()->json($users);
+                }
+            }
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }*/
+    }
+
+    public function classe_apprenant()
+    {
+        $this->authorize('ad_re_su_ch_fo', User::class);
         try
         {
+            $user_email = (Auth::user()->email);
+            $profil_id = (Auth::user()->profil_id);
 
+            $classe_id = request('classe_id');
+
+            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+
+            if($classe_id == null)
+            {
+                return back()->with('messagealert', "Sélectionner une classe.");
+            }
+
+            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
+           {
+                //$suivis = Suivi::select('*')->where('datefin','=',null)->orderBy('id','DESC')->get();
+
+                $users =  DB::table('profils')
+                ->join('users','profils.id','=','users.profil_id')
+                ->join('associations','users.id','=','associations.user_id')
+                ->join('classes','classes.id','=','associations.classe_id')
+                ->join('metiers','metiers.id','=','classes.metier_id')
+                ->where('profils.libelleprofil','=','Apprenant')
+                ->where('classes.id','=',$classe_id)
+                ->select('users.*','classes.libelleclasse','metiers.id as ood')
+                ->distinct('users.id')->orderBy('users.id','DESC')->get();
+
+                return view('positionnements.index_apprenant', compact('users'));
+
+           }
+           elseif($profil_libelle == 'Chargé du suivi')
+           {
+               if(Appartenance::where('user_id','=',Auth::user()->id)->select('id')->exists())
+               {
+                    $entreprise = Appartenance::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
+
+                    //$suivis = Suivi::where('entreprise_id','=',$entreprise->entreprise_id)->where('datefin','=',null)->select('*')->orderBy('id','DESC')->get();
+
+                    $suivis =  DB::table('entreprises')
+                    ->join('suivis','entreprises.id','=','suivis.entreprise_id')
+                    ->join('users','users.id','=','suivis.user_id')
+                    ->join('associations','users.id','=','associations.user_id')
+                    ->join('classes','classes.id','=','associations.classe_id')
+                    ->join('metiers','metiers.id','=','classes.metier_id')
+                    ->where('entreprises.id','=',$entreprise->entreprise_id)
+                    ->where('suivis.datefin','=',null)
+                    ->where('classes.id','=',$classe_id)
+                    ->select('suivis.*','users.id as id_user','users.nomuser','users.prenomuser','users.imageuser','entreprises.libelleentreprise','classes.libelleclasse')
+                    ->distinct('suivis.id')->orderBy('id','DESC')->get();
+
+                    return view('positionnements.index', compact('suivis'));
+               }
+               else
+               {
+                   return back()->with('messagealert', "Pas de droit nécessaire.");
+               }
+           }
+           else
+           {
+                $formateurs = Rattacher::where('user_id','=',Auth::user()->id)->select('*')->get()->last();
+
+                //dd($formateurs);
+
+                $users =  DB::table('profils')
+                ->join('users','profils.id','=','users.profil_id')
+                ->join('associations','users.id','=','associations.user_id')
+                ->join('classes','classes.id','=','associations.classe_id')
+                ->join('metiers','metiers.id','=','classes.metier_id')
+                ->where('profils.libelleprofil','=','Apprenant')
+                ->where('metiers.id','=',$formateurs->metier_id)
+                ->where('classes.id','=',$classe_id)
+                ->select('users.*','classes.libelleclasse','metiers.id as ood')
+                ->distinct('users.id')->orderBy('users.id','DESC')->get();
+
+                return view('positionnements.index_apprenant', compact('users'));
+            }
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }
+
+    public function recup_apprenant(User $user)
+    {
+        $this->authorize('ad_re_su_ch_fo', User::class);
+        try
+        {
+            if(DB::table('associations')->where('associations.user_id','=',$user->id)->select('associations.id')->doesntExist())
+            {
+                return back()->with('messagealert',"L'apprenant(e) n'est pas associé à un IFAD");
+            }
+
+            $association = Association::where('user_id','=',$user->id)
+            ->select('*')->get()->last();
+
+            $fiche_positionnements = DB::table('users')
+            ->join('associations','users.id','=','associations.user_id')
+            ->join('classes','classes.id','=','associations.classe_id')
+            ->join('metiers','metiers.id','=','classes.metier_id')
+            ->join('ifads','ifads.id','=','metiers.ifad_id')
+            ->join('fiche_positionnements','associations.id','=','fiche_positionnements.association_id')
+            ->where('users.id','=',$user->id)
+            ->select('fiche_positionnements.*','classes.libelleclasse','ifads.libelleifad')
+            ->distinct('fiche_positionnements.id')
+            ->orderBy('fiche_positionnements.id','DESC')
+            ->get();
+
+            return view('positionnements.recup_apprenant',compact('fiche_positionnements','user','association'));
+
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }
+
+    public function create(User $user)
+    {
+        $this->authorize('ad_re_su_ch_fo', User::class);
+        try
+        {
             $user_id = (Auth::user()->id);
             $profil = (Auth::user()->profil_id);
 
-            $recup_suivi_id = request('suivi_id');
-            $groupe_activite_id = request('groupe_activite_id');
-            //dd($groupe_activite_id);
 
-            if($recup_suivi_id == null)
+            if(DB::table('associations')->where('associations.user_id','=',$user->id)->select('associations.id')->doesntExist())
             {
-                return back()->with('messagealert', "Sélectionner un(e) apprenant(e).");
+                return back()->with('messagealert',"L'apprenant(e) n'est pas associé à un IFAD");
             }
-            elseif($groupe_activite_id == null)
+
+            $association = Association::where('user_id','=',$user->id)
+            ->select('*')->get()->last();
+
+            $metier_id = $association->classe->metier->id;
+
+            if(Metier::where('id','=',$metier_id)->select('*')->doesntExist())
             {
-                return back()->with('messagealert', "Sélectionner un groupe d'activité.");
+                return back()->with('messagealert', "Ajouter un métier de l'apprenant(e).");
             }
             else
             {
-                if(DB::table('groupe_activites')->join('activites','groupe_activites.id','=','activites.groupe_activite_id')
-                ->join('taches','activites.id','=','taches.activite_id')
-                ->where('activites.groupe_activite_id','=',$groupe_activite_id)->select('taches.id')->doesntExist())
+                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$user->nomuser." ".$user->prenomuser;
+
+                if(FichePositionnement::where('libellefiche','=',$fiche_positionnement)->select('id')->exists())
                 {
-                  return back()->with('messagealert', "Ajouter au moins une tâche à ce groupe.");
+                    return redirect('positionnements')->with('messagealert',"L'apprenant(e) ".$user->nomuser." ".$user->prenomuser." a déjà été positionné(e) aujourd'hui");
                 }
                 else
                 {
-                    $positionnement = new Positionnement();
+                    //$classe_id = DB::table('associations')->where('associations.user_id','=',$suivis->user_id)
+                    //->select('classe_id')->get()->last()->classe_id;
 
-                    $suivis = Suivi::select('*')->where('id','=',$recup_suivi_id)->first();
+                    //$ifad_id = Classe::where('id','=',$classe_id)->select('*')->first()->ifad_id;
 
-                    $groupe_activites = GroupeActivite::select('*')->where('id','=',$groupe_activite_id)->first();
+                    //$metier = Metier::where('ifad_id','=',$ifad_id)->select('*')->first();
 
-                    /** selection des activites metiers par activites **/
-                    $activites = Activite::where('groupe_activite_id','=',$groupe_activite_id)->select('*')->orderBy('id')->distinct('id')->get();
-
-                    $i = 0;
-                    foreach($activites as $activite)
+                    if(DB::table('metiers')->join('groupe_activites','metiers.id','=','groupe_activites.metier_id')
+                    ->join('activites','groupe_activites.id','=','activites.groupe_activite_id')
+                    ->join('taches','activites.id','=','taches.activite_id')
+                    ->where('groupe_activites.metier_id','=',$metier_id)->select('taches.id')->doesntExist())
                     {
-                        $tab_activite_id[$i] = $activite->id;
-                        $tab_activite_libelle[$i] = $activite->libelleactivite;
-
-
-                        $tab_tache[$i] = DB::table('activites')
-                        ->join('taches','activites.id','=','taches.activite_id')
-                        ->select('taches.*','activites.id as id_activite')
-                        ->where('activites.id','=',$tab_activite_id[$i])
-                        ->where('activites.groupe_activite_id','=',$groupe_activite_id)
-                        ->orderBy('activites.id')
-                        ->distinct('activites.id')
-                        ->get();
-
-                        $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
-
-                        $i++;
+                        return back()->with('messagealert', "Ajouter au moins une tâche au métier de l'apprenant(e).");
                     }
+                    else
+                    {
+                        $positionnement = new Positionnement();
 
-                    return view('positionnements.create',compact('collections','suivis','groupe_activites'));
+                        /** selection des groupe_activite par metier **/
+                        $groupe_activites = GroupeActivite::select('*')->where('metier_id','=',$metier_id)->orderBy('id')->distinct('id')->get();
+
+                        $i = 0;
+                        foreach($groupe_activites as $groupe_activite)
+                        {
+                            $tab_groupe_activite_id[$i] = $groupe_activite->id;
+                            $tab_groupe_activite_libelle[$i] = $groupe_activite->libellegroupe;
+
+                            /** Groupe_activite = fonction **/
+
+
+                            $tab_activites[$i] = Activite::select('*')->where('groupe_activite_id','=',$tab_groupe_activite_id[$i])
+                            ->orderBy('id')->distinct('id')->get();
+
+                                $a = 0;
+                                foreach($tab_activites[$i] as $tab_activite)
+                                {
+                                    $tab_activite_id[$a] = $tab_activite->id;
+                                    $tab_activite_libelle[$a] = $tab_activite->libelleactivite;
+
+                                    /** recuperation de tous les positionnements de toutes les fiches d'un apprenant
+                                     * l'apprenant de peut pas avoir un positionnement inferieur par rapport aux anciens positionnements**/
+
+                                    if(DB::table('taches')
+                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                    ->where('associations.user_id','=',$user->id)
+                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
+                                    ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
+                                    ->groupBy('taches.id','taches.libelletache')->doesntExist())
+                                    {
+                                    $tab_taches[$a] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')
+                                    ->where('activite_id','=',$tab_activite_id[$a])->orderBy('id')->distinct('id')->get();
+                                    }
+                                    elseif(Tache::select('id','libelletache')->where('activite_id','=',$tab_activite_id[$a])
+                                    ->orderBy('id')->distinct('id')->first()->id == DB::table('taches')
+                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                    ->where('associations.user_id','=',$user->id)
+                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
+                                    ->select('taches.id','taches.libelletache')
+                                    ->groupBy('taches.id','taches.libelletache')
+                                    ->distinct('taches.id')->first()->id)
+                                    {
+                                    $tab_taches[$a] = DB::table('taches')
+                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                    ->where('associations.user_id','=',$user->id)
+                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
+                                    ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
+                                    ->groupBy('taches.id','taches.libelletache')
+                                    ->distinct('taches.id')
+                                    ->get();
+                                    }
+                                    else
+                                    {
+                                    $tab_taches[$a] = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
+                                    ->orderBy('id')->distinct('id')->get();
+                                    }
+
+                                    /** Recuperation des taches selon l'activité **/
+
+                                    /*$tab_taches[$a] = Tache::select('*')->where('activite_id','=',$tab_activite_id[$a])
+                                    ->orderBy('id')->distinct('id')->get();*/
+
+                                    $collection_taches[$a] = collect(['activite_id' => $tab_activite_id[$a], 'activite_libelle' => $tab_activite_libelle[$a], 'taches' => $tab_taches[$a]])->all();
+
+                                    $a++;
+                                }
+
+                            $collections[$i] = collect(['fonction_id' => $tab_groupe_activite_id[$i], 'focntion_libelle' => $tab_groupe_activite_libelle[$i], 'activites' => $collection_taches])->all();
+
+                            /** Vider la collection **/
+                            $collection_taches = null;
+
+                            $i++;
+
+                        }
+
+                        //dd($collections);
+
+                        $metiers = Metier::where('id','=',$metier_id)->select('*')->first();
+
+                        return view('positionnements.create',compact('collections','user','metiers'));
+                    }
                 }
             }
 
@@ -203,7 +446,7 @@ class PositionnementController extends Controller
 
     public function store()
     {
-        $this->authorize('ad_re_su_ch', User::class);
+        $this->authorize('ad_re_su_ch_fo', User::class);
       try
       {
             $auth = Auth::user()->id;
@@ -211,8 +454,8 @@ class PositionnementController extends Controller
             $nom_tuteur =  Auth::user()->nomuser;//request('nom_tuteur');
             $prenom_tuteur = Auth::user()->prenomuser; //request('prenom_tuteur');
             $tel_tuteur = Auth::user()->teluser; //request('tel_tuteur');
-            $suivi_id = request('suivi_id');
-            $groupe_activite_id = request('groupe_activite_id');
+            $user_id = request('user_id');
+            $metier_id = request('metier_id');
             $metier_libelle = request('metier_libelle');
 
         if(Appartenance::where('user_id','=',Auth::user()->id)->select('id')->exists())
@@ -227,9 +470,14 @@ class PositionnementController extends Controller
             $adresse_entreprise  = $entreprise->adresseentreprise;
 
             /** date debut suivi **/
-            if(Suivi::where('id','=',$suivi_id)->select('datedebut')->first()->datedebut == null)
+            if(Suivi::where('user_id','=',$user_id)->select('datedebut')->exists())
             {
-                DB::table('suivis')->where('suivis.id','=',$suivi_id)->update(['suivis.datedebut' => now()]);
+                if(Suivi::where('user_id','=',$user_id)->select('datedebut')->get()->last()->datedebut == null)
+                {
+                    $suivi_id = Suivi::where('user_id','=',$user_id)->select('*')->get()->last()->id;
+
+                    Suivi::where('id','=',$suivi_id)->update(['datedebut' => now()]);
+                }
             }
         }
         else
@@ -240,21 +488,20 @@ class PositionnementController extends Controller
             $mail_entreprise = null;
         }
 
-        $suivi = Suivi::select('*')->where('id','=',$suivi_id)->first();
-        $users = User::select('*')->where('id','=',$suivi->user_id)->first();
+        $users = User::where('id','=',$user_id)->select('*')->first();
 
         $association = DB::table('associations')
-        ->where('associations.user_id','=',$suivi->user_id)
+        ->where('associations.user_id','=',$users->id)
         ->select('associations.id')->get()->last();
 
         $responsable_suivi_id = Auth::user()->id;
         $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$users->nomuser." ".$users->prenomuser;
 
         /** Recuperation des valeurs **/
-        $taches = DB::table('groupe_activites')
+        $taches = DB::table('metiers')->join('groupe_activites','metiers.id','=','groupe_activites.metier_id')
         ->join('activites','groupe_activites.id','=','activites.groupe_activite_id')
         ->join('taches','activites.id','=','taches.activite_id')
-        ->where('activites.groupe_activite_id','=',$groupe_activite_id)->select('taches.*')->get();
+        ->where('groupe_activites.metier_id','=',$metier_id)->select('taches.*')->get();
 
             $nombre_tache = 0;
             $t = 1;
@@ -328,7 +575,7 @@ class PositionnementController extends Controller
 
     public function edit(Positionnement $positionnement)
     {
-        $this->authorize('ad_re_su_ch', User::class);
+        $this->authorize('ad_re_su_ch_fo', User::class);
       try
       {
         $activites = DB::table('activites')
@@ -347,7 +594,7 @@ class PositionnementController extends Controller
 
     public function update(Positionnement $positionnement)
      {
-        $this->authorize('ad_re_su_ch', User::class);
+        $this->authorize('ad_re_su_ch_fo', User::class);
        try
        {
           $fiche_id = request('fiche_id');

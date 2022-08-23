@@ -128,7 +128,7 @@
                                       <div class="input-group-append">
                                         <span class="input-group-text"><i class="nav-icon fas fa-school"></i></span>
                                       </div>
-                                      <select class="custom-select select2bs4  @error('ifad_id') is-invalid @enderror" name="ifad_id">
+                                      <select class="custom-select select2bs4  @error('ifad_id') is-invalid @enderror" name="ifad_id" id="ifad">
                                         <option selected disabled> Sélectionner un IFAD</option>
                                         @foreach($ifads as $ifad)
                                         <option value="{{ $ifad->id}}"> {{ $ifad->libelleifad }}</option>
@@ -143,31 +143,60 @@
                                  </div>
                               </div>
 
-                        <div class="col-12 col-sm-6">
-                        <label for="text" class="col-sm-4 col-form-label">Image</label>
-                            <div class="col-sm-8">
-                                <div class="custom-file">
-                                    <input type="file" name="image" class="@error('image') is-invalid @enderror" id="validatedCustomFile" value="{{ old('image') ?? $apprenant->image }}">
-                                    @error('image')
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('image')}}
+                              <div class="col-12 col-sm-6">
+                                <label for="text" class="col-sm-2 col-form-label">Classe</label>
+                                <div class="col-sm-10">
+                                  <div class="input-group mb-3">
+                                      <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-text-height"></i></span>
+                                      </div>
+                                      <select class="custom-select select2bs4" name="classe_id" id="classe"></select>
+                                   </div>
+                                 </div>
+                              </div>
+
+                              <div class="col-12 col-sm-6">
+                                <label for="text" class="col-sm-4 col-form-label">Numéro matricule</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-append">
+                                              <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
+                                            </div>
+                                           <input type="text" class="form-control @error('numero_matricule') is-invalid @enderror" name="numero_matricule" placeholder="Rentrez le numéro matricule de l'apprenant(e)..." value="{{ old('numero_matricule') ?? $apprenant->numero_matricule }}"/>
+                                        </div>
+                                        @error('numero_matricule')
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('numero_matricule')}}
+                                            </div>
+                                        @enderror
+                                    </div>
                                 </div>
+
+                            <div class="col-12 col-sm-6">
+                            <label for="text" class="col-sm-4 col-form-label">Image</label>
+                                <div class="col-sm-8">
+                                    <div class="custom-file">
+                                        <input type="file" name="image" class="@error('image') is-invalid @enderror" id="validatedCustomFile" value="{{ old('image') ?? $apprenant->image }}">
+                                        @error('image')
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('image')}}
+                                    </div>
+                                    @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--div class="form-group row">
+                            <label for="text" class="col-sm-4 col-form-label">Mot de passe</label>
+                                <div class="col-sm-10">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Rentrez le mot de passe de l'utilisateur..." value="{{ old('password') ?? $apprenant->password }}" autofocus  required/>
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('password')}}
+                                    </div>
                                 @enderror
                                 </div>
-                            </div>
-                        </div>
-
-                        <!--div class="form-group row">
-                        <label for="text" class="col-sm-4 col-form-label">Mot de passe</label>
-                            <div class="col-sm-10">
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Rentrez le mot de passe de l'utilisateur..." value="{{ old('password') ?? $apprenant->password }}" autofocus  required/>
-                            @error('password')
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('password')}}
-                                </div>
-                            @enderror
-                            </div>
-                        </div-->
+                            </div-->
 
                      </div>
 

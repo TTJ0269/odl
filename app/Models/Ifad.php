@@ -18,8 +18,13 @@ class Ifad extends Model
          return $this->hasMany('App\Models\Metier');
      }
 
-     public function associations()
+     public function classes()
      {
-         return $this->hasMany('App\Models\Association');
+         return $this->hasMany('App\Models\Classe');
+     }
+
+     public function rattachers()
+     {
+         return $this->hasMany('App\Models\Rattacher');
      }
 }

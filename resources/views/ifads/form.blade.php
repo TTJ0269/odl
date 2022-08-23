@@ -51,6 +51,20 @@
                       </div>
                   </div>
 
+                  <div class="form-group row">
+                    <label for="text" class="col-sm-2 col-form-label">Logo</label>
+                        <div class="col-sm-10">
+                            <div class="custom-file">
+                                <input type="file" name="image" class="@error('image') is-invalid @enderror" id="validatedCustomFile" value="{{ old('image') ?? $ifad->logoifad }}">
+                                @error('image')
+                            <div class="invalid-feedback">
+                                {{ $errors->first('image')}}
+                            </div>
+                            @enderror
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

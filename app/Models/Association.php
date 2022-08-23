@@ -18,9 +18,9 @@ class Association extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function ifad()
+    public function classe()
     {
-        return $this->belongsTo('App\Models\Ifad');
+        return $this->belongsTo('App\Models\Classe');
     }
 
      public function fiche_positionnements()

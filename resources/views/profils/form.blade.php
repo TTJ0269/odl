@@ -37,6 +37,7 @@
                       <option value="Administrateur" {{ $profil->libelleprofil == "Administrateur" ? 'selected' : '' }}> Administrateur </option>
                       <option value="Responsable pédagogique" {{ $profil->libelleprofil == "Responsable pédagogique" ? 'selected' : '' }}>Responsable pédagogique</option>
                       <option value="Chargé du suivi" {{ $profil->libelleprofil == "Chargé du suivi" ? 'selected' : '' }}>Chargé du suivi</option>
+                      <option value="Formateur_IFAD" {{ $profil->libelleprofil == "Formateur_IFAD" ? 'selected' : '' }}>Formateur à l'IFAD</option>
                       <option value="DG_IFAD" {{ $profil->libelleprofil == "DG_IFAD" ? 'selected' : '' }}>DG_IFAD</option>
                       <option value="Suivi_AED" {{ $profil->libelleprofil == "Suivi_AED" ? 'selected' : '' }}>Suivi_AED</option>
                       <option value="Apprenant" {{ $profil->libelleprofil == "Apprenant" ? 'selected' : '' }}>Apprenant</option>

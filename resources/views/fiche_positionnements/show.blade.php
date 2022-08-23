@@ -33,7 +33,7 @@
             <div class="col-12 col-sm-7">
               <div class="form-group">
                     <h6><strong> {{$fiche_positionnement->association->user->nomuser}} {{$fiche_positionnement->association->user->prenomuser}}</strong></h6>
-                    <h6><strong> {{$fiche_positionnement->association->ifad->libelleifad}}</strong></h6>
+                    <h6><strong> {{$fiche_positionnement->association->classe->metier->ifad->libelleifad}}</strong></h6>
               </div>
             </div>
 
@@ -49,6 +49,7 @@
               </div>
             </div>
          </div>
+         <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
          @can('admin','App\Models\User')
          <a href="{{ route('fiche_edit', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-primary my-2"><i class="far fa-edit"></i>Modifier</a>
          @endcan
@@ -127,7 +128,7 @@
       <div class="row no-print">
 
           <div class="col-12">
-            <a href="{{ route('statistique_show', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-primary"> <i class="fas fa-chart-line"></i><span> Statistique </span> </a>
+            <a href="{{ route('statistique_show', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-primary"> <i class="fas fa-chart-line"></i><span> Radars de positionnement </span> </a>
             <button onclick="window.print()" class="btn btn-success my-2"><i class="far fa-credit-card"></i> Imprimer</button>
           </div>
       </div>

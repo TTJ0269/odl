@@ -43,6 +43,7 @@
                             </form>
                             <hr>
                             <p><strong>Libelle :</strong> {{$metier->libellemetier}}</p>
+                            <p><strong>Niveau :</strong> {{$metier->niveaumetier}}</p>
                             <p><strong>IFAD :</strong> {{$metier->ifad->libelleifad}}</p>
                     </div>
                 </div>

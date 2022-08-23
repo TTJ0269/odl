@@ -4,12 +4,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Groupe d'activité</h1>
+            <h1 class="m-0">Fonction</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-              <li class="breadcrumb-item active">Groupe d'activité</li>
+              <li class="breadcrumb-item active">Fonction</li>
             </ol>
            </div><!-- /.col -->
         </div><!-- /.row -->
@@ -19,7 +19,7 @@
  <!-- cadre general -->
  <div class="card card-secondary direct-chat direct-chat-secondary">
   <div class="card-header">
-    <h3 class="card-title">Groupe d'activité</h3>
+    <h3 class="card-title">Fonction</h3> <!-- Fonction = Groupe d'activite-->
     <div class="card-tools">
       <span data-toggle="tooltip" title="users" class="nav-icon fas fa-bookmark"></span>
     </div>
@@ -41,7 +41,7 @@
             <select class="custom-select select2bs4  @error('metier_id') is-invalid @enderror" name="metier_id">
                 <option selected disabled> Sélectionner un métier</option>
                 @foreach($metiers as $metier)
-                <option value="{{ $metier->id }}" {{ $groupe_activite->metier_id == $metier->id ? 'selected' : ''}}> {{ $metier->libellemetier }}</option>
+                <option value="{{ $metier->id }}" {{ $groupe_activite->metier_id == $metier->id ? 'selected' : ''}}> {{ $metier->libellemetier }} ({{ $metier->ifad->libelleifad }})</option>
                 @endforeach
             </select>
         </div>

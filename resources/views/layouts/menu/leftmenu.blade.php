@@ -26,6 +26,7 @@
            @include('layouts.menu_users.admin')
            @include('layouts.menu_users.responsable_pedagogique')
            @include('layouts.menu_users.suivi_aed')
+           @include('layouts.menu_users.formateur_ifad')
            @include('layouts.menu_users.charge_suivi')
            @include('layouts.menu_users.dg_ifad')
            @include('layouts.menu_users.apprenant')

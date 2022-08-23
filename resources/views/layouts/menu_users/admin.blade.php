@@ -8,8 +8,17 @@
         </a>
     </li>
 
-    <li class="nav-item">
+    <!--li class="nav-item">
         <a href="{{ route('users.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-user"></i>
+        <p>
+            User
+        </p>
+        </a>
+    </li-->
+
+    <li class="nav-item">
+        <a href="{{ route('autre_user') }}" class="nav-link">
         <i class="nav-icon fas fa-user"></i>
         <p>
             Utilisateur
@@ -17,23 +26,14 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ route('apprenants.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-user"></i>
-        <p>
-            Apprenant
-        </p>
-        </a>
-    </li>
-
-    <li class="nav-item">
+    <!--li class="nav-item">
         <a href="{{ route('appartenances.index') }}" class="nav-link">
         <i class="nav-icon fas fa-user"></i>
         <p>
             Tuteur/Tutrice
         </p>
         </a>
-    </li>
+    </li-->
 
     <li class="nav-item">
         <a href="{{ route('entreprises.index') }}" class="nav-link">
@@ -54,6 +54,15 @@
     </li>
 
     <li class="nav-item">
+        <a href="{{ route('classes.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-door-open"></i>
+        <p>
+            Classe
+        </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
         <a href="{{ route('metiers.index') }}" class="nav-link">
         <i class="nav-icon fas fa-chalkboard-teacher"></i>
         <p>
@@ -66,7 +75,7 @@
         <a href="{{ route('groupe_activites.index') }}" class="nav-link">
         <i class="nav-icon fas fa-bookmark"></i>
         <p>
-            Groupe Activité
+            Fonction <!-- Fonction = Groupe d'activite-->
         </p>
         </a>
     </li>
@@ -94,6 +103,15 @@
         <i class="nav-icon fas fa-clone"></i>
         <p>
             Association
+        </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{{ route('rattachers.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-expand"></i>
+        <p>
+            Rattachement
         </p>
         </a>
     </li>
@@ -161,7 +179,7 @@
         </a>
     </li>
 
-    <!--li class="nav-item">
+    <li class="nav-item">
         <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-pie"></i>
         <p>
@@ -174,12 +192,12 @@
         <li class="nav-item">
             <a href="{{ route('statistique_index') }}" class="nav-link">
             <i class="nav-icon fas fa-chart-line"></i>
-            <p>Statistique</p>
+            <p>Radars de positionnement</p>
             </a>
         </li>
 
         </ul>
-    </li-->
+    </li>
 
     <li class="nav-item">
         <a href="{{ route('historique_index') }}" class="nav-link">

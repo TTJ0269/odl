@@ -48,6 +48,7 @@
                                     <th scope="col">IFAD</th>
                                     <th scope="col">Début activité</th>
                                     <th scope="col">Fin activité</th>
+                                    <th scope="col">Profil</th>
                                 </thead>
 
                                     <tbody>
@@ -55,9 +56,10 @@
                                     <tr>
                                     <th scope="row"> {{++$key}} </th>
                                     <td> <a href="{{ route('associations.show', ['association' => $association->id]) }}" style="color:rgb(55, 144, 246);"> {{$association->user->nomuser}} {{$association->user->prenomuser}} </a></td>
-                                    <th scope="row"> {{$association->ifad->libelleifad}}  </th>
+                                    <th scope="row"> {{$association->classe->metier->ifad->libelleifad}}  </th>
                                     <th scope="row"> {{$association->datedebut}} </th>
                                     <th scope="row"> {{$association->datefin}} </th>
+                                    <th scope="col">{{$association->user->profil->libelleprofil}}</th>
                                     </tr>
                                     @endforeach
                                     </tbody>

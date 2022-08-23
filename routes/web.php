@@ -8,9 +8,13 @@ use App\Http\Controllers\IfadController;
 use App\Http\Controllers\MetierController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\AssociationController;
+use App\Http\Controllers\ClasseController;
+use App\Http\Controllers\RattacherController;
+use App\Http\Controllers\AllUserController;
 use App\Http\Controllers\FichePositionnementController;
 use App\Http\Controllers\PositionnementController;
 use App\Http\Controllers\SuiviController;
+use App\Http\Controllers\FormateurController;
 use App\Http\Controllers\ObservationController;
 use App\Http\Controllers\StatistiqueController;
 use App\Http\Controllers\MessageController;
@@ -93,6 +97,18 @@ Route::resource('/appartenances', AppartenanceController::class);
 Route::resource('/associations', AssociationController::class);
 Route::get('/get_ifad', [AssociationController::class, 'getIfad'])->name('get_ifad');
 
+/*** routes generales pour Classe ***/
+Route::resource('/classes', ClasseController::class);
+
+/*** routes generales pour formateurs ***/
+Route::resource('/formateurs', FormateurController::class);
+
+/*** routes generales pour Rattacher ***/
+Route::resource('/rattachers', RattacherController::class);
+
+/*** routes autres users ***/
+Route::get('/utilisateur', [AllUserController::class, 'index'])->name('autre_user');
+
 /*** routes generales pour Suivi ***/
 Route::resource('/suivis', SuiviController::class);
 Route::get('/suivi_fin/{suivi}', [SuiviController::class, 'update'])->name('suivi_fin');
@@ -116,12 +132,13 @@ Route::get('/fiche_desarchive/{fiche_positionnement}', [FichePositionnementContr
 /*** routes generales pour Positionnement ***/
 Route::resource('/positionnements', PositionnementController::class);
 Route::get('/positionnement/create', [PositionnementController::class, 'index'])->name('positionnement_index');
-Route::post('/positionnement/create', [PositionnementController::class, 'create'])->name('positionnement_create');
-Route::get('/positionnement/recup_metier/{suivi}', [PositionnementController::class, 'recup_metier'])->name('positionnement_recup_metier');
-//Route::get('/positionnement/recup', [PositionnementController::class, 'index'])->name('positionnement_recup_index');
-//Route::post('/positionnement/recup', [PositionnementController::class, 'recup'])->name('positionnement_recup');
+Route::get('/positionnement/create/{user}', [PositionnementController::class, 'create'])->name('positionnement_create');
+Route::get('/positionnement/recup_apprenant/{user}', [PositionnementController::class, 'recup_apprenant'])->name('positionnement_recup_apprenant');
+Route::get('/positionnement/classe_apprenant', [PositionnementController::class, 'index'])->name('positionnement_classe_apprenant');
+Route::post('/positionnement/classe_apprenant', [PositionnementController::class, 'classe_apprenant'])->name('positionnement_classe_apprenant');
 Route::get('/get_index', [PositionnementController::class, 'getUser'])->name('get_index');
-Route::get('/get_groupe_activite', [PositionnementController::class, 'getGroupeActivite'])->name('get_groupe_activite');
+Route::get('/get_classe', [PositionnementController::class, 'getClasse'])->name('get_classe');
+Route::get('/get_apprenant', [PositionnementController::class, 'getApprenant'])->name('get_apprenant');
 
 /*** routes generales pour Observation ***/
 Route::resource('/observations', ObservationController::class);
@@ -130,6 +147,9 @@ Route::get('/observations/create/{user}', [ObservationController::class, 'create
 /*** routes statistiques ***/
 Route::get('/statistique', [StatistiqueController::class, 'index'])->name('statistique_index');
 Route::get('/statistique/{fiche_positionnement}', [StatistiqueController::class, 'show'])->name('statistique_show');
+Route::post('/statistique', [StatistiqueController::class, 'show_info'])->name('statistique_show_info');
+Route::get('/fiche_generale/{user}', [StatistiqueController::class, 'fiche_generale'])->name('fiche_generale');
+Route::get('/statistique_generale/{user}', [StatistiqueController::class, 'statistique_generale'])->name('statistique_generale');
 Route::get('/getfichepositionnement', [StatistiqueController::class, 'getfichepositionnement'])->name('getfichepositionnement');
 
 /*** routes preferences ***/
@@ -184,4 +204,4 @@ Route::get('/hoho', function () {
 
 Route::get('/pie', [ChartController::class, 'pie'])->name('chart.pie');
 
-Route::get('/first', [ChartController::class, 'first'])->name('first');
+//Route::get('/first', [ChartController::class, 'first'])->name('first');

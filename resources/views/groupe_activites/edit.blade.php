@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h4>Modifier le groupe d'activité: {{ $groupe_activite->libellegroupe }}</h4>
+<h4>Modifier la fonction: {{ $groupe_activite->libellegroupe }}</h4>
 <form action="{{ route('groupe_activites.update', ['groupe_activite' => $groupe_activite->id]) }}" method="POST" enctype="multipart/form-data">
   @method('PATCH')
   @include('groupe_activites.form')

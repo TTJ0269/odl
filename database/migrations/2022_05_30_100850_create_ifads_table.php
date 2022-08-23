@@ -16,6 +16,7 @@ class CreateIfadsTable extends Migration
         Schema::create('ifads', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('libelleifad')->unique();
+            $table->string('logoifad')->nullable();
             $table->integer('etatsup');
             $table->timestamps();
         });

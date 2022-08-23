@@ -41,18 +41,24 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                   <hr>
                                 <thead>
-                                    <th scope="col">Numero</th>
+                                    <th scope="col">Numéro</th>
                                     <th scope="col">Login</th>
                                     <th scope="col">Nom</th>
                                     <th scope="col">Téléphone</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Ifad</th>
+                                    <th scope="col">Classe</th>
+                                    <th scope="col">Métier</th>
+                                    <th scope="col">IFAD</th>
                                 </thead>
 
                                     <tbody>
                                     @foreach($apprenants as $key=>$apprenant)
                                     <tr>
+                                    @if ($apprenant->numero_matricule)
+                                    <th scope="row"> {{$apprenant->numero_matricule}} </th>
+                                    @else
                                     <th scope="row"> {{++$key}} </th>
+                                    @endif
                                     <td> <a href="{{ route('apprenants.show', ['apprenant' => $apprenant->id]) }}" style="color:rgb(55, 144, 246);"> {{$apprenant->name}} </a> </td>
                                     <th scope="row"> {{$apprenant->nomuser}} {{$apprenant->prenomuser}} </th>
                                     @if ($apprenant->teluser)
@@ -65,6 +71,8 @@
                                     @else
                                     <th scope="row"> -- Aucune valeur trouvée -- </th>
                                     @endif
+                                    <th scope="row"> {{$apprenant->libelleclasse}} </th>
+                                    <th scope="row"> {{$apprenant->libellemetier}} </th>
                                     <th scope="row"> {{$apprenant->libelleifad}} </th>
                                     </tr>
                                     @endforeach

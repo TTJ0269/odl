@@ -17,6 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'numero_matricule',
         'name',
         'email',
         'password',
@@ -66,6 +67,11 @@ class User extends Authenticatable
      public function appartenance()
      {
          return $this->hasMany('App\Models\Appartenance');
+     }
+
+     public function rattachers()
+     {
+         return $this->hasMany('App\Models\Rattacher');
      }
 
      public function preference()

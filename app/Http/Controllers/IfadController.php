@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Ifad;
 use App\Models\Association;
+use App\Models\Metier;
 use App\Models\User;
 use App\Models\Historique;
 
@@ -65,16 +66,30 @@ class IfadController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function store()
+     public function store(Request  $request)
      {
         $this->authorize('ad_re_su', User::class);
+        $this->validator();
        try
        {
         if(Ifad::where('libelleifad','=',request('libelleifad'))->select('id')->doesntExist())
         {
             $libelle = request('libelleifad');
+            $imageifad = null;
 
-            $ifad = Ifad::create($this->validator());
+            if($request->file('image'))
+            {
+                $file=$request->file('image');
+                $filename=time().'.'.$file->getClientOriginalExtension();
+                $request->image->move('storage/imageifad/', $filename);
+
+                $imageifad = $filename;
+            }
+
+            $ifad = Ifad::create([
+                'libelleifad'=> $libelle,
+                'logoifad'=> $imageifad,
+            ]);
 
             $this->historique($libelle, 'Ajout');
 
@@ -137,14 +152,35 @@ class IfadController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function update(Ifad $ifad)
+     public function update(Ifad $ifad, Request  $request)
      {
         $this->authorize('ad_re_su', User::class);
        try
        {
           $libelle = request('libelleifad');
 
-          $ifad->update($this->validator());
+          if($request->file('image'))
+          {
+            if($request->file('image'))
+            {
+                $file=$request->file('image');
+                $filename=time().'.'.$file->getClientOriginalExtension();
+                $request->image->move('storage/imageifad/', $filename);
+
+                $imageifad = $filename;
+            }
+
+            $ifad->update([
+                'libelleifad'=> $libelle,
+                'logoifad'=> $imageifad,
+            ]);
+          }
+          else
+          {
+            $ifad->update([
+                'libelleifad'=> $libelle,
+            ]);
+          }
 
           $this->historique($libelle, 'Modification');
 
@@ -168,7 +204,7 @@ class IfadController extends Controller
         $this->authorize('ad_re_su', User::class);
        try
        {
-        if(Association::where('ifad_id','=',$ifad->id)->select('id')->exists())
+        if(Metier::where('ifad_id','=',$ifad->id)->select('id')->exists())
         {
            return back()->with('messagealert',"Suppression pas possible. L'IFAD est référencé dans une autre table.");
         }

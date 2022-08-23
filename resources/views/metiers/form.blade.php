@@ -70,5 +70,22 @@
          </div>
      </div>
 
+     <div class="form-group row">
+        <label for="text" class="col-sm-2 col-form-label">Niveau</label>
+            <div class="col-sm-10">
+               <div class="input-group mb-3">
+                   <div class="input-group-append">
+                     <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
+                   </div>
+                   <input type="text" class="form-control @error('niveaumetier') is-invalid @enderror" name="niveaumetier" placeholder="Rentrez le niveau..." value="{{ old('niveaumetier') ?? $metier->niveaumetier }}"/>
+                   @error('niveaumetier')
+                       <div class="invalid-feedback">
+                           {{ $errors->first('niveaumetier')}}
+                       </div>
+                   @enderror
+            </div>
+        </div>
+    </div>
+
     </div>
 </div>

@@ -57,7 +57,7 @@
                                       @else
                                     <th scope="row"> -- Aucune valeur trouvée -- </th>
                                       @endif
-                                    <th scope="row"> {{$fiche_positionnement->association->ifad->libelleifad}} </th>
+                                    <th scope="row"> {{$fiche_positionnement->association->classe->metier->ifad->libelleifad}} </th>
                                     <td> <a href="{{ route('fiche_desarchive', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-primary"><i class="fas fa-folder-minus"></i> Désarchiver </a></td>
                                     </tr>
                                     @endforeach
