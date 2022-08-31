@@ -319,7 +319,7 @@ class PositionnementController extends Controller
             }
             else
             {
-                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$user->nomuser." ".$user->prenomuser;
+                $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y H-i-s')." de ".$user->nomuser." ".$user->prenomuser;
 
                 if(FichePositionnement::where('libellefiche','=',$fiche_positionnement)->select('id')->exists())
                 {
@@ -369,45 +369,45 @@ class PositionnementController extends Controller
                                     /** recuperation de tous les positionnements de toutes les fiches d'un apprenant
                                      * l'apprenant de peut pas avoir un positionnement inferieur par rapport aux anciens positionnements**/
 
-                                    if(DB::table('taches')
-                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
-                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                                    ->where('associations.user_id','=',$user->id)
-                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
-                                    ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
-                                    ->groupBy('taches.id','taches.libelletache')->doesntExist())
-                                    {
-                                    $tab_taches[$a] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')
-                                    ->where('activite_id','=',$tab_activite_id[$a])->orderBy('id')->distinct('id')->get();
-                                    }
-                                    elseif(Tache::select('id','libelletache')->where('activite_id','=',$tab_activite_id[$a])
-                                    ->orderBy('id')->distinct('id')->first()->id == DB::table('taches')
-                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
-                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                                    ->where('associations.user_id','=',$user->id)
-                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
-                                    ->select('taches.id','taches.libelletache')
-                                    ->groupBy('taches.id','taches.libelletache')
-                                    ->distinct('taches.id')->first()->id)
-                                    {
-                                    $tab_taches[$a] = DB::table('taches')
-                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
-                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                                    ->where('associations.user_id','=',$user->id)
-                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
-                                    ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
-                                    ->groupBy('taches.id','taches.libelletache')
-                                    ->distinct('taches.id')
-                                    ->get();
-                                    }
-                                    else
-                                    {
-                                    $tab_taches[$a] = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
-                                    ->orderBy('id')->distinct('id')->get();
-                                    }
+                                        $all_taches = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
+                                        ->orderBy('id')->distinct('id')->get();
+
+                                         $t = 0;
+                                         foreach($all_taches as $all_tache)
+                                         {
+                                            if(DB::table('taches')
+                                            ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                            ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                            ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                            ->where('associations.user_id','=',$user->id)
+                                            ->where('taches.id','=',$all_tache->id)
+                                            ->where('taches.activite_id','=',$tab_activite_id[$a])->exists())
+                                            {
+                                                $valeur[$t] = DB::table('taches')
+                                                ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                                ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                                ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                                ->where('taches.id','=',$all_tache->id)
+                                                ->where('associations.user_id','=',$user->id)
+                                                ->where('taches.activite_id','=',$tab_activite_id[$a])
+                                                ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
+                                                ->groupBy('taches.id','taches.libelletache')
+                                                ->distinct('taches.id')
+                                                ->first();
+
+                                                $t++;
+                                            }
+                                            else
+                                            {
+                                                $valeur[$t] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('id','=',$all_tache->id)
+                                                ->where('activite_id','=',$tab_activite_id[$a])->orderBy('id')->distinct('id')->first();
+
+                                                $t++;
+                                            }
+
+                                         }
+
+                                         $tab_taches[$a] = $valeur;
 
                                     /** Recuperation des taches selon l'activité **/
 
@@ -416,8 +416,14 @@ class PositionnementController extends Controller
 
                                     $collection_taches[$a] = collect(['activite_id' => $tab_activite_id[$a], 'activite_libelle' => $tab_activite_libelle[$a], 'taches' => $tab_taches[$a]])->all();
 
+                                    /** vider le contenu avant de reprendre **/
+                                    $valeur = null;
+                                    $tab_taches[$a] = null;
+
                                     $a++;
                                 }
+
+
 
                             $collections[$i] = collect(['fonction_id' => $tab_groupe_activite_id[$i], 'focntion_libelle' => $tab_groupe_activite_libelle[$i], 'activites' => $collection_taches])->all();
 
@@ -495,7 +501,7 @@ class PositionnementController extends Controller
         ->select('associations.id')->get()->last();
 
         $responsable_suivi_id = Auth::user()->id;
-        $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y')." de ".$users->nomuser." ".$users->prenomuser;
+        $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y H-i-s')." de ".$users->nomuser." ".$users->prenomuser;
 
         /** Recuperation des valeurs **/
         $taches = DB::table('metiers')->join('groupe_activites','metiers.id','=','groupe_activites.metier_id')
@@ -511,9 +517,39 @@ class PositionnementController extends Controller
 
                if($value_id[$t] != null)
                {
+
                    if($value_id[$t] != 0)
                    {
-                     $nombre_tache = $nombre_tache +1;
+                        if(DB::table('taches')
+                        ->join('positionnements','taches.id','=','positionnements.tache_id')
+                        ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                        ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                        ->where('associations.user_id','=',$users->id)
+                        ->where('taches.id','=',$tache_value->id)
+                        ->select('positionnements.valeurpost')->exists())
+                        {
+                            $positionnement_fiche = DB::table('taches')
+                            ->join('positionnements','taches.id','=','positionnements.tache_id')
+                            ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                            ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                            ->where('associations.user_id','=',$users->id)
+                            ->where('taches.id','=',$tache_value->id)
+                            ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.libelletache')
+                            ->groupBy('taches.id','taches.libelletache')
+                            ->distinct('taches.id')
+                            ->first();
+
+
+                            if($positionnement_fiche->valeurpost < $value_id[$t])
+                            {
+                                $nombre_tache = $nombre_tache +1;
+                            }
+
+                        }
+                        else
+                        {
+                            $nombre_tache = $nombre_tache +1;
+                        }
                    }
                }
                $t++;
@@ -550,11 +586,47 @@ class PositionnementController extends Controller
                {
                    if($value_id[$i] != 0)
                    {
-                        /** enregistrement des positionnements **/
-                        $positionnement = Positionnement::create([
+                    /** recuperer toutes les fiches de l'apprenant(e) selon la tache donnée et recuperer
+                     * la plus grande valeur et si la valeur recuperée de la fiche
+                     *  est superieur a l'ancien valeur
+                     * de toutes les anciens **/
+                        if(DB::table('taches')
+                        ->join('positionnements','taches.id','=','positionnements.tache_id')
+                        ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                        ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                        ->where('associations.user_id','=',$users->id)
+                        ->where('taches.id','=',$tache_value->id)
+                        ->select('positionnements.valeurpost')->exists())
+                        {
+                            $positionnement_fiche = DB::table('taches')
+                            ->join('positionnements','taches.id','=','positionnements.tache_id')
+                            ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                            ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                            ->where('associations.user_id','=',$users->id)
+                            ->where('taches.id','=',$tache_value->id)
+                            ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.libelletache')
+                            ->groupBy('taches.id','taches.libelletache')
+                            ->distinct('taches.id')
+                            ->first();
+
+
+                            if($positionnement_fiche->valeurpost < $value_id[$i])
+                            {
+                                /** enregistrement des positionnements **/
+                                $positionnement = Positionnement::create([
+                                    'valeurpost'=> $value_id[$i],
+                                    'fiche_positionnement_id'=> $fiche,
+                                    'tache_id'=> $tache_value->id,]);
+                            }
+                        }
+                        else
+                        {
+                            /** enregistrement des positionnements **/
+                            $positionnement = Positionnement::create([
                             'valeurpost'=> $value_id[$i],
                             'fiche_positionnement_id'=> $fiche,
                             'tache_id'=> $tache_value->id,]);
+                        }
                    }
                }
 

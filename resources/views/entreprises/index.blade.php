@@ -41,7 +41,7 @@
                                   <hr>
                                 <thead>
                                     <th scope="col">Numero</th>
-                                    <th scope="col">Libelle</th>
+                                    <th scope="col">Nom</th>
                                     <th scope="col">Téléphone</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Adresse</th>

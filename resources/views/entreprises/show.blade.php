@@ -42,7 +42,7 @@
                             <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i><span> Supprimer </span></button>
                             </form>
                             <hr>
-                            <p><strong>Libelle :</strong> {{$entreprise->libelleentreprise}}</p>
+                            <p><strong>Nom :</strong> {{$entreprise->libelleentreprise}}</p>
                             <p>
                                 @if($entreprise->logoentreprise)
                                 <img src="{{ asset('storage/entreprise/' .$entreprise->logoentreprise) }}" alt="entre-LogoEntreprise" class="img-thumbnail" width="400">

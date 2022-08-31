@@ -52,10 +52,16 @@
 
                             <div class="col-12 col-sm-10">
                               <div class="form-group">
-                                    <h6><strong> Nom & Prénom: {{$user->nomuser}} {{$user->prenomuser}}</strong></h6>
-                                    <h6><strong> Classe: {{$association->classe->libelleclasse}} </strong></h6>
-                                    <h6><strong> IFAD: {{$association->classe->metier->ifad->libelleifad}} </strong></h6>
-                              </div>
+                                  <div class="row">
+                                    <h6 class="col-12 col-sm-1"> <strong>Nom:</strong> </h6> <h6 class="col-12 col-sm-7">{{$user->nomuser}} {{$user->prenomuser}}</h6>
+                                  </div>
+                                  <div class="row">
+                                    <h6 class="col-12 col-sm-1"> <strong>Classe:</strong> </h6> <h6 class="col-12 col-sm-7"> {{$association->classe->libelleclasse}} </h6>
+                                  </div>
+                                  <div class="row">
+                                    <h6 class="col-12 col-sm-1"> <strong>IFAD:</strong> </h6> <h6 class="col-12 col-sm-7"> {{$association->classe->metier->ifad->libelleifad}} </h6>
+                                  </div>
+                               </div>
                             </div>
 
                             <div class="col-12 col-sm-1">

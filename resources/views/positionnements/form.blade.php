@@ -103,7 +103,7 @@
                                                         @foreach($activite['taches'] as $tache)
                                                             <div class="row">
                                                                 <div class="col-12 col-sm-10">
-                                                                <label class="form-check-label"> <strong>{{$tache->libelletache}}</strong>  </label>
+                                                                <label class="form-check-label"> <strong> <i>{{$tache->libelletache}}</i> </strong>  </label>
                                                                 </div>
                                                                 <div class="col-12 col-sm-2">
                                                                 <!--input class="form-check-input" type="checkbox" value="{{$tache->id}}" name="tache_id_{{$tache->id}}"-->

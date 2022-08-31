@@ -33,13 +33,13 @@
        <div class="row">
 
         <div class="col-12 col-sm-6">
-            <label for="text" class="col-sm-2 col-form-label">Libelle</label>
+            <label for="text" class="col-sm-2 col-form-label">Nom</label>
                 <div class="col-sm-10">
                     <div class="input-group mb-3">
                         <div class="input-group-append">
                           <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
                         </div>
-                        <input type="text" class="form-control @error('libelleentreprise') is-invalid @enderror" name="libelleentreprise" placeholder="Rentrez le libelle..." value="{{ old('libelleentreprise') ?? $entreprise->libelleentreprise }}" autofocus  required/>
+                        <input type="text" class="form-control @error('libelleentreprise') is-invalid @enderror" name="libelleentreprise" placeholder="Rentrez le nom de l'entreprise..." value="{{ old('libelleentreprise') ?? $entreprise->libelleentreprise }}" autofocus  required/>
                         @error('libelleentreprise')
                             <div class="invalid-feedback">
                                 {{ $errors->first('libelleentreprise')}}

@@ -16,16 +16,16 @@
                 @csrf
 
                 <div class="form-group row">
-                    <label for="text" class="col-sm-2 col-form-label">Métier</label>
+                    <label for="text" class="col-sm-2 col-form-label">Fonction</label>
                     <div class="col-sm-10">
                         <div class="input-group mb-3">
                             <div class="input-group-append">
-                            <span class="input-group-text"><i class="nav-icon fas fa-chalkboard-teacher"></i></span>
+                            <span class="input-group-text"><i class="nav-icon fas fa-bookmark"></i></span>
                             </div>
                             <select class="custom-select select2bs4  @error('groupe_activite_id') is-invalid @enderror" name="groupe_activite_id">
-                                <option selected disabled>Sélectionner un metier</option>
+                                <option selected disabled>Sélectionner une fonction</option>
                                 @foreach($groupe_activites as $groupe_activite)
-                                <option value="{{ $groupe_activite->id}}"> {{ $groupe_activite->libellegroupe }}</option>
+                                <option value="{{ $groupe_activite->id}}"> {{ $groupe_activite->libellegroupe }} ({{ $groupe_activite->metier->libellemetier }})</option>
                                 @endforeach
                             </select>
                             @error('groupe_activite_id')

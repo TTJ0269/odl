@@ -51,8 +51,7 @@
                              @endcannot
                           <th scope="col">Date début</th>
                           <th scope="col">Date fin</th>
-                          <th scope="col">Fiche de positionnement</th>
-                          <th scope="col">Observation</th>
+                          <th scope="col">Action</th>
                       </thead>
 
                           <tbody>
@@ -86,16 +85,20 @@
                             @else
                             <th scope="row"> Pas définie</th>
                             @endif
-                          <td> <a href="{{ route('positionnement_create', ['user' => $suivi->id_user]) }}" class="btn btn-primary"> Positionner </a></td>
-                            @can('admin','App\Models\User')
-                            <th><a href="{{ route('observation_create', ['user' => $suivi->id_user]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a></th>
-                            @endcan
-                            @can('charge_suivi','App\Models\User')
-                            <th><a href="{{ route('observation_create', ['user' => $suivi->id_user]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a></th>
-                            @endcan
-                            @can('formateur_ifad','App\Models\User')
-                            <th><a href="{{ route('observation_create', ['user' => $suivi->id_user]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a></th>
-                            @endcan
+                            <td>
+                               <a href="{{ route('positionnement_create', ['user' => $suivi->id_user]) }}" class="btn btn-primary"> Positionner </a>
+                               <a href="{{ route('positionnement_recup_apprenant', ['user' => $suivi->id_user]) }}" class="btn btn-primary"> Fiche du suivi </a>
+                               @can('admin','App\Models\User')
+                               <a href="{{ route('observation_create', ['user' => $suivi->id_user]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a>
+                               @endcan
+                               @can('charge_suivi','App\Models\User')
+                               <a href="{{ route('observation_create', ['user' => $suivi->id_user]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a>
+                               @endcan
+                               @can('formateur_ifad','App\Models\User')
+                               <a href="{{ route('observation_create', ['user' => $suivi->id_user]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a>
+                               @endcan
+                            </td>
+
                           </tr>
                           @endforeach
                           </tbody>
@@ -111,23 +114,13 @@
 <hr>
 <h6 style="color:rgb(209, 16, 16);">NB: </h6>
 <div class="row">
-    <div class="col-12 col-sm-4">
+    <div class="col-12 col-sm-12">
       <div class="form-group">
-        <h6> Pour visualiser les fiches du suivi  d’un(e) apprenant(e) cliquez sur le bouton <button class="btn btn-primary"> Fiche du suivi </button> devant son nom. </h6>
+        <h6><strong>1.</strong> Pour visualiser les fiches du suivi  d’un(e) apprenant(e) cliquez sur le bouton <strong> Fiche du suivi </strong> devant son nom. </h6>
+        <h6><strong>2.</strong> Pour aller sur la fiche de positionnement  d’un(e) apprenant(e) cliquez sur le bouton <strong> Positionner </strong> à côté son nom. </h6>
+        <h6><strong>3.</strong> Pour faire des observations par rapport aux comportements ou travail de l’apprenant(e) cliquez sur l’icone <strong> Commentaire. </strong> </h6>
       </div>
     </div>
-
-    <div class="col-12 col-sm-4">
-        <div class="form-group">
-          <h6> Pour aller sur la fiche de positionnement  d’un(e) apprenant(e) cliquez sur le bouton <button class="btn btn-primary"> Positionner </button> à côté son nom. </h6>
-        </div>
-      </div>
-
-      <div class="col-12 col-sm-4">
-        <div class="form-group">
-          <h6> Pour faire des observations par rapport aux comportements ou travail de l’apprenant(e) cliquez sur l’icone. <button class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </button> </h6>
-        </div>
-      </div>
-    </div>
+</div>
 
 @endsection
