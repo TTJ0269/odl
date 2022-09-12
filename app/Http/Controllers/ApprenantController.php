@@ -252,7 +252,7 @@ class ApprenantController extends Controller
         {
             return back()->with('messagealert',"Le mail ".request('email')." existe déjà.");
         }
-        elseif(request('numero_matricule') != null && User::where('numero_matricule','=',request('numero_matricule'))->select('id')->exists())
+        elseif(request('numero_matricule') != null && $apprenant->numero_matricule != request('numero_matricule') && User::where('numero_matricule','=',request('numero_matricule'))->select('id')->exists())
         {
             return back()->with('messagealert',"Ce numéro matricule existe déjà.");
         }

@@ -57,7 +57,7 @@
                                     <th scope="col">Numero</th>
                                     <th scope="col">Identifiant</th>
                                     <th scope="col">Libelle</th>
-                                    <th scope="col">Groupe d'activité</th>
+                                    <th scope="col">Fonction</th>
                                     <th scope="col">Catégorie</th>
                                 </thead>
 

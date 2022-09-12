@@ -43,6 +43,7 @@
                         <hr>
                       <thead>
                           <th scope="col">Numéro</th>
+                          <th scope="col">Photo</th>
                           <th scope="col">Nom</th>
                           <th scope="col">Prénom</th>
                           <th scope="col">Action</th>
@@ -51,8 +52,15 @@
                           <tbody>
                           @foreach($users as $key=>$user)
                           <tr>
-                          <th scope="row" class="col-12 col-sm-3"> {{++$key}} </th>
-                          <th scope="row" class="col-12 col-sm-3"> {{$user->nomuser}} </th>
+                          <th scope="row" class="col-12 col-sm-1"> {{++$key}} </th>
+                          @if($user->imageuser)
+                          <th scope="row" class="col-12 col-sm-1">
+                            <img src="{{ asset('storage/image/' .$user->imageuser) }}" alt="user-ImageUser" class="img-circle elevation-2" style="width: 50px; height: 70px;">
+                          </th>
+                          @else
+                           <th scope="row" class="col-12 col-sm-1"> Photo non trouvée </th>
+                          @endif
+                          <th scope="row" class="col-12 col-sm-2"> {{$user->nomuser}} </th>
                           <th scope="row" class="col-12 col-sm-3"> {{$user->prenomuser}} </th>
                           <th scope="row" class="col-12 col-sm-3">
                             <a href="{{ route('positionnement_recup_apprenant', ['user' => $user->id]) }}" class="btn btn-primary"> Fiche du suivi </a>

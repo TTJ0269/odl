@@ -87,7 +87,7 @@
                             <div class="card-body">
                                 <div class="container-fluid">
                                     @foreach($collection['activites'] as $activite)
-                                        <div class="col-12 col-sm-12">
+                                        <div class="col-12 col-sm-12"cd>
                                             <div class="card card- collapsed-card">
                                                 <div class="card-header">
                                                     <h3 class="card-title"> <strong style="color:rgb(12, 27, 72);"> {{$activite['activite_libelle']}} </strong></h3>
