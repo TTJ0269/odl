@@ -30,6 +30,9 @@
   <link rel="stylesheet" href="{{ asset('vendors/plugins/select2/css/select2.min.css') }}">
   <link rel="stylesheet" href="{{ asset('vendors/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 
+    <script src="{{ asset('assets/js/pdfmake.min.js') }}"></script>
+ 	<script src="{{ asset('assets/js/vfs.fonts.js') }}"></script>
+
   <!-- Bootstrap4 Duallistbox -->
   <link rel="stylesheet" href="{{ asset('vendors/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
 </head>
@@ -142,6 +145,8 @@ $('.select2bs4').select2({
   });
 </script>
 
+<style type="text/css" media="print"> @page { size: landscape; } </style>
+
 <!-- Debut activites -->
 @foreach ($collections as $collection)
 <script type="text/javascript">
@@ -158,7 +163,7 @@ $('.select2bs4').select2({
             labels: labels{{$collection['activite_id']}},
             datasets: [
               {
-                label: '{{$collection['activite_libelle']}}',
+                label: 'Radar',
                 fillColor: "rgba(25, 25, 25, 5)",
                 backgroundColor: "rgba(0, 0, 55, 0.3)", //"rgb(55, 144, 246)"
                 borderColor: "rgba(54, 162, 235, 1)",
@@ -177,32 +182,26 @@ $('.select2bs4').select2({
             legend: {
             position: 'top',
                 labels: {
-                    fontSize:20,
+                    fontSize:0,
                     fontColor: "rgb(55, 144, 246)",
                 }
             },
-            title: {
-                text: "",
-                display: true,
-                fontSize:24,
-                fontColor: 'blue'
-            },
             scale: {
               ticks: {
-                  fontSize: 15,
-                  fontColor: 'black',
+                  fontSize: 10,
+                  fontColor: 'red',
                   max: 4,
                   min: 0,
                   stepSize: 1,
               },
               angleLines: {
-                color: 'red'
+                color: 'red',
               },
               gridLines: {
-                color: 'black'
+                color: 'black',
               },
               pointLabels: {
-                fontSize: 17,
+                fontSize: 12,
                 fontColor: 'black',
               }
            },

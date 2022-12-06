@@ -1,0 +1,73 @@
+public function statistique_generale(User $user)
+    {
+        try
+        {
+
+            $user_id = (Auth::user()->id);
+            $profil_id = (Auth::user()->profil_id);
+
+            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+            if($profil_libelle == 'Apprenant')
+            {
+                if(Association::where('user_id','=',Auth::user()->id)->select()->exists())
+                {
+                    $association = Association::where('user_id','=',Auth::user()->id)->select('*')->first();
+                    if($fiche_positionnement->association_id != $association->id)
+                    {
+                        return back()->with('messagealert',"Pas de droit nécessaire");
+                    }
+                }
+            }
+
+            /** Recuperation de la derniere assocoation d'un apprenant a un IFAD **/
+            $association = Association::where('associations.user_id','=',$user->id)->select('*')->get()->last();
+
+            /** Recuperation des infos de la derniere fiche de positionnement **/
+            $fiche_positionnement = FichePositionnement::where('association_id','=',$association->id)->select('*')->get()->last();
+
+            if(FichePositionnement::where('association_id','=',$association->id)->select('id')->doesntExist())
+            {
+                return back()->with('messagealert',"Aucune fiche de positionnement trouvée pour cet(te) apprenant(e)");
+            }
+            else
+            {
+                    /** selection des activites metiers par activites **/
+                $activites = DB::table('activites')
+                ->join('taches','activites.id','=','taches.activite_id')
+                ->join('positionnements','taches.id','=','positionnements.tache_id')
+                ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                ->select('activites.*')->where('associations.user_id','=',$user->id)
+                ->orderBy('activites.id')->distinct('activites.id')->get();
+
+                    $i = 1;
+                    foreach($activites as $activite)
+                    {
+                        $tab_activite_id[$i]= $activite->id;
+                        $tab_activite_libelle[$i]= $activite->libelleactivite;
+
+                        $tab_tache[$i] = DB::table('taches')
+                        ->join('positionnements','taches.id','=','positionnements.tache_id')
+                        ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                        ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                        ->where('associations.user_id','=',$user->id)
+                        ->where('taches.activite_id','=',$tab_activite_id[$i])
+                        ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.libelletache')
+                        ->groupBy('taches.id','taches.libelletache')
+                        ->distinct('taches.id')
+                        ->get();
+
+                        $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
+
+                        $i++;
+                    }
+
+                return view('statistiques.show_generale', compact('collections','fiche_positionnement'));
+            }
+
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+    }

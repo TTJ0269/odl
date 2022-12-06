@@ -45,4 +45,14 @@ class MessageController extends Controller
         return view('message.erreurpage');
     }
 
+    public function send_logo(String $logo, String $name)
+    {
+        if($logo){
+            return view('auth.login', compact('logo','name'));
+        }else {
+             return redirect('index');
+        }
+
+    }
+
 }

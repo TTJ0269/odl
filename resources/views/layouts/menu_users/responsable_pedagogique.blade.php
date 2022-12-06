@@ -12,7 +12,7 @@
         <a href="{{ route('metiers.index') }}" class="nav-link">
         <i class="nav-icon fas fa-chalkboard-teacher"></i>
         <p>
-            Métier
+            Métiers
         </p>
         </a>
     </li>
@@ -21,7 +21,7 @@
         <a href="{{ route('classes.index') }}" class="nav-link">
         <i class="nav-icon fas fa-door-open"></i>
         <p>
-            Classe
+            Classes
         </p>
         </a>
     </li>
@@ -30,7 +30,7 @@
         <a href="{{ route('entreprises.index') }}" class="nav-link">
         <i class="nav-icon fas fa-building"></i>
         <p>
-            Entreprise
+            Entreprises
         </p>
         </a>
     </li>
@@ -39,7 +39,7 @@
         <a href="{{ route('autre_user') }}" class="nav-link">
         <i class="nav-icon fas fa-user"></i>
         <p>
-            Utilisateur
+            Utilisateurs
         </p>
         </a>
     </li>
@@ -66,7 +66,7 @@
         <a href="{{ route('groupe_activites.index') }}" class="nav-link">
         <i class="nav-icon fas fa-bookmark"></i>
         <p>
-            Fonction <!-- Fonction = Groupe d'activite-->
+            Fonctions <!-- Fonction = Groupe d'activite-->
         </p>
         </a>
     </li>
@@ -75,7 +75,7 @@
         <a href="{{ route('activites.index') }}" class="nav-link">
         <i class="nav-icon fas fa-copy"></i>
         <p>
-            Activité
+            Activités
         </p>
         </a>
     </li>
@@ -84,7 +84,7 @@
         <a href="{{ route('taches.index') }}" class="nav-link">
         <i class="nav-icon fas fa-paste"></i>
         <p>
-            Tâche
+            Tâches
         </p>
         </a>
     </li>
@@ -111,7 +111,7 @@
         <a href="#" class="nav-link">
         <i class="nav-icon fas fa-book-open"></i>
         <p>
-            Fiche Positionnement
+            Fiche Positionnements
             <i class="right fas fa-angle-left"></i>
         </p>
         </a>
@@ -120,13 +120,13 @@
         <li class="nav-item">
             <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
             <i class="nav-icon fas fa-folder-open"></i>
-            <p>Non archivé</p>
+            <p>Non archivées</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('fiches_archive_show') }}" class="nav-link">
             <i class="nav-icon fas fa-folder"></i>
-            <p>Archivé</p>
+            <p>Archivées</p>
             </a>
         </li>
 
@@ -137,7 +137,7 @@
         <a href="{{ route('observations.index') }}" class="nav-link">
         <i class="nav-icon fas fa-comments"></i>
         <p>
-            Observation
+            Observations
         </p>
         </a>
     </li>

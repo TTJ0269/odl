@@ -6,12 +6,12 @@
      <div class="container-fluid">
        <div class="row mb-2">
          <div class="col-sm-6">
-           <h1 class="m-0">Stagiaire</h1>
+           <h1 class="m-0">Apprenant</h1>
          </div><!-- /.col -->
          <div class="col-sm-6">
            <ol class="breadcrumb float-sm-right">
            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-             <li class="breadcrumb-item active">Stagiaire</li>
+             <li class="breadcrumb-item active">Apprenant</li>
            </ol>
          </div><!-- /.col -->
        </div><!-- /.row -->
@@ -24,7 +24,7 @@
    <!-- cadre general -->
 <div class="card card-secondary direct-chat direct-chat-secondary">
  <div class="card-header">
-   <h3 class="card-title">Liste des stagiaires</h3>
+   <h3 class="card-title">Liste des Apprenants</h3>
    <div class="card-tools">
      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-signal"></span>
    </div>
@@ -44,8 +44,7 @@
                       <thead>
                           <th scope="col">Numéro</th>
                           <th scope="col">Photo</th>
-                          <th scope="col">Nom</th>
-                          <th scope="col">Prénom</th>
+                          <th scope="col">Nom & Prénom</th>
                           <th scope="col">Action</th>
                       </thead>
 
@@ -60,8 +59,7 @@
                           @else
                            <th scope="row" class="col-12 col-sm-1"> Photo non trouvée </th>
                           @endif
-                          <th scope="row" class="col-12 col-sm-2"> {{$user->nomuser}} </th>
-                          <th scope="row" class="col-12 col-sm-3"> {{$user->prenomuser}} </th>
+                          <th scope="row" class="col-12 col-sm-2"> {{$user->nomuser}} <i>{{$user->prenomuser}}</i> </th>
                           <th scope="row" class="col-12 col-sm-3">
                             <a href="{{ route('positionnement_recup_apprenant', ['user' => $user->id]) }}" class="btn btn-primary"> Fiche du suivi </a>
                             <a href="{{ route('positionnement_create', ['user' => $user->id]) }}" class="btn btn-primary"> Positionner </a>

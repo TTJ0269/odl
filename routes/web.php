@@ -29,6 +29,8 @@ use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\AppartenanceController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\ReferentielController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +43,10 @@ use App\Http\Controllers\ImportController;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login'); //view('welcome')
-});
+Route::get('/', [HomeController::class, 'index'])->name('index'); //view('welcome') auth.login
+
+Route::get('/aed/{logo}/{name}/login', [MessageController::class, 'send_logo'])->name('send_logo');
+Route::get('/login', [HomeController::class, 'index'])->name('login');
 
 /*Route::get('/dashboard', function () {
     return view('dashboard');
@@ -196,6 +199,10 @@ Route::get('/fichier_activite_tache', [ImportController::class, 'referentiel_met
 
 /*** routes generales pour apprenant ***/
 Route::resource('/apprenants', ApprenantController::class);
+
+/** Referentiel **/
+Route::get('/referentiel', [ReferentielController::class, 'index'])->name('referentiel');
+Route::get('/referentiel_show/{ifad}', [ReferentielController::class, 'show'])->name('referentiel_show');
 
 
 Route::get('/hoho', function () {

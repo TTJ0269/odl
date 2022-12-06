@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Profil;
 use App\Models\User;
 use App\Models\Association;
-use App\Models\metier;
+use App\Models\Metier;
 use App\Models\FichePositionnement;
+use App\Models\GroupeActivite;
+use App\Models\Activite;
+use App\Models\Tache;
 
 class StatistiqueController extends Controller
 {
@@ -202,68 +205,17 @@ class StatistiqueController extends Controller
     {
         try
         {
-
-            $user_id = (Auth::user()->id);
-            $profil_id = (Auth::user()->profil_id);
-
-            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
-            if($profil_libelle == 'Apprenant')
-            {
-                if(Association::where('user_id','=',Auth::user()->id)->select()->exists())
-                {
-                    $association = Association::where('user_id','=',Auth::user()->id)->select('*')->first();
-                    if($fiche_positionnement->association_id != $association->id)
-                    {
-                        return back()->with('messagealert',"Pas de droit nécessaire");
-                    }
-                }
-            }
+            $collections = $this->getdata($user);
 
             /** Recuperation de la derniere assocoation d'un apprenant a un IFAD **/
             $association = Association::where('associations.user_id','=',$user->id)->select('*')->get()->last();
 
-            /** Recuperation des infos de la derniere fiche de positionnement **/
-            $fiche_positionnement = FichePositionnement::where('association_id','=',$association->id)->select('*')->get()->last();
+            /** Recuperation du metier de l'apprenant **/
+            $metier_id = $association->classe->metier->id;
 
-            if(FichePositionnement::where('association_id','=',$association->id)->select('id')->doesntExist())
-            {
-                return back()->with('messagealert',"Aucune fiche de positionnement trouvée pour cet(te) apprenant(e)");
-            }
-            else
-            {
-                /** selection des activites metiers par activites **/
-                $activites = DB::table('activites')
-                ->join('taches','activites.id','=','taches.activite_id')
-                ->join('positionnements','taches.id','=','positionnements.tache_id')
-                ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                ->select('activites.*')->where('associations.user_id','=',$user->id)
-                ->orderBy('activites.id')->distinct('activites.id')->get();
+            $metiers = Metier::where('id','=',$metier_id)->select('*')->first();
 
-                    $i = 1;
-                    foreach($activites as $activite)
-                    {
-                        $tab_activite_id[$i]= $activite->id;
-                        $tab_activite_libelle[$i]= $activite->libelleactivite;
-
-                        $tab_tache[$i] = DB::table('taches')
-                        ->join('positionnements','taches.id','=','positionnements.tache_id')
-                        ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                        ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                        ->where('associations.user_id','=',$user->id)
-                        ->where('taches.activite_id','=',$tab_activite_id[$i])
-                        ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.libelletache')
-                        ->groupBy('taches.id','taches.libelletache')
-                        ->distinct('taches.id')
-                        ->get();
-
-                        $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
-
-                        $i++;
-                    }
-
-                return view('fiche_positionnements.show_generale', compact('collections','fiche_positionnement','user'));
-            }
+            return view('fiche_positionnements.show_generale',compact('collections','metiers','user'));
 
         }
         catch(\Exception $exception)
@@ -276,73 +228,138 @@ class StatistiqueController extends Controller
     {
         try
         {
-
-            $user_id = (Auth::user()->id);
-            $profil_id = (Auth::user()->profil_id);
-
-            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
-            if($profil_libelle == 'Apprenant')
-            {
-                if(Association::where('user_id','=',Auth::user()->id)->select()->exists())
-                {
-                    $association = Association::where('user_id','=',Auth::user()->id)->select('*')->first();
-                    if($fiche_positionnement->association_id != $association->id)
-                    {
-                        return back()->with('messagealert',"Pas de droit nécessaire");
-                    }
-                }
-            }
+            $collections = $this->getdata($user);
 
             /** Recuperation de la derniere assocoation d'un apprenant a un IFAD **/
             $association = Association::where('associations.user_id','=',$user->id)->select('*')->get()->last();
 
-            /** Recuperation des infos de la derniere fiche de positionnement **/
-            $fiche_positionnement = FichePositionnement::where('association_id','=',$association->id)->select('*')->get()->last();
+            /** Recuperation du metier de l'apprenant **/
+            $metier_id = $association->classe->metier->id;
 
-            if(FichePositionnement::where('association_id','=',$association->id)->select('id')->doesntExist())
-            {
-                return back()->with('messagealert',"Aucune fiche de positionnement trouvée pour cet(te) apprenant(e)");
-            }
-            else
-            {
-                    /** selection des activites metiers par activites **/
-                $activites = DB::table('activites')
-                ->join('taches','activites.id','=','taches.activite_id')
-                ->join('positionnements','taches.id','=','positionnements.tache_id')
-                ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                ->select('activites.*')->where('associations.user_id','=',$user->id)
-                ->orderBy('activites.id')->distinct('activites.id')->get();
+            $metiers = Metier::where('id','=',$metier_id)->select('*')->first();
 
-                    $i = 1;
-                    foreach($activites as $activite)
-                    {
-                        $tab_activite_id[$i]= $activite->id;
-                        $tab_activite_libelle[$i]= $activite->libelleactivite;
-
-                        $tab_tache[$i] = DB::table('taches')
-                        ->join('positionnements','taches.id','=','positionnements.tache_id')
-                        ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                        ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                        ->where('associations.user_id','=',$user->id)
-                        ->where('taches.activite_id','=',$tab_activite_id[$i])
-                        ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.libelletache')
-                        ->groupBy('taches.id','taches.libelletache')
-                        ->distinct('taches.id')
-                        ->get();
-
-                        $collections[$i] = collect(['activite_id' => $tab_activite_id[$i], 'activite_libelle' => $tab_activite_libelle[$i], 'taches' => $tab_tache[$i]])->all();
-
-                        $i++;
-                    }
-
-                return view('statistiques.show_generale', compact('collections','fiche_positionnement'));
-            }
+            return view('statistiques.show_generale', compact('collections','user','metiers'));
 
         }
         catch(\Exception $exception)
         {
             return redirect('erreur')->with('messageerreur',$exception->getMessage());
         }
+    }
+
+
+    private function getdata(User $user)
+    {
+        $user_id = (Auth::user()->id);
+        $profil_id = (Auth::user()->profil_id);
+
+        $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+        if($profil_libelle == 'Apprenant')
+        {
+            if(Association::where('user_id','=',Auth::user()->id)->select()->exists())
+            {
+                $association = Association::where('user_id','=',Auth::user()->id)->select('*')->first();
+                if($fiche_positionnement->association_id != $association->id)
+                {
+                    return back()->with('messagealert',"Pas de droit nécessaire");
+                }
+            }
+        }
+
+        /** Recuperation de la derniere assocoation d'un apprenant a un IFAD **/
+        $association = Association::where('associations.user_id','=',$user->id)->select('*')->get()->last();
+
+        /** Recuperation du metier de l'apprenant **/
+        $metier_id = $association->classe->metier->id;
+
+            /** selection des groupe_activite par metier **/
+            $groupe_activites = GroupeActivite::select('*')->where('metier_id','=',$metier_id)->orderBy('id')->distinct('id')->get();
+
+            $i = 0;
+            foreach($groupe_activites as $groupe_activite)
+            {
+                $tab_groupe_activite_id[$i] = $groupe_activite->id;
+                $tab_groupe_activite_libelle[$i] = $groupe_activite->libellegroupe;
+
+                /** Groupe_activite = fonction **/
+
+
+                $tab_activites[$i] = Activite::select('*')->where('groupe_activite_id','=',$tab_groupe_activite_id[$i])
+                ->orderBy('id')->distinct('id')->get();
+
+                    $a = 0;
+                    foreach($tab_activites[$i] as $tab_activite)
+                    {
+                        $tab_activite_id[$a] = $tab_activite->id;
+                        $tab_activite_libelle[$a] = $tab_activite->libelleactivite;
+
+                        /** recuperation de tous les positionnements de toutes les fiches d'un apprenant
+                         * l'apprenant de peut pas avoir un positionnement inferieur par rapport aux anciens positionnements**/
+
+                            $all_taches = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
+                            ->orderBy('id')->distinct('id')->get();
+
+                            $t = 0;
+                            foreach($all_taches as $all_tache)
+                            {
+                                if(DB::table('taches')
+                                ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                ->where('associations.user_id','=',$user->id)
+                                ->where('taches.id','=',$all_tache->id)
+                                ->where('taches.activite_id','=',$tab_activite_id[$a])->exists())
+                                {
+                                    $valeur[$t] = DB::table('taches')
+                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                    ->where('taches.id','=',$all_tache->id)
+                                    ->where('associations.user_id','=',$user->id)
+                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
+                                    ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
+                                    ->groupBy('taches.id','taches.libelletache')
+                                    ->distinct('taches.id')
+                                    ->first();
+
+                                    $t++;
+                                }
+                                else
+                                {
+                                    $valeur[$t] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('id','=',$all_tache->id)
+                                    ->where('activite_id','=',$tab_activite_id[$a])->orderBy('id')->distinct('id')->first();
+
+                                    $t++;
+                                }
+
+                            }
+
+                            $tab_taches[$a] = $valeur;
+
+                        /** Recuperation des taches selon l'activité **/
+
+                        /*$tab_taches[$a] = Tache::select('*')->where('activite_id','=',$tab_activite_id[$a])
+                        ->orderBy('id')->distinct('id')->get();*/
+
+                        $collection_taches[$a] = collect(['activite_id' => $tab_activite_id[$a], 'activite_libelle' => $tab_activite_libelle[$a], 'taches' => $tab_taches[$a]])->all();
+
+                        /** vider le contenu avant de reprendre **/
+                        $valeur = null;
+                        $tab_taches[$a] = null;
+
+                        $a++;
+                    }
+
+
+
+                $collections[$i] = collect(['fonction_id' => $tab_groupe_activite_id[$i], 'focntion_libelle' => $tab_groupe_activite_libelle[$i], 'activites' => $collection_taches])->all();
+
+                /** Vider la collection **/
+                $collection_taches = null;
+
+                $i++;
+
+            }
+        return $collections;
     }
 }

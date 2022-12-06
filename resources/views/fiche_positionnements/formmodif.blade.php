@@ -17,6 +17,8 @@
     </div>
     <!-- /.content-header -->
 
+    <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
+    
        <div class="row">
             <div class="col-12 col-sm-8">
               <div class="form-group">

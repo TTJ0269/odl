@@ -3,7 +3,7 @@
         <a href="{{ route('positionnements.index') }}" class="nav-link">
         <i class="nav-icon fas fa-signal"></i>
         <p>
-            Stagiaire
+            Apprenants
         </p>
         </a>
     </li>
@@ -12,7 +12,7 @@
         <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
         <i class="nav-icon fas fa-book-open"></i>
         <p>
-            Fiche Positionnement
+            Fiche Positionnements
         </p>
         </a>
     </li>
@@ -21,7 +21,7 @@
         <a href="{{ route('observations.index') }}" class="nav-link">
         <i class="nav-icon fas fa-comments"></i>
         <p>
-            Observation
+            Observations
         </p>
         </a>
     </li>

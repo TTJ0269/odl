@@ -20,7 +20,7 @@
     </div>
     <!-- /.content-header -->
     <!--a href="{{ route('observations.create') }}" class="btn btn-primary my-3">Nouveau observation</a-->
-
+    <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
 
     <!-- cadre general -->
 <div class="card card-secondary direct-chat direct-chat-secondary">

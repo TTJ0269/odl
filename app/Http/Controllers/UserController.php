@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use PDF;
 use App\Events\NotificationEvent;
 use App\Mail\NotificationMail;
 use App\Models\User;
@@ -36,6 +37,8 @@ class UserController extends Controller
         try
         {
             /** $users = User::with('type_utilisateur')->paginate(5); **/
+
+
 
             $users = User::select('*')->orderBy('id','DESC')->get();
             //$profils = Profil::all();

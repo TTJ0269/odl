@@ -3,7 +3,7 @@
         <a href="{{ route('fiche_positionnements.index') }}" class="nav-link">
         <i class="nav-icon fas fa-book-open"></i>
         <p>
-            Fiche Positionnement
+            Fiche Positionnements
         </p>
         </a>
     </li>

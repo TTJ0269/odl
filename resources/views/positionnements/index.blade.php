@@ -6,12 +6,12 @@
      <div class="container-fluid">
        <div class="row mb-2">
          <div class="col-sm-6">
-           <h1 class="m-0">Stagiaire</h1>
+           <h1 class="m-0">Apprenant</h1>
          </div><!-- /.col -->
          <div class="col-sm-6">
            <ol class="breadcrumb float-sm-right">
            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-             <li class="breadcrumb-item active">Stagiaire</li>
+             <li class="breadcrumb-item active">Apprenant</li>
            </ol>
          </div><!-- /.col -->
        </div><!-- /.row -->
@@ -24,7 +24,7 @@
    <!-- cadre general -->
 <div class="card card-secondary direct-chat direct-chat-secondary">
  <div class="card-header">
-   <h3 class="card-title">Liste des stagiaires</h3>
+   <h3 class="card-title">Liste des Apprenants</h3>
    <div class="card-tools">
      <span data-toggle="tooltip" title="user" class="nav-icon fas fa-signal"></span>
    </div>
@@ -43,8 +43,7 @@
                       <thead>
                           <th scope="col">Numéro</th>
                           <th scope="col">Photo</th>
-                          <th scope="col">Nom</th>
-                          <th scope="col">Prénom</th>
+                          <th scope="col">Nom & Prénom</th>
                           <th scope="col">Classe</th>
                              @cannot('charge_suivi','App\Models\User')
                           <th scope="col">Entreprise</th>
@@ -65,8 +64,7 @@
                           @else
                            <th scope="row"> -- Photo non trouvée -- </th>
                           @endif
-                          <th scope="row"> {{$suivi->nomuser}} </th>
-                          <th scope="row"> {{$suivi->prenomuser}} </th>
+                          <th scope="row"> {{$suivi->nomuser}} <i>{{$suivi->prenomuser}}</i>  </th>
                           @if ($suivi->libelleclasse)
                           <th scope="row"> {{ $suivi->libelleclasse }} </th>
                           @else

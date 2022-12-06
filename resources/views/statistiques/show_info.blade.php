@@ -18,7 +18,6 @@
      </div><!-- /.container-fluid -->
    </div>
    <!-- /.content-header -->
-
    <!-- Main content -->
        <div class="container">
 
@@ -72,7 +71,7 @@
                     </div>
                     <div class="card-body">
                         <div class="chart">
-                            <canvas id="activite{{$collection['activite_id']}}"></canvas>
+                            <canvas id="activite{{$collection['activite_id']}}" width="50" height="25"></canvas>
                         </div>
                     </div>
                 </div>

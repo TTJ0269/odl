@@ -7,23 +7,23 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Stagiaire</h1>
+            <h1 class="m-0">Apprenant</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Accueil</a></li>
-              <li class="breadcrumb-item active">Stagiaire</li>
+              <li class="breadcrumb-item active">Apprenant</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
-
+    <a href="javascript:history.back();" class="btn btn-primary my-2"><i class="fas fa-angle-left"></i> Retour</a>
     <!-- cadre general -->
     <div class="card card-secondary direct-chat direct-chat-secondary">
   <div class="card-header">
-    <h3 class="card-title">Stagiaire</h3>
+    <h3 class="card-title">Apprenant</h3>
     <div class="card-tools">
       <span data-toggle="tooltip" title="user" class="nav-icon fas fa-signal"></span>
     </div>
@@ -54,7 +54,7 @@
                                         <select class="custom-select select2bs4" name="metier_id" id="metier">
                                             <option selected disabled>Sélectionner un métier</option>
                                             @foreach ($metiers as $metier)
-                                            <option value="{{ $metier->id }}"> {{ $metier->libellemetier }}</option>
+                                            <option value="{{ $metier->id }}"> {{ $metier->libellemetier }} ({{ $metier->ifad->libelleifad }}) </option>
                                             @endforeach
                                         </select>
                                   </div>
