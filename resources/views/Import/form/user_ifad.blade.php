@@ -8,6 +8,16 @@
                     </button>
                 </div>
             </div>
+
+                     @if ($errors->any())
+                        <h6 style="color:rgb(178, 20, 20)"> Erreur dans le fichier Excel</h6>
+                        <ol>
+                            @foreach ($errors->all() as $error)
+                              <li>{{$error}}</li>
+                            @endforeach
+                        </ol>
+                      @endif
+
             <div class="card-body">
                 <div class="container-fluid">
 

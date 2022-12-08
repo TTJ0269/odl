@@ -240,6 +240,44 @@ class AssociationController extends Controller
 
      }
 
+     public function datefin_create()
+     {
+        $this->authorize('ad_re_su', User::class);
+       try
+       {
+         $users = DB::table('profils')
+         ->join('users','profils.id','=','users.profil_id')
+         ->where('profils.libelleprofil','=','Apprenant')
+         ->select('users.*','profils.libelleprofil')
+         ->get();
+
+         return view('associations.datefin',compact('users'));
+
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+     }
+
+     public function dateupdate()
+     {
+        $this->authorize('ad_re_su', User::class);
+      try
+      {
+              /** actualisation de l'association **/
+              $this->finassociation();
+
+              return redirect('associations/create')->with('message', 'Informations bien enregistrées.');
+
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+
+     }
+
 
      private  function validator()
      {
@@ -263,6 +301,23 @@ class AssociationController extends Controller
                 'datedebut'=> now(),
                 'datefin'=> request('datefin'),
             ]);
+        }
+
+     }
+
+
+     private function finassociation()
+     {
+
+        $nbre = count(request('user_id'));
+
+        for ($i=0; $i < $nbre; $i++) {
+            $association = DB::table('associations')->where('associations.user_id','=',request('user_id')[$i])->select('associations.id')->get()->last();
+
+            if(DB::table('associations')->where('associations.user_id','=',request('user_id')[$i])->select('associations.id')->exists())
+            {
+                DB::table('associations')->where('associations.id','=',$association->id)->update(['datefin'=> now()]);
+            }
         }
 
      }

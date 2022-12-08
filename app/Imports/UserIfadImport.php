@@ -35,7 +35,7 @@ class UserIfadImport implements ToCollection ,WithHeadingRow, WithValidation //T
         foreach($rows as $row)
         {
             $data = [
-                'numero_matricule' => $row['numero_matricule'],
+                //'numero_matricule' => $row['numero_matricule'],
                 'name' => $row['name'],
                 'nomuser' => $row['nom'],
                 'prenomuser' => $row['prenom'],
@@ -64,7 +64,7 @@ class UserIfadImport implements ToCollection ,WithHeadingRow, WithValidation //T
     public function rules(): array
     {
         return [
-            'numero_matricule'=>'required|unique:users',
+            //'numero_matricule'=>'required|unique:users',
             'name'=>'required|unique:users',
             'nom'=>'required',
             'prenom'=>'required',

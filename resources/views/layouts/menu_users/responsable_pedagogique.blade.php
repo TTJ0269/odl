@@ -1,32 +1,5 @@
 @can('responsable_pedagogique','App\Models\User')
     <li class="nav-item">
-        <a href="{{ route('ifads.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-school"></i>
-        <p>
-            IFAD
-        </p>
-        </a>
-    </li>
-
-    <li class="nav-item">
-        <a href="{{ route('metiers.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-chalkboard-teacher"></i>
-        <p>
-            Métiers
-        </p>
-        </a>
-    </li>
-
-    <li class="nav-item">
-        <a href="{{ route('classes.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-door-open"></i>
-        <p>
-            Classes
-        </p>
-        </a>
-    </li>
-
-    <li class="nav-item">
         <a href="{{ route('entreprises.index') }}" class="nav-link">
         <i class="nav-icon fas fa-building"></i>
         <p>

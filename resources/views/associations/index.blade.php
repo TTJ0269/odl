@@ -21,6 +21,7 @@
     <!-- /.content-header -->
 
     <a href="{{ route('associations.create') }}" class="btn btn-primary my-3"><i class="fas fa-plus-circle"></i><span> Nouvelle association </span></a>
+    <a href="{{ route('association_datefin_create') }}" class="btn btn-info my-3"><i class="fas fa-plus-circle"></i><span> Fin association </span></a>
 
 
 
@@ -48,6 +49,10 @@
                                     <th scope="col">IFAD</th>
                                     <th scope="col">Début activité</th>
                                     <th scope="col">Fin activité</th>
+                                    <th scope="col">Classe</th>
+                                    @can('admin','App\Models\User')
+                                    <th scope="col">Action</th>
+                                    @endcan
                                     <th scope="col">Profil</th>
                                 </thead>
 
@@ -59,6 +64,16 @@
                                     <th scope="row"> {{$association->classe->metier->ifad->libelleifad}}  </th>
                                     <th scope="row"> {{$association->datedebut}} </th>
                                     <th scope="row"> {{$association->datefin}} </th>
+                                    <th scope="row"> {{$association->classe->libelleclasse}} </th>
+                                    @can('admin','App\Models\User')
+                                    <th scope="row">
+                                    <form action="{{ route('associations.destroy', ['association' => $association->id]) }}" method="POST" style="display: inline;" onsubmit="return confirm('Vous allez effectuer une suppression')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i><span> Supprimer </span></button>
+                                    </form>
+                                    </th>
+                                    @endcan
                                     <th scope="col">{{$association->user->profil->libelleprofil}}</th>
                                     </tr>
                                     @endforeach
