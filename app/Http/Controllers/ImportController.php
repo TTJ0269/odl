@@ -18,7 +18,7 @@ class ImportController extends Controller
 {
     public function import_user_index()
     {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             if(Profil::where('libelleprofil','=','Apprenant')->select('id')->exists())
@@ -37,7 +37,7 @@ class ImportController extends Controller
 
     public function import_user_store(Request  $request)
     {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             /* $ifad_id = request('ifad_id');
@@ -61,7 +61,7 @@ class ImportController extends Controller
 
     public function import_index()
     {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             if(Profil::where('libelleprofil','=','Apprenant')->select('id')->doesntExist())
@@ -85,7 +85,7 @@ class ImportController extends Controller
 
     public function import_user_ifad_store(Request  $request)
     {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             $classe = request('classe_id');
@@ -111,7 +111,7 @@ class ImportController extends Controller
 
     public function import_activite_tache_store(Request  $request)
     {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
 
@@ -142,7 +142,7 @@ class ImportController extends Controller
 
     public function referentiel_user()
     {
-       $this->authorize('ad_re_su', User::class);
+       $this->authorize('ad_su', User::class);
        try
        {
           return response()->download('storage/fichier/reference_user.xlsx');
@@ -155,7 +155,7 @@ class ImportController extends Controller
 
     public function referentiel_metier()
     {
-       $this->authorize('ad_re_su', User::class);
+       $this->authorize('ad_su', User::class);
        try
        {
           return response()->download('storage/fichier/reference_activite_tache.xlsx');

@@ -29,7 +29,7 @@ class FormateurController extends Controller
      // Afficher les activites appartenants a la personne qui s'est connecter
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
         $formateurs = DB::table('profils')
@@ -60,7 +60,7 @@ class FormateurController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
         if(Profil::where('libelleprofil','Formateur_IFAD')->exists())
@@ -90,7 +90,7 @@ class FormateurController extends Controller
 
      public function store(Request  $request)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
 
        try
@@ -185,7 +185,7 @@ class FormateurController extends Controller
 
      public function show(User $formateur)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
            return view('formateurs.show',compact('formateur'));
@@ -205,7 +205,7 @@ class FormateurController extends Controller
 
      public function edit(User $formateur)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
          $metiers = Metier::select('*')->get();
@@ -228,7 +228,7 @@ class FormateurController extends Controller
 
      public function update(User $formateur, Request  $request)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
       try
       {
         //$metier_id = request('metier_id');
@@ -296,7 +296,7 @@ class FormateurController extends Controller
 
      public function destroy(User $formateur)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
             $formateur->delete();

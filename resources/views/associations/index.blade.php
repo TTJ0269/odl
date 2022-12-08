@@ -21,7 +21,7 @@
     <!-- /.content-header -->
 
     <a href="{{ route('associations.create') }}" class="btn btn-primary my-3"><i class="fas fa-plus-circle"></i><span> Nouvelle association </span></a>
-    <a href="{{ route('association_datefin_create') }}" class="btn btn-info my-3"><i class="fas fa-plus-circle"></i><span> Fin association </span></a>
+    <a href="{{ route('association_datefin_create') }}" class="btn btn-secondary my-3"><i class="fas fa-minus-circle"></i><span> Fin association </span></a>
 
 
 

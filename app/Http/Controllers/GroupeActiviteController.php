@@ -26,7 +26,7 @@ class GroupeActiviteController extends Controller
      // Afficher les metiers
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
             $groupe_activites = GroupeActivite::select('*')->get();
@@ -47,7 +47,7 @@ class GroupeActiviteController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
 
@@ -71,7 +71,7 @@ class GroupeActiviteController extends Controller
 
      public function store()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
         try
         {
@@ -96,7 +96,7 @@ class GroupeActiviteController extends Controller
 
      public function show(GroupeActivite $groupe_activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
         {
           return view('groupe_activites.show',compact('groupe_activite'));
@@ -116,7 +116,7 @@ class GroupeActiviteController extends Controller
 
      public function edit(GroupeActivite $groupe_activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
           $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
@@ -139,7 +139,7 @@ class GroupeActiviteController extends Controller
 
      public function update(GroupeActivite $groupe_activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
        try
        {
@@ -166,7 +166,7 @@ class GroupeActiviteController extends Controller
 
      public function destroy(GroupeActivite $groupe_activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             if(Activite::where('groupe_activite_id','=',$groupe_activite->id)->doesntExist())

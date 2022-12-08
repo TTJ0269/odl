@@ -25,7 +25,7 @@ class IfadController extends Controller
      // Afficher les types utilisateurs
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             $ifads = Ifad::select('*')->get();
@@ -46,7 +46,7 @@ class IfadController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
           $ifad = new Ifad();
@@ -68,7 +68,7 @@ class IfadController extends Controller
 
      public function store(Request  $request)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
        try
        {
@@ -113,7 +113,7 @@ class IfadController extends Controller
 
      public function show(Ifad $ifad)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
           return view('ifads.show',compact('ifad'));
@@ -133,7 +133,7 @@ class IfadController extends Controller
 
      public function edit(Ifad $ifad)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
           return view('ifads.edit', compact('ifad'));
@@ -154,7 +154,7 @@ class IfadController extends Controller
 
      public function update(Ifad $ifad, Request  $request)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
           $libelle = request('libelleifad');
@@ -201,7 +201,7 @@ class IfadController extends Controller
 
      public function destroy(Ifad $ifad)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
         if(Metier::where('ifad_id','=',$ifad->id)->select('id')->exists())

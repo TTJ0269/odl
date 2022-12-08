@@ -26,7 +26,7 @@ class TacheController extends Controller
      // Afficher les activites appartenants a la personne qui s'est connecter
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
          $taches = Tache::select('*')->orderBy('id','DESC')->get();
@@ -48,7 +48,7 @@ class TacheController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
          $tach = new Tache();
@@ -73,7 +73,7 @@ class TacheController extends Controller
 
      public function store()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
 
        try
@@ -109,7 +109,7 @@ class TacheController extends Controller
 
      public function show(Tache $tach)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
            return view('taches.show',compact('tach'));
@@ -129,7 +129,7 @@ class TacheController extends Controller
 
      public function edit(Tache $tach)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
         $activites = activite::all();
@@ -152,7 +152,7 @@ class TacheController extends Controller
 
      public function update(Tache $tach)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
       try
       {
@@ -184,7 +184,7 @@ class TacheController extends Controller
 
      public function destroy(Tache $tach)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
         if(Positionnement::where('tache_id','=',$tach->id)->select('id')->exists())

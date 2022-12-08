@@ -8,15 +8,6 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ route('autre_user') }}" class="nav-link">
-        <i class="nav-icon fas fa-user"></i>
-        <p>
-            Utilisateurs
-        </p>
-        </a>
-    </li>
-
     <!--li class="nav-item">
         <a href="{{ route('apprenants.index') }}" class="nav-link">
         <i class="nav-icon fas fa-user"></i>
@@ -34,33 +25,6 @@
         </p>
         </a>
     </li-->
-
-    <li class="nav-item">
-        <a href="{{ route('groupe_activites.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-bookmark"></i>
-        <p>
-            Fonctions <!-- Fonction = Groupe d'activite-->
-        </p>
-        </a>
-    </li>
-
-    <li class="nav-item">
-        <a href="{{ route('activites.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-copy"></i>
-        <p>
-            Activités
-        </p>
-        </a>
-    </li>
-
-    <li class="nav-item">
-        <a href="{{ route('taches.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-paste"></i>
-        <p>
-            Tâches
-        </p>
-        </a>
-    </li>
 
     <!--li class="nav-item">
         <a href="{{ route('associations.index') }}" class="nav-link">

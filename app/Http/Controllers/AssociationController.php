@@ -107,35 +107,28 @@ class AssociationController extends Controller
         //$this->validator();
        try
        {
-           /** ici il peut arriver qu'un utilisateur ne soit pas dans aucune classe
-            * pour cela aucune_le libelle de l'IFAD ont creer prealablement comme classe **/
+
          $ifad_id = request('ifad_id');
          $classe_id = request('classe_id');
+         $nbre = count(request('user_id'));
 
-         if(Association::where('user_id','=',request('user_id'))
-         ->where('classe_id','=',$classe_id)->doesntExist())
-         {
-            $this->creation();
+         for ($i=0; $i < $nbre; $i++) {
 
-            return redirect('associations/create')->with('message', 'Informations bien enregistrées.');
-         }
-         else
-         {
-            $assocition_verification = Association::where('user_id','=',request('user_id'))
-            ->where('classe_id','=',$classe_id)->select('*')->get()->last();
-
-            if($assocition_verification->datefin == null)
-            {
-              return back()->with('messagealert', "Veuillez définir la fin de l'association de cet utilisateur");
-            }
-            else
-            {
+            if(Association::where('user_id','=',request('user_id')[$i])->doesntExist()) {
+                /** si l'utilisateur n'est pas encore associé à un ifad **/
                 $this->creation();
-
-                return redirect('associations/create')->with('message', 'Informations bien enregistrées.');
             }
+            elseif(Association::where('user_id','=',request('user_id')) ->where('classe_id','=',$classe_id)->exists())
+            {
+                //rien faire
+            }
+            elseif (Association::where('user_id','=',request('user_id')[$i])->exists()) {
+                /** Apprenants passent en classe superieur **/
+                $this->classe_change();
+            }
+        }
 
-         }
+            return redirect('associations')->with('message', 'Informations bien enregistrées.');
 
       }
       catch(\Exception $exception)
@@ -317,6 +310,22 @@ class AssociationController extends Controller
             if(DB::table('associations')->where('associations.user_id','=',request('user_id')[$i])->select('associations.id')->exists())
             {
                 DB::table('associations')->where('associations.id','=',$association->id)->update(['datefin'=> now()]);
+            }
+        }
+
+     }
+
+     private function classe_change()
+     {
+
+        $nbre = count(request('user_id'));
+
+        for ($i=0; $i < $nbre; $i++) {
+            $association = DB::table('associations')->where('associations.user_id','=',request('user_id')[$i])->select('associations.id')->get()->last();
+
+            if(DB::table('associations')->where('associations.user_id','=',request('user_id')[$i])->select('associations.id')->exists())
+            {
+                DB::table('associations')->where('associations.id','=',$association->id)->update(['associations.classe_id'=> request('classe_id')]);
             }
         }
 

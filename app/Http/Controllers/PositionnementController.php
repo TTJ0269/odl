@@ -190,7 +190,7 @@ class PositionnementController extends Controller
                 return back()->with('messagealert', "Sélectionner une classe.");
             }
 
-            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
+            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Suivi_AED')
            {
                 //$suivis = Suivi::select('*')->where('datefin','=',null)->orderBy('id','DESC')->get();
 

@@ -36,7 +36,7 @@ class FichePositionnementController extends Controller
 
           $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
 
-           if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
+           if($profil_libelle == 'Administrateur' || $profil_libelle == 'Suivi_AED')
            {
                 $fiche_positionnements = DB::table('users')
                 ->join('associations','users.id','=','associations.user_id')
@@ -93,7 +93,7 @@ class FichePositionnementController extends Controller
                     return view('fiche_positionnements.index', compact('fiche_positionnements'));
                 }
            }
-           elseif($profil_libelle == 'DG_IFAD')
+           elseif($profil_libelle == 'DG_IFAD' || $profil_libelle == 'Responsable pédagogique')
            {
                 if(DB::table('rattachers')->where('rattachers.user_id','=',Auth::user()->id)->select('rattachers.id')->doesntExist())
                 {
@@ -362,7 +362,7 @@ class FichePositionnementController extends Controller
       /** Visualisation de l'Archivage des fiches **/
     public function fiches_archive_show()
     {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             $fiche_positionnements = FichePositionnement::where('etat','=',1)->select('*')->orderBy('id','DESC')->get();
@@ -378,7 +378,7 @@ class FichePositionnementController extends Controller
         /** Archivage de la fiche de positionnement **/
      public function fiche_archive(FichePositionnement $fiche_positionnement)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             $fiche = FichePositionnement::where('id','=',$fiche_positionnement->id)->update(['etat' => 1]);
@@ -394,7 +394,7 @@ class FichePositionnementController extends Controller
     /** Désarchivage de la fiche de positionnement **/
     public function fiche_desarchive(FichePositionnement $fiche_positionnement)
     {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             $fiche = FichePositionnement::where('id','=',$fiche_positionnement->id)->update(['etat' => 0]);

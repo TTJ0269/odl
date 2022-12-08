@@ -26,7 +26,7 @@ class RattacherController extends Controller
      // Afficher les activites appartenants a la personne qui s'est connecter
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
          $rattachers = Rattacher::select('*')->orderBy('id','DESC')->get();
@@ -48,7 +48,7 @@ class RattacherController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
          $rattacher = new Rattacher();
@@ -58,6 +58,7 @@ class RattacherController extends Controller
          ->join('users','profils.id','=','users.profil_id')
          ->where('profils.libelleprofil','=','Formateur_IFAD')
          ->orWhere('profils.libelleprofil','=','DG_IFAD')
+         ->orWhere('profils.libelleprofil','=','Responsable pédagogique')
          ->select('users.*','profils.libelleprofil')
          ->get();
 
@@ -80,7 +81,7 @@ class RattacherController extends Controller
 
      public function store()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
        try
        {
@@ -141,7 +142,7 @@ class RattacherController extends Controller
 
      public function show(Rattacher $rattacher)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
            return view('rattachers.show',compact('rattacher'));
@@ -161,7 +162,7 @@ class RattacherController extends Controller
 
      public function edit(Rattacher $rattacher)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
          $users = User::select('*')->get();
@@ -186,7 +187,7 @@ class RattacherController extends Controller
 
      public function update(Rattacher $rattacher)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
       try
       {
               /** actualisation du rattachement **/
@@ -213,7 +214,7 @@ class RattacherController extends Controller
 
      public function destroy(Rattacher $rattacher)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
             $rattacher->delete();

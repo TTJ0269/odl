@@ -24,7 +24,7 @@ class ClasseController extends Controller
      // Afficher les classes
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
             $classes = Classe::select('*')->get();
@@ -45,7 +45,7 @@ class ClasseController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
 
@@ -69,7 +69,7 @@ class ClasseController extends Controller
 
      public function store()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
        try
        {
@@ -94,7 +94,7 @@ class ClasseController extends Controller
 
      public function show(Classe $class)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
         {
           return view('classes.show',compact('class'));
@@ -114,7 +114,7 @@ class ClasseController extends Controller
 
      public function edit(Classe $class)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
           $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
@@ -136,7 +136,7 @@ class ClasseController extends Controller
 
      public function update(Classe $class)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
           $classe_libelle = request('libelleclasse');
@@ -160,7 +160,7 @@ class ClasseController extends Controller
 
      public function destroy(Classe $class)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             if(DB::table('associations')->where('associations.classe_id','=',$class->id)->doesntExist())

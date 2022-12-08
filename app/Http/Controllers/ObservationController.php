@@ -33,7 +33,7 @@ class ObservationController extends Controller
 
             $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
 
-            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Responsable pédagogique' || $profil_libelle == 'Suivi_AED')
+            if($profil_libelle == 'Administrateur' || $profil_libelle == 'Suivi_AED')
            {
                 //$observations = Observation::select('*')->orderBy('observations.id','DESC')->get();
 
@@ -94,7 +94,7 @@ class ObservationController extends Controller
                 }
 
            }
-           elseif($profil_libelle == 'DG_IFAD')
+           elseif($profil_libelle == 'DG_IFAD' || $profil_libelle == 'Responsable pédagogique')
            {
                 if(DB::table('rattachers')->where('rattachers.user_id','=',Auth::user()->id)->select('rattachers.id')->doesntExist())
                 {

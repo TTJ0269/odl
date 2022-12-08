@@ -139,12 +139,13 @@ class ProfilPolicy
         }
     }
 
-    public function ad_re()
+    public function ad_su()
     {
+        //ad_re_su = administrateur et suivi aed;
         try
         {
             if(Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Administrateur')->exists() ||
-               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Responsable pédagogique')->exists())
+               Profil::where('id',Auth::user()->profil_id)->where('libelleprofil','Suivi_AED')->exists())
            {return true;}
             return false;
         }

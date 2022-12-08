@@ -25,7 +25,7 @@ class ActiviteController extends Controller
      // Afficher les types utilisateurs
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
             $activites = Activite::select('*')->orderBy('id','DESC')->get();
@@ -46,7 +46,7 @@ class ActiviteController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
           $groupe_activites = GroupeActivite::select('*')->get();
@@ -69,7 +69,7 @@ class ActiviteController extends Controller
 
      public function store()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
        try
        {
@@ -105,7 +105,7 @@ class ActiviteController extends Controller
 
      public function show(Activite $activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
           return view('activites.show',compact('activite'));
@@ -125,7 +125,7 @@ class ActiviteController extends Controller
 
      public function edit(Activite $activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
           $groupe_activites = GroupeActivite::select('*')->get();
@@ -147,7 +147,7 @@ class ActiviteController extends Controller
 
      public function update(Activite $activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
        try
        {
@@ -177,7 +177,7 @@ class ActiviteController extends Controller
 
      public function destroy(activite $activite)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
         if(Tache::where('activite_id','=',$activite->id)->select('id')->exists())

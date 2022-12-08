@@ -26,7 +26,7 @@ class MetierController extends Controller
      // Afficher les metiers
      public function index()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
             $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
@@ -47,7 +47,7 @@ class MetierController extends Controller
 
      public function create()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
        {
           $metier = new Metier();
@@ -70,7 +70,7 @@ class MetierController extends Controller
 
      public function store()
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
         try
         {
@@ -106,7 +106,7 @@ class MetierController extends Controller
 
      public function show(Metier $metier)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
        try
         {
           return view('metiers.show',compact('metier'));
@@ -126,7 +126,7 @@ class MetierController extends Controller
 
      public function edit(Metier $metier)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
           $ifads = Ifad::select('*')->get();
@@ -149,7 +149,7 @@ class MetierController extends Controller
 
      public function update(Metier $metier)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         $this->validator();
        try
        {
@@ -176,7 +176,7 @@ class MetierController extends Controller
 
      public function destroy(Metier $metier)
      {
-        $this->authorize('ad_re_su', User::class);
+        $this->authorize('ad_su', User::class);
         try
         {
             if(GroupeActivite::where('metier_id','=',$metier->id)->doesntExist())
