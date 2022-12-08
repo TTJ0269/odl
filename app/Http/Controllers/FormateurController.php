@@ -66,7 +66,7 @@ class FormateurController extends Controller
         if(Profil::where('libelleprofil','Formateur_IFAD')->exists())
         {
             $formateur = new User();
-            $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+            $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
 
             return view('formateurs.create',compact('formateur','metiers'));
         }

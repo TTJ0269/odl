@@ -90,9 +90,11 @@ class RattacherController extends Controller
          $ifad_id = request('ifad_id');
          $metier_id = request('metier_id');
 
+         $libellemetier = 'Aucun_metier'.request('ifad_id');
+
          if($metier_id == 0)
          {
-            $metier_id = DB::table('metiers')->select('id')->where('libellemetier','=','Aucun_metier')->first()->id;
+            $metier_id = DB::table('metiers')->select('id')->where('libellemetier','=',$libellemetier)->first()->id;
          }
          elseif($metier_id != 0)
          {
@@ -242,9 +244,11 @@ class RattacherController extends Controller
         $ifad_id = request('ifad_id');
         $metier_id = request('metier_id');
 
+        $libellemetier = 'Aucun_metier'.request('ifad_id');
+
          if($metier_id == 0)
          {
-            $metier_id = DB::table('metiers')->select('id')->where('libellemetier','=','Aucun_metier')->first()->id;
+            $metier_id = DB::table('metiers')->select('id')->where('libellemetier','=',$libellemetier)->first()->id;
          }
          elseif($metier_id != 0)
          {

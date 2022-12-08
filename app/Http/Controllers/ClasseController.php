@@ -50,7 +50,7 @@ class ClasseController extends Controller
        {
 
           $class = new Classe();
-          $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+          $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
 
           return view('classes.create',compact('class','metiers'));
         }
@@ -117,7 +117,7 @@ class ClasseController extends Controller
         $this->authorize('ad_su', User::class);
         try
         {
-          $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+          $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
           return view('classes.edit', compact('class','metiers'));
         }
         catch(\Exception $exception)

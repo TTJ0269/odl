@@ -29,7 +29,7 @@ class MetierController extends Controller
         $this->authorize('ad_su', User::class);
        try
        {
-            $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+            $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
 
             return view('metiers.index', compact('metiers'));
         }
@@ -72,12 +72,17 @@ class MetierController extends Controller
      {
         $this->authorize('ad_su', User::class);
         $this->validator();
+
+        /** il peut arrivé d'un formateur ou apprenant ne soit pas directement
+         * liées au metier donc dans chaque ifad aucun_metierid_ifad est créé. **/
+
+        $libellemetier = 'Aucun_metier'.request('ifad_id');
         try
         {
-            if(Metier::where('libellemetier','=','Aucun_metier')->select('id')->doesntExist())
+            if(Metier::where('libellemetier','=',$libellemetier)->select('id')->doesntExist())
             {
                Metier::create([
-                'libellemetier'=>'Aucun_metier',
+                'libellemetier'=> $libellemetier,
                 'niveaumetier'=>'Aucun',
                 'ifad_id' => request('ifad_id')
                ]);
