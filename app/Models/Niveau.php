@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GroupeActivite extends Model
+class Niveau extends Model
 {
     use HasFactory;
 
@@ -13,13 +13,8 @@ class GroupeActivite extends Model
 
     protected $attributes=['etatsup'=> 0];
 
-     public function filiere()
+    public function classe()
     {
-        return $this->belongsTo('App\Models\Filiere');
+        return $this->hasMany('App\Models\Classe');
     }
-
-      public function activites()
-     {
-         return $this->hasMany('App\Models\Activite');
-     }
 }

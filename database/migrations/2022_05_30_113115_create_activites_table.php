@@ -16,7 +16,7 @@ class CreateActivitesTable extends Migration
         Schema::create('activites', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('identifiantactivite', 10)->nullable();
-            $table->string('libelleactivite')->unique();
+            $table->string('libelleactivite');
             $table->string('categorie')->nullable();
             $table->integer('etatsup');
             $table->timestamps();

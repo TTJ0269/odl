@@ -1,5 +1,5 @@
 @can('suivi_aed','App\Models\User')
-    <li class="nav-item">
+    <!--li class="nav-item">
         <a href="{{ route('entreprises.index') }}" class="nav-link">
         <i class="nav-icon fas fa-building"></i>
         <p>
@@ -33,7 +33,7 @@
             Métiers
         </p>
         </a>
-    </li>
+    </li-->
 
     <li class="nav-item">
         <a href="{{ route('groupe_activites.index') }}" class="nav-link">
@@ -61,7 +61,7 @@
         </p>
         </a>
     </li>
-    
+
     <li class="nav-item">
         <a href="#" class="nav-link">
         <i class="nav-icon fas fa-book-open"></i>

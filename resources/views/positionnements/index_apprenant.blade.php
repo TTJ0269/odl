@@ -61,8 +61,8 @@
                           @endif
                           <th scope="row" class="col-12 col-sm-2"> {{$user->nomuser}} <i>{{$user->prenomuser}}</i> </th>
                           <th scope="row" class="col-12 col-sm-3">
-                            <a href="{{ route('positionnement_recup_apprenant', ['user' => $user->id]) }}" class="btn btn-primary"> Fiche du suivi </a>
-                            <a href="{{ route('positionnement_create', ['user' => $user->id]) }}" class="btn btn-primary"> Positionner </a>
+                            <a href="{{ route('positionnement_recup_apprenant', ['user' => $user->id,'metier'=> $metier->id]) }}" class="btn btn-primary"> Fiche du suivi </a>
+                            <a href="{{ route('positionnement_create', ['user' => $user->id,'metier'=> $metier->id]) }}" class="btn btn-primary"> Positionner </a>
                             @can('admin','App\Models\User')
                             <a href="{{ route('observation_create', ['user' => $user->id]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a>
                             @endcan

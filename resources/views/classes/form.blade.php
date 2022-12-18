@@ -32,25 +32,46 @@
     <hr>
 
     <div class="form-group row">
-        <label for="text" class="col-sm-2 col-form-label">Métier</label>
-        <div class="col-sm-10">
-          <div class="input-group mb-3">
-              <div class="input-group-append">
-                <span class="input-group-text"><i class="fas fa-chalkboard-teacher"></i></span>
-              </div>
-              <select class="custom-select select2bs4  @error('metier_id') is-invalid @enderror" name="metier_id">
-                @foreach($metiers as $metier)
-                <option value="{{ $metier->id}}" {{ $class->metier_id = $metier->id ? 'selected' : ''}}> {{ $metier->libellemetier }} ({{ $metier->ifad->libelleifad }})</option>
-                @endforeach
-              </select>
-           </div>
-              @error('metier_id')
-              <div class="invalid-feedback">
-                  {{ $errors->first('metier_id')}}
-              </div>
-            @enderror
+      <label for="text" class="col-sm-2 col-form-label">Niveau</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+              <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
+            </div>
+            <select class="custom-select @error('niveau_id') is-invalid @enderror" name="niveau_id">
+              @foreach($niveaux as $niveau)
+                <option value="{{ $niveau->id}}" {{ $class->niveau_id == $niveau->id ? 'selected' : ''}}> {{ $niveau->libelleniveau }} </option>
+              @endforeach
+            </select>
          </div>
-      </div>
+            @error('niveau_id')
+            <div class="invalid-feedback">
+                {{ $errors->first('niveau_id')}}
+            </div>
+          @enderror
+       </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="text" class="col-sm-2 col-form-label">Metier</label>
+      <div class="col-sm-10">
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+              <span class="input-group-text"><i class="nav-icon fas fa-school"></i></span>
+            </div>
+            <select class="custom-select @error('metier_id') is-invalid @enderror" name="metier_id">
+              @foreach($metiers as $metier)
+                <option value="{{ $metier->id}}" {{ $class->metier_id == $metier->id ? 'selected' : ''}}> {{ $metier->libellemetier }} ({{ $metier->ifad->libelleifad }}) </option>
+              @endforeach
+            </select>
+         </div>
+            @error('metier_id')
+            <div class="invalid-feedback">
+                {{ $errors->first('metier_id')}}
+            </div>
+          @enderror
+       </div>
+    </div>
 
         <div class="form-group row">
             <label for="text" class="col-sm-2 col-form-label">Libelle</label>
@@ -69,21 +90,21 @@
             </div>
         </div>
 
-        <div class="form-group row">
+        <!--<div class="form-group row">
         <label for="text" class="col-sm-2 col-form-label">Niveau</label>
             <div class="col-sm-10">
                 <div class="input-group mb-3">
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="nav-icon fas fa-signature"></i></span>
                     </div>
-                    <input type="text" class="form-control @error('niveauclasse') is-invalid @enderror" name="niveauclasse" placeholder="Rentrez le niveau..." value="{{ old('niveauclasse') ?? $class->niveauclasse }}"/>
+                    <input type="text" class="form-control @error('niveauclasse') is-invalid @enderror" name="niveauclasse" placeholder="Rentrez le niveau..."/>
                     @error('niveauclasse')
                         <div class="invalid-feedback">
                             {{ $errors->first('niveauclasse')}}
                         </div>
                     @enderror
             </div>
-        </div>
+        </div>-->
     </div>
 
     </div>

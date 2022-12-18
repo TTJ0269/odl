@@ -20,7 +20,12 @@ class Classe extends Model
      }
 
      public function metier()
-    {
-        return $this->belongsTo('App\Models\Metier');
-    }
+     {
+         return $this->belongsTo('App\Models\Metier');
+     }
+
+     public function niveau()
+     {
+         return $this->belongsTo('App\Models\Niveau');
+     }
 }

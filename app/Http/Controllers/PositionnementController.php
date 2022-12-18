@@ -14,6 +14,7 @@ use App\Models\GroupeActivite;
 use App\Models\Activite;
 use App\Models\Tache;
 use App\Models\Metier;
+use App\Models\Filiere;
 use App\Models\Ifad;
 use App\Models\Classe;
 use App\Models\Suivi;
@@ -47,9 +48,15 @@ class PositionnementController extends Controller
                 {
                     return back()->with('messagealert', "Vous n'est pas rattaché(e) à un Métier.");
                 }
-            }
 
-            $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+                $id_ifad = Rattacher::where('user_id','=',Auth::user()->id)->select('ifad_id')->get()->last()->ifad_id;
+
+                $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->where('ifad_id','=',$id_ifad)->get();
+            }
+            else
+            {
+                $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+            }
 
             return view('positionnements.index_apprenant_classe', compact('metiers'));
 
@@ -182,6 +189,9 @@ class PositionnementController extends Controller
             $profil_id = (Auth::user()->profil_id);
 
             $classe_id = request('classe_id');
+            $metier_id = request('metier_id');
+
+            $metier = Metier::where('id','=',$metier_id)->select('*')->first();
 
             $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
 
@@ -204,7 +214,7 @@ class PositionnementController extends Controller
                 ->select('users.*','classes.libelleclasse','metiers.id as ood')
                 ->distinct('users.id')->orderBy('users.id','DESC')->get();
 
-                return view('positionnements.index_apprenant', compact('users'));
+                return view('positionnements.index_apprenant', compact('users','metier'));
 
            }
            elseif($profil_libelle == 'Chargé du suivi')
@@ -227,7 +237,7 @@ class PositionnementController extends Controller
                     ->select('suivis.*','users.id as id_user','users.nomuser','users.prenomuser','users.imageuser','entreprises.libelleentreprise','classes.libelleclasse')
                     ->distinct('suivis.id')->orderBy('id','DESC')->get();
 
-                    return view('positionnements.index', compact('suivis'));
+                    return view('positionnements.index', compact('suivis','metier'));
                }
                else
                {
@@ -251,7 +261,7 @@ class PositionnementController extends Controller
                 ->select('users.*','classes.libelleclasse','metiers.id as ood')
                 ->distinct('users.id')->orderBy('users.id','DESC')->get();
 
-                return view('positionnements.index_apprenant', compact('users'));
+                return view('positionnements.index_apprenant', compact('users','metier'));
             }
         }
         catch(\Exception $exception)
@@ -260,7 +270,7 @@ class PositionnementController extends Controller
         }
     }
 
-    public function recup_apprenant(User $user)
+    public function recup_apprenant(User $user ,Metier $metier)
     {
         $this->authorize('ad_re_su_ch_fo', User::class);
         try
@@ -285,7 +295,7 @@ class PositionnementController extends Controller
             ->orderBy('fiche_positionnements.id','DESC')
             ->get();
 
-            return view('positionnements.recup_apprenant',compact('fiche_positionnements','user','association'));
+            return view('positionnements.recup_apprenant',compact('fiche_positionnements','user','metier','association'));
 
         }
         catch(\Exception $exception)
@@ -294,14 +304,15 @@ class PositionnementController extends Controller
         }
     }
 
-    public function create(User $user)
+    public function create(User $user, Metier $metier)
     {
         $this->authorize('ad_re_su_ch_fo', User::class);
-        try
-        {
+        /*try
+        {*/
             $user_id = (Auth::user()->id);
             $profil = (Auth::user()->profil_id);
 
+            //dd($metier);
 
             if(DB::table('associations')->where('associations.user_id','=',$user->id)->select('associations.id')->doesntExist())
             {
@@ -334,10 +345,11 @@ class PositionnementController extends Controller
 
                     //$metier = Metier::where('ifad_id','=',$ifad_id)->select('*')->first();
 
-                    if(DB::table('metiers')->join('groupe_activites','metiers.id','=','groupe_activites.metier_id')
+                    if(DB::table('metiers')->join('filieres','metiers.id','=','filieres.metier_id')
+                    ->join('groupe_activites','filieres.id','=','groupe_activites.filiere_id')
                     ->join('activites','groupe_activites.id','=','activites.groupe_activite_id')
                     ->join('taches','activites.id','=','taches.activite_id')
-                    ->where('groupe_activites.metier_id','=',$metier_id)->select('taches.id')->doesntExist())
+                    ->where('filieres.metier_id','=',$metier_id)->select('taches.id')->doesntExist())
                     {
                         return back()->with('messagealert', "Ajouter au moins une tâche au métier de l'apprenant(e).");
                     }
@@ -345,93 +357,114 @@ class PositionnementController extends Controller
                     {
                         $positionnement = new Positionnement();
 
-                        /** selection des groupe_activite par metier **/
-                        $groupe_activites = GroupeActivite::select('*')->where('metier_id','=',$metier_id)->orderBy('id')->distinct('id')->get();
+                         /** selection des filieres par groupe d'activité **/
+                        $filieres = Filiere::select('*')->where('metier_id','=',$metier_id)->orderBy('id')->distinct('id')->get();
 
-                        $i = 0;
-                        foreach($groupe_activites as $groupe_activite)
+                        $f = 0;
+                        foreach($filieres as $filiere)
                         {
-                            $tab_groupe_activite_id[$i] = $groupe_activite->id;
-                            $tab_groupe_activite_libelle[$i] = $groupe_activite->libellegroupe;
+                            $tab_filiere_id[$f] = $filiere->id;
+                            $tab_filiere_libelle[$f] = $filiere->libellefiliere;
 
                             /** Groupe_activite = fonction **/
 
 
-                            $tab_activites[$i] = Activite::select('*')->where('groupe_activite_id','=',$tab_groupe_activite_id[$i])
+                            $tab_groupe_activites[$f] = GroupeActivite::select('*')->where('filiere_id','=',$tab_filiere_id[$f])
                             ->orderBy('id')->distinct('id')->get();
 
-                                $a = 0;
-                                foreach($tab_activites[$i] as $tab_activite)
-                                {
-                                    $tab_activite_id[$a] = $tab_activite->id;
-                                    $tab_activite_libelle[$a] = $tab_activite->libelleactivite;
 
-                                    /** recuperation de tous les positionnements de toutes les fiches d'un apprenant
-                                     * l'apprenant de peut pas avoir un positionnement inferieur par rapport aux anciens positionnements**/
+                            $i = 0;
+                            foreach($tab_groupe_activites[$f] as $groupe_activite)
+                            {
+                                $tab_groupe_activite_id[$i] = $groupe_activite->id;
+                                $tab_groupe_activite_libelle[$i] = $groupe_activite->libellegroupe;
 
-                                        $all_taches = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
-                                        ->orderBy('id')->distinct('id')->get();
+                                /** Groupe_activite = fonction **/
 
-                                         $t = 0;
-                                         foreach($all_taches as $all_tache)
-                                         {
-                                            if(DB::table('taches')
-                                            ->join('positionnements','taches.id','=','positionnements.tache_id')
-                                            ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
-                                            ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                                            ->where('associations.user_id','=',$user->id)
-                                            ->where('taches.id','=',$all_tache->id)
-                                            ->where('taches.activite_id','=',$tab_activite_id[$a])->exists())
+
+                                $tab_activites[$i] = Activite::select('*')->where('groupe_activite_id','=',$tab_groupe_activite_id[$i])
+                                ->orderBy('id')->distinct('id')->get();
+
+                                    $a = 0;
+                                    foreach($tab_activites[$i] as $tab_activite)
+                                    {
+                                        $tab_activite_id[$a] = $tab_activite->id;
+                                        $tab_activite_libelle[$a] = $tab_activite->libelleactivite;
+
+                                        /** recuperation de tous les positionnements de toutes les fiches d'un apprenant
+                                         * l'apprenant de peut pas avoir un positionnement inferieur par rapport aux anciens positionnements**/
+
+                                            $all_taches = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
+                                            ->orderBy('id')->distinct('id')->get();
+
+                                            $t = 0;
+                                            foreach($all_taches as $all_tache)
                                             {
-                                                $valeur[$t] = DB::table('taches')
+                                                if(DB::table('taches')
                                                 ->join('positionnements','taches.id','=','positionnements.tache_id')
                                                 ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
                                                 ->join('associations','associations.id','=','fiche_positionnements.association_id')
-                                                ->where('taches.id','=',$all_tache->id)
                                                 ->where('associations.user_id','=',$user->id)
-                                                ->where('taches.activite_id','=',$tab_activite_id[$a])
-                                                ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
-                                                ->groupBy('taches.id','taches.libelletache')
-                                                ->distinct('taches.id')
-                                                ->first();
+                                                ->where('taches.id','=',$all_tache->id)
+                                                ->where('taches.activite_id','=',$tab_activite_id[$a])->exists())
+                                                {
+                                                    $valeur[$t] = DB::table('taches')
+                                                    ->join('positionnements','taches.id','=','positionnements.tache_id')
+                                                    ->join('fiche_positionnements','fiche_positionnements.id','=','positionnements.fiche_positionnement_id')
+                                                    ->join('associations','associations.id','=','fiche_positionnements.association_id')
+                                                    ->where('taches.id','=',$all_tache->id)
+                                                    ->where('associations.user_id','=',$user->id)
+                                                    ->where('taches.activite_id','=',$tab_activite_id[$a])
+                                                    ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
+                                                    ->groupBy('taches.id','taches.libelletache')
+                                                    ->distinct('taches.id')
+                                                    ->first();
 
-                                                $t++;
+                                                    $t++;
+                                                }
+                                                else
+                                                {
+                                                    $valeur[$t] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('id','=',$all_tache->id)
+                                                    ->where('activite_id','=',$tab_activite_id[$a])->orderBy('id')->distinct('id')->first();
+
+                                                    $t++;
+                                                }
+
                                             }
-                                            else
-                                            {
-                                                $valeur[$t] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('id','=',$all_tache->id)
-                                                ->where('activite_id','=',$tab_activite_id[$a])->orderBy('id')->distinct('id')->first();
 
-                                                $t++;
-                                            }
+                                            $tab_taches[$a] = $valeur;
 
-                                         }
+                                        /** Recuperation des taches selon l'activité **/
 
-                                         $tab_taches[$a] = $valeur;
+                                        /*$tab_taches[$a] = Tache::select('*')->where('activite_id','=',$tab_activite_id[$a])
+                                        ->orderBy('id')->distinct('id')->get();*/
 
-                                    /** Recuperation des taches selon l'activité **/
+                                        $collection_taches[$a] = collect(['activite_id' => $tab_activite_id[$a], 'activite_libelle' => $tab_activite_libelle[$a], 'taches' => $tab_taches[$a]])->all();
 
-                                    /*$tab_taches[$a] = Tache::select('*')->where('activite_id','=',$tab_activite_id[$a])
-                                    ->orderBy('id')->distinct('id')->get();*/
+                                        /** vider le contenu avant de reprendre **/
+                                        $valeur = null;
+                                        $tab_taches[$a] = null;
 
-                                    $collection_taches[$a] = collect(['activite_id' => $tab_activite_id[$a], 'activite_libelle' => $tab_activite_libelle[$a], 'taches' => $tab_taches[$a]])->all();
-
-                                    /** vider le contenu avant de reprendre **/
-                                    $valeur = null;
-                                    $tab_taches[$a] = null;
-
-                                    $a++;
-                                }
+                                        $a++;
+                                    }
 
 
 
-                            $collections[$i] = collect(['fonction_id' => $tab_groupe_activite_id[$i], 'focntion_libelle' => $tab_groupe_activite_libelle[$i], 'activites' => $collection_taches])->all();
+                                $collection_groupe_activites[$i] = collect(['fonction_id' => $tab_groupe_activite_id[$i], 'focntion_libelle' => $tab_groupe_activite_libelle[$i], 'activites' => $collection_taches])->all();
+
+                                /** Vider la collection **/
+                                $collection_taches = null;
+
+                                $i++;
+
+                            }
+
+                            $collections[$f] = collect(['filiere_id' => $tab_filiere_id[$f], 'filiere_libelle' => $tab_filiere_libelle[$f], 'groupe_activites' => $collection_groupe_activites])->all();
 
                             /** Vider la collection **/
-                            $collection_taches = null;
+                            $collection_groupe_activites = null;
 
-                            $i++;
-
+                            $f++;
                         }
 
                         //dd($collections);
@@ -443,11 +476,11 @@ class PositionnementController extends Controller
                 }
             }
 
-        }
+       /* }
         catch(\Exception $exception)
         {
            return redirect('erreur')->with('messageerreur',$exception->getMessage());
-        }
+        }*/
     }
 
     public function store()
@@ -504,10 +537,11 @@ class PositionnementController extends Controller
         $fiche_positionnement = "Fiche de positionnement du ".now()->format('d-m-Y H-i-s')." de ".$users->nomuser." ".$users->prenomuser;
 
         /** Recuperation des valeurs **/
-        $taches = DB::table('metiers')->join('groupe_activites','metiers.id','=','groupe_activites.metier_id')
+        $taches = DB::table('metiers')->join('filieres','metiers.id','=','filieres.metier_id')
+        ->join('groupe_activites','filieres.id','=','groupe_activites.filiere_id')
         ->join('activites','groupe_activites.id','=','activites.groupe_activite_id')
         ->join('taches','activites.id','=','taches.activite_id')
-        ->where('groupe_activites.metier_id','=',$metier_id)->select('taches.*')->get();
+        ->where('filieres.metier_id','=',$metier_id)->select('taches.*')->get();
 
             $nombre_tache = 0;
             $t = 1;

@@ -43,7 +43,7 @@
                                     <th scope="col">Numero</th>
                                     <th scope="col">Libelle</th>
                                     <th scope="col">Niveau</th>
-                                    <th scope="col">Métier</th>
+                                    <th scope="col">Metier</th>
                                     <th scope="col">IFAD</th>
                                 </thead>
 
@@ -52,11 +52,7 @@
                                     <tr>
                                     <th scope="row"> {{++$key}} </th>
                                     <td> <a href="{{ route('classes.show', ['class' => $classe->id]) }}"> {{$classe->libelleclasse}} </a></td>
-                                    @if($classe->niveauclasse)
-                                    <th scope="row"> {{$classe->niveauclasse}} </th>
-                                    @else
-                                    <th scope="row"> -- Aucune valeur trouvée -- </th>
-                                    @endif
+                                    <th scope="row"> {{$classe->niveau->libelleniveau}} </th>
                                     <th scope="row"> {{$classe->metier->libellemetier}} </th>
                                     <th scope="row"> {{$classe->metier->ifad->libelleifad}} </th>
                                     </tr>

@@ -54,10 +54,10 @@
     </li>
 
     <li class="nav-item">
-        <a href="{{ route('classes.index') }}" class="nav-link">
-        <i class="nav-icon fas fa-door-open"></i>
+        <a href="{{ route('niveaux.index') }}" class="nav-link">
+         <i class="nav-icon fas fa-sort-amount-up-alt"></i>
         <p>
-            Classes
+            Niveaux
         </p>
         </a>
     </li>
@@ -70,6 +70,25 @@
         </p>
         </a>
     </li>
+
+    <li class="nav-item">
+        <a href="{{ route('classes.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-door-open"></i>
+        <p>
+            Classes
+        </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="{{ route('filieres.index') }}" class="nav-link">
+        <i class="nav-icon fab fa-foursquare"></i>
+        <p>
+            Filières
+        </p>
+        </a>
+    </li>
+
 
     <li class="nav-item">
         <a href="{{ route('groupe_activites.index') }}" class="nav-link">

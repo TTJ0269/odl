@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Niveau;
-use App\Models\Classe;
 use App\Models\Metier;
+use App\Models\GroupeActivite;
+use App\Models\Filiere;
 use App\Models\User;
+use App\Models\Historique;
 
-class ClasseController extends Controller
+class FiliereController extends Controller
 {
     public function __construct()
     {
@@ -21,15 +21,15 @@ class ClasseController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-     // Afficher les classes
+     // Afficher les types utilisateurs
      public function index()
      {
         $this->authorize('ad_su', User::class);
        try
        {
-            $classes = Classe::select('*')->get();
+            $filieres = Filiere::select('*')->orderBy('id','DESC')->get();
 
-            return view('classes.index', compact('classes'));
+            return view('filieres.index', compact('filieres'));
         }
         catch(\Exception $exception)
        {
@@ -48,12 +48,10 @@ class ClasseController extends Controller
         $this->authorize('ad_su', User::class);
        try
        {
+          $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+          $filiere = new Filiere();
 
-          $class = new Classe();
-          $niveaux = Niveau::select('*')->get();
-          $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
-
-          return view('classes.create',compact('class','niveaux','metiers'));
+          return view('filieres.create',compact('filiere','metiers'));
         }
         catch(\Exception $exception)
        {
@@ -74,13 +72,19 @@ class ClasseController extends Controller
         $this->validator();
        try
        {
-          $classe_libelle = request('libelleclasse');
+            $libelle = request('libellefiliere');
 
-          $classe = Classe::create($this->validator());
+            $filiere = Filiere::create([
+                'libellefiliere'=> request('libellefiliere'),
+                'metier_id'=> request('metier_id'),
+            ]);
 
-          return redirect('classes')->with('message', 'Classe bien ajoutée.');
+            $this->historique(request('libellefiliere'), 'Ajout');
+
+            return redirect('filieres/create')->with('message', 'filiére bien ajoutée.');
+
       }
-        catch(\Exception $exception)
+      catch(\Exception $exception)
       {
           return redirect('erreur')->with('messageerreur',$exception->getMessage());
       }
@@ -93,12 +97,12 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function show(Classe $class)
+     public function show(Filiere $filiere)
      {
         $this->authorize('ad_su', User::class);
        try
-        {
-          return view('classes.show',compact('class'));
+       {
+          return view('filieres.show',compact('filiere'));
         }
         catch(\Exception $exception)
        {
@@ -113,14 +117,13 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function edit(Classe $class)
+     public function edit(Filiere $filiere)
      {
         $this->authorize('ad_su', User::class);
-        try
-        {
-          $niveaux = Niveau::select('*')->get();
-          $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
-          return view('classes.edit', compact('class','niveaux','metiers'));
+       try
+       {
+          $metiers = Metier::select('*')->get();
+          return view('filieres.edit', compact('filiere','metiers'));
         }
         catch(\Exception $exception)
        {
@@ -136,16 +139,20 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function update(Classe $class)
+     public function update(Filiere $filiere)
      {
         $this->authorize('ad_su', User::class);
+        $this->validator();
        try
        {
-          $classe_libelle = request('libelleclasse');
+          $filiere->update([
+            'libellefiliere'=> request('libellefiliere'),
+            'metier_id'=> request('metier_id'),
+          ]);
 
-          $class->update($this->validator());
+          $this->historique(request('libellefiliere'), 'Modification');
 
-          return redirect('classes/' . $class->id);
+          return redirect('filieres/' . $filiere->id)->with('message',"Modification effectuée avec succès.");
         }
         catch(\Exception $exception)
        {
@@ -160,34 +167,49 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function destroy(Classe $class)
+     public function destroy(Filiere $filiere)
      {
         $this->authorize('ad_su', User::class);
-        try
+       try
+       {
+        if(GroupeActivite::where('filiere_id','=',$filiere->id)->select('id')->exists())
         {
-            if(DB::table('associations')->where('associations.classe_id','=',$class->id)->doesntExist())
-            {
-              $class->delete();
-
-              return redirect('classes')->with('messagealert','Suppression éffectuée');
-            }
-
-            return redirect('classes')->with('messagealert','Cette classe est referencée dans une autre table');
+           return back()->with('messagealert',"Suppression pas possible. Cette filiére est référencée dans une autre table.");
         }
-          catch(\Exception $exception)
+        else
         {
-            return redirect('erreur')->with('messageerreur',$exception->getMessage());
-        }
+            $filiere->delete();
 
+            $this->historique($filiere->libellefiliere, 'Suppression');
+
+            return redirect('filieres')->with('messagealert','Suppression éffectuée');
+        }
+       }
+        catch(\Exception $exception)
+       {
+           return redirect('erreur')->with('messageerreur',$exception->getMessage());
+       }
      }
 
      private  function validator()
      {
          return request()->validate([
-             'libelleclasse'=>'required|min:2',
-             'metier_id' => 'required',
-             'niveau_id' => 'required',
-             'niveauclasse' => 'max:255'
+             'libellefiliere'=>'required|min:2',
+             'metier_id'=>'required|integer',
          ]);
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Filiere',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
+
 }

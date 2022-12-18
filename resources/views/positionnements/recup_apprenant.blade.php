@@ -67,7 +67,7 @@
                             <div class="col-12 col-sm-1">
                               <div class="form-group">
                                   <div class="form-group clearfix">
-                                    <a href="{{ route('positionnement_create', ['user' => $user->id]) }}" class="btn btn-primary"> Positionner </a>
+                                    <a href="{{ route('positionnement_create', ['user' => $user->id,'metier'=> $metier->id]) }}" class="btn btn-primary"> Positionner </a>
                                   </div>
                               </div>
                             </div>

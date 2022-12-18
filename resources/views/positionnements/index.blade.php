@@ -84,8 +84,8 @@
                             <th scope="row"> Pas définie</th>
                             @endif
                             <td>
-                               <a href="{{ route('positionnement_create', ['user' => $suivi->id_user]) }}" class="btn btn-primary"> Positionner </a>
-                               <a href="{{ route('positionnement_recup_apprenant', ['user' => $suivi->id_user]) }}" class="btn btn-primary"> Fiche du suivi </a>
+                               <a href="{{ route('positionnement_create', ['user' => $suivi->id_user,'metier'=> $metier->id]) }}" class="btn btn-primary"> Positionner </a>
+                               <a href="{{ route('positionnement_recup_apprenant', ['user' => $suivi->id_user,'metier'=> $metier->id]) }}" class="btn btn-primary"> Fiche du suivi </a>
                                @can('admin','App\Models\User')
                                <a href="{{ route('observation_create', ['user' => $suivi->id_user]) }}" class="btn btn-warning"> <i class="fas fa-comments"></i><span> </span> </a>
                                @endcan

@@ -41,47 +41,63 @@
                                   <hr>
                                 <thead>
                                     <th scope="col">Numéro</th>
-                                    <th scope="col">Fonctions</th>
-                                    <th scope="col">Activités, Tâches & positionnements</th>
+                                    <th scope="col">Filière</th>
+                                    <th scope="col">Fonction, Activités, Tâches & positionnements</th>
                                 </thead>
 
                                     <tbody>
                                         @foreach($collections as $key=>$collection)
                                     <tr>
                                     <th scope="row"> {{ 1+ $key++}} </th>
-                                    <th scope="row"> {{$collection['focntion_libelle']}}</th>
+                                    <th scope="row"> {{$collection['filiere_libelle']}}</th>
                                     <th scope="row">
                                             <table id="#" class="table table-bordered table-hover">
                                               <thead>
-                                                  <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-3">Activités </th>
-                                                  <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-9">Tâches et positionnements </th>
+                                                  <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-3">Fonction </th>
+                                                  <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-9">Activités, Tâches et positionnements </th>
                                               </thead>
 
                                               <tbody>
-                                                @foreach($collection['activites'] as $activite)
-                                                  <tr>
-                                                    <th scope="row"> {{$activite['activite_libelle']}} </th>
-                                                    <th scope="row">
-
+                                                @foreach($collection['groupe_activites'] as $groupe_activite)
+                                                <tr>
+                                                <th scope="row"> {{$groupe_activite['focntion_libelle']}}</th>
+                                                <th scope="row">
                                                         <table id="#" class="table table-bordered table-hover">
-                                                            <thead>
-                                                                <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-10">Tâches </th>
-                                                                <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-2">Position </th>
-                                                            </thead>
+                                                          <thead>
+                                                              <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-3">Activités </th>
+                                                              <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-9">Tâches et positionnements </th>
+                                                          </thead>
 
-                                                            <tbody>
-                                                                @foreach($activite['taches'] as $tache)
+                                                          <tbody>
+                                                              @foreach($groupe_activite['activites'] as $activite)
                                                                 <tr>
-                                                                  <th scope="row"> {{$tache->libelletache}} </th>
-                                                                  <th scope="row"> {{$tache->valeurpost}} </th>
+                                                                  <th scope="row"> {{$activite['activite_libelle']}} </th>
+                                                                  <th scope="row">
+
+                                                                      <table id="#" class="table table-bordered table-hover">
+                                                                          <thead>
+                                                                              <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-10">Tâches </th>
+                                                                              <th scope="col" style="color:rgb(55, 144, 246);" class="col-12 col-sm-2">Position </th>
+                                                                          </thead>
+
+                                                                          <tbody>
+                                                                              @foreach($activite['taches'] as $tache)
+                                                                              <tr>
+                                                                                <th scope="row"> {{$tache->libelletache}} </th>
+                                                                                <th scope="row"> {{$tache->valeurpost}} </th>
+                                                                              </tr>
+                                                                              @endforeach
+                                                                          </tbody>
+                                                                      </table>
+
+                                                                  </th>
                                                                 </tr>
                                                                 @endforeach
-                                                            </tbody>
-                                                         </table>
-
-                                                    </th>
-                                                  </tr>
-                                                  @endforeach
+                                                          </tbody>
+                                                        </table>
+                                                     </th>
+                                                     </tr>
+                                                     @endforeach
                                               </tbody>
                                            </table>
                                     </th>

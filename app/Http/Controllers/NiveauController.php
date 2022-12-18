@@ -6,11 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Niveau;
-use App\Models\Classe;
-use App\Models\Metier;
 use App\Models\User;
+use App\Models\Historique;
 
-class ClasseController extends Controller
+class NiveauController extends Controller
 {
     public function __construct()
     {
@@ -21,15 +20,15 @@ class ClasseController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-     // Afficher les classes
+     // Afficher les types utilisateurs
      public function index()
      {
         $this->authorize('ad_su', User::class);
        try
        {
-            $classes = Classe::select('*')->get();
+            $niveaux = Niveau::all();
 
-            return view('classes.index', compact('classes'));
+            return view('niveaux.index', compact('niveaux'));
         }
         catch(\Exception $exception)
        {
@@ -49,11 +48,9 @@ class ClasseController extends Controller
        try
        {
 
-          $class = new Classe();
-          $niveaux = Niveau::select('*')->get();
-          $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
+          $niveau = new Niveau();
 
-          return view('classes.create',compact('class','niveaux','metiers'));
+          return view('niveaux.create',compact('niveau'));
         }
         catch(\Exception $exception)
        {
@@ -71,14 +68,15 @@ class ClasseController extends Controller
      public function store()
      {
         $this->authorize('ad_su', User::class);
-        $this->validator();
        try
        {
-          $classe_libelle = request('libelleclasse');
+          $niveau_libelle = request('libelleniveau');
 
-          $classe = Classe::create($this->validator());
+          $niveau = Niveau::create($this->validator());
 
-          return redirect('classes')->with('message', 'Classe bien ajoutée.');
+          $this->historique($niveau_libelle, 'Ajout');
+
+          return redirect('niveaux')->with('message', 'Niveau bien ajouté.');
       }
         catch(\Exception $exception)
       {
@@ -93,12 +91,12 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function show(Classe $class)
+     public function show(Niveau $niveau)
      {
         $this->authorize('ad_su', User::class);
        try
         {
-          return view('classes.show',compact('class'));
+          return view('niveaux.show',compact('niveau'));
         }
         catch(\Exception $exception)
        {
@@ -113,14 +111,12 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function edit(Classe $class)
+     public function edit(Niveau $niveau)
      {
         $this->authorize('ad_su', User::class);
         try
         {
-          $niveaux = Niveau::select('*')->get();
-          $metiers = Metier::select('*')->get();//->where('libellemetier','not like',"%Aucun%")
-          return view('classes.edit', compact('class','niveaux','metiers'));
+          return view('niveaux.edit', compact('niveau'));
         }
         catch(\Exception $exception)
        {
@@ -136,16 +132,18 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function update(Classe $class)
+     public function update(Niveau $niveau)
      {
         $this->authorize('ad_su', User::class);
        try
        {
-          $classe_libelle = request('libelleclasse');
+          $niveau_libelle = request('libelleniveau');
 
-          $class->update($this->validator());
+          $niveau->update($this->validator());
 
-          return redirect('classes/' . $class->id);
+          $this->historique($niveau->libelleniveau, 'Modification');
+
+          return redirect('niveaux/' . $niveau->id);
         }
         catch(\Exception $exception)
        {
@@ -160,19 +158,21 @@ class ClasseController extends Controller
       * @return \Illuminate\Http\Response
       */
 
-     public function destroy(Classe $class)
+     public function destroy(Niveau $niveau)
      {
         $this->authorize('ad_su', User::class);
         try
         {
-            if(DB::table('associations')->where('associations.classe_id','=',$class->id)->doesntExist())
+            if(DB::table('classes')->where('classes.niveau_id','=',$niveau->id)->doesntExist())
             {
-              $class->delete();
+              $niveau->delete();
 
-              return redirect('classes')->with('messagealert','Suppression éffectuée');
+              $this->historique($niveau->libelleniveau, 'Suppression');
+
+              return redirect('niveaux')->with('messagealert','Suppression éffectuée');
             }
 
-            return redirect('classes')->with('messagealert','Cette classe est referencée dans une autre table');
+            return redirect('niveaux')->with('messagealert','Ce niveau est référencé dans une autre table');
         }
           catch(\Exception $exception)
         {
@@ -184,10 +184,20 @@ class ClasseController extends Controller
      private  function validator()
      {
          return request()->validate([
-             'libelleclasse'=>'required|min:2',
-             'metier_id' => 'required',
-             'niveau_id' => 'required',
-             'niveauclasse' => 'max:255'
+             'libelleniveau'=>'required|min:2'
          ]);
      }
+
+     private function historique($attribute, $action)
+    {
+        $auth_user = (Auth::user()->nomuser). ' ' .(Auth::user()->prenomuser);
+
+        /** historiques des actions sur le systeme **/
+        $historique = Historique::create([
+        'user_action'=> $auth_user,
+        'table'=> 'Niveau',
+        'attribute' => $attribute,
+        'action'=> $action
+        ]);
+    }
 }

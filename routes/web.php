@@ -5,7 +5,9 @@ use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\IfadController;
+use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\MetierController;
+use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\AssociationController;
 use App\Http\Controllers\ClasseController;
@@ -90,8 +92,14 @@ Route::resource('/taches', TacheController::class);
 /*** routes generales pour IFAD ***/
 Route::resource('/ifads', IfadController::class);
 
+/*** routes generales pour miveau ***/
+Route::resource('/niveaux', NiveauController::class);
+
 /*** routes generales pour metier ***/
 Route::resource('/metiers', MetierController::class);
+
+/*** routes generales pour filiere ***/
+Route::resource('/filieres', FiliereController::class);
 
 /*** routes generales pour appartenance  pour les tuteurs***/
 Route::resource('/appartenances', AppartenanceController::class);
@@ -137,8 +145,8 @@ Route::get('/fiche_desarchive/{fiche_positionnement}', [FichePositionnementContr
 /*** routes generales pour Positionnement ***/
 Route::resource('/positionnements', PositionnementController::class);
 Route::get('/positionnement/create', [PositionnementController::class, 'index'])->name('positionnement_index');
-Route::get('/positionnement/create/{user}', [PositionnementController::class, 'create'])->name('positionnement_create');
-Route::get('/positionnement/recup_apprenant/{user}', [PositionnementController::class, 'recup_apprenant'])->name('positionnement_recup_apprenant');
+Route::get('/positionnement/create/{user}/{metier}', [PositionnementController::class, 'create'])->name('positionnement_create');
+Route::get('/positionnement/recup_apprenant/{user}/{metier}', [PositionnementController::class, 'recup_apprenant'])->name('positionnement_recup_apprenant');
 Route::get('/positionnement/classe_apprenant', [PositionnementController::class, 'index'])->name('positionnement_classe_apprenant');
 Route::post('/positionnement/classe_apprenant', [PositionnementController::class, 'classe_apprenant'])->name('positionnement_classe_apprenant');
 Route::get('/get_index', [PositionnementController::class, 'getUser'])->name('get_index');

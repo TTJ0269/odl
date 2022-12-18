@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClassesTable extends Migration
+class CreateFilieresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateClassesTable extends Migration
      */
     public function up()
     {
-        Schema::create('classes', function (Blueprint $table) {
+        Schema::create('filieres', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('libelleclasse');
-            $table->string('niveauclasse')->nullable();
+            $table->string('libellefiliere')->unique();
             $table->integer('etatsup');
             $table->timestamps();
 
-            $table->unsignedBigInteger('niveau_id');
             $table->unsignedBigInteger('metier_id');
-            $table->foreign('niveau_id')->references('id')->on('niveaux')->onDelete('cascade');
             $table->foreign('metier_id')->references('id')->on('metiers')->onDelete('cascade');
         });
     }
@@ -34,6 +31,6 @@ class CreateClassesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('classes');
+        Schema::dropIfExists('filieres');
     }
 }

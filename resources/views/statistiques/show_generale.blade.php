@@ -52,7 +52,8 @@
        </div>
 
             @foreach ($collections as $collection)
-                @foreach($collection['activites'] as $activite)
+               @foreach($collection['groupe_activites'] as $groupe_activite)
+                 @foreach($groupe_activite['activites'] as $activite)
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">{{$activite['activite_libelle']}}</h3>
@@ -69,7 +70,8 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
+                 @endforeach
+              @endforeach
             @endforeach
        </div>
 

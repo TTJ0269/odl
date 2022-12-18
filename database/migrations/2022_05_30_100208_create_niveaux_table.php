@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGroupeActivitesTable extends Migration
+class CreateNiveauxTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateGroupeActivitesTable extends Migration
      */
     public function up()
     {
-        Schema::create('groupe_activites', function (Blueprint $table) {
+        Schema::create('niveaux', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('identifiantgroupe', 10)->nullable();
-            $table->string('libellegroupe');
+            $table->string('libelleniveau');
             $table->integer('etatsup');
             $table->timestamps();
-
-            $table->unsignedBigInteger('filiere_id');
-            $table->foreign('filiere_id')->references('id')->on('filieres')->onDelete('cascade');
         });
     }
 
@@ -32,6 +28,6 @@ class CreateGroupeActivitesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groupe_activites');
+        Schema::dropIfExists('niveaux');
     }
 }

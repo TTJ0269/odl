@@ -152,7 +152,8 @@ $('.select2bs4').select2({
 
 
 @foreach ($collections as $collection)
-    @foreach($collection['activites'] as $activite)
+  @foreach($collection['groupe_activites'] as $groupe_activite)
+    @foreach($groupe_activite['activites'] as $activite)
     <script type="text/javascript">
         let labels{{$activite['activite_id']}} = [
                         @foreach ($activite['taches'] as $tache)
@@ -212,6 +213,7 @@ $('.select2bs4').select2({
             }
         });
         </script>
+      @endforeach
     @endforeach
 @endforeach
 

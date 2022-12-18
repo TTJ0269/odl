@@ -32,22 +32,22 @@
     <hr>
 
     <div class="form-group row">
-        <label for="text" class="col-sm-2 col-form-label">Métier</label>
+        <label for="text" class="col-sm-2 col-form-label">Filière</label>
         <div class="col-sm-10">
         <div class="input-group mb-3">
             <div class="input-group-append">
                 <span class="input-group-text"><i class="nav-icon fas fa-chalkboard-teacher"></i></span>
             </div>
-            <select class="custom-select select2bs4  @error('metier_id') is-invalid @enderror" name="metier_id">
-                <option selected disabled> Sélectionner un métier</option>
-                @foreach($metiers as $metier)
-                <option value="{{ $metier->id }}" {{ $groupe_activite->metier_id == $metier->id ? 'selected' : ''}}> {{ $metier->libellemetier }} ({{ $metier->ifad->libelleifad }})</option>
+            <select class="custom-select select2bs4  @error('filiere_id') is-invalid @enderror" name="filiere_id">
+                <option selected disabled> Sélectionner une filière</option>
+                @foreach($filieres as $filiere)
+                <option value="{{ $filiere->id }}" {{ $groupe_activite->filiere_id == $filiere->id ? 'selected' : ''}}> {{ $filiere->libellefiliere }} ({{ $filiere->metier->libellemetier }})</option>
                 @endforeach
             </select>
         </div>
-            @error('metier_id')
+            @error('filiere_id')
             <div class="invalid-feedback">
-                {{ $errors->first('metier_id')}}
+                {{ $errors->first('filiere_id')}}
             </div>
             @enderror
         </div>

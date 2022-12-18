@@ -43,7 +43,7 @@
                             </form>
                             <hr>
                             <p><strong>Libelle :</strong> {{$class->libelleclasse}}</p>
-                            <p><strong>Niveau :</strong> {{$class->niveauclasse}}</p>
+                            <p><strong>Niveau :</strong> {{$class->niveau->libelleniveau}}</p>
                             <p><strong>Métier :</strong> {{$class->metier->libellemetier}}</p>
                             <p><strong>IFAD :</strong> {{$class->metier->ifad->libelleifad}}</p>
                     </div>

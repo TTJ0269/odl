@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Metier;
+use App\Models\Filiere;
 use App\Models\Ifad;
 use App\Models\User;
 use App\Models\GroupeActivite;
@@ -52,9 +52,9 @@ class GroupeActiviteController extends Controller
        {
 
           $groupe_activite = new GroupeActivite();
-          $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+          $filieres = Filiere::select('*')->get();
 
-          return view('groupe_activites.create',compact('groupe_activite','metiers'));
+          return view('groupe_activites.create',compact('groupe_activite','filieres'));
         }
         catch(\Exception $exception)
        {
@@ -119,9 +119,9 @@ class GroupeActiviteController extends Controller
         $this->authorize('ad_su', User::class);
         try
         {
-          $metiers = Metier::select('*')->where('libellemetier','not like',"%Aucun%")->get();
+          $filieres = Filiere::select('*')->get();
 
-          return view('groupe_activites.edit', compact('groupe_activite','metiers'));
+          return view('groupe_activites.edit', compact('groupe_activite','filieres'));
         }
         catch(\Exception $exception)
        {
@@ -192,7 +192,7 @@ class GroupeActiviteController extends Controller
          return request()->validate([
              'identifiantgroupe'=>'max:10',
              'libellegroupe'=>'required|min:2',
-             'metier_id' => 'required'
+             'filiere_id' => 'required'
          ]);
      }
 
