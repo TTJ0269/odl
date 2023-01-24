@@ -33,6 +33,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ReferentielController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AideController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,11 @@ Route::get('/login', [HomeController::class, 'index'])->name('login');
 /*Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');*/
+
+/** aide **/
+Route::get('/aide', [AideController::class, 'index'])->name('aide_index');
+Route::get('/guide_utilisation_docx', [AideController::class, 'guide_utilisation_docx'])->name('guide_utilisation_docx');
+Route::get('/guide_utilisation_pdf', [AideController::class, 'guide_utilisation_pdf'])->name('guide_utilisation_pdf');
 
 Route::get('/dashboard', [MessageController::class, 'accueil'])->middleware(['auth'])->name('dashboard');
 

@@ -50,7 +50,7 @@
 
           <div class="my-2" style="float:right; margin-right: 170px">
             <i style="color: rgb(9, 121, 40)">Besoin d'aide, cliquer ici</i>
-            <a href="#"><img src="{{ asset('bb/images/aide.png') }}" style="height: 35px; width: 35px;" alt=""></a>
+            <a href="{{ route('aide_index') }}"><img src="{{ asset('bb/images/aide.png') }}" style="height: 35px; width: 35px;" alt=""></a>
           </div>
         </div>
       </div>

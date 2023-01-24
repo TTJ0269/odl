@@ -25,7 +25,7 @@
                             <select class="custom-select select2bs4  @error('groupe_activite_id') is-invalid @enderror" name="groupe_activite_id">
                                 <option selected disabled>Sélectionner une fonction</option>
                                 @foreach($groupe_activites as $groupe_activite)
-                                <option value="{{ $groupe_activite->id}}"> {{ $groupe_activite->libellegroupe }} ({{ $groupe_activite->metier->libellemetier }})</option>
+                                <option value="{{ $groupe_activite->id}}"> {{ $groupe_activite->libellegroupe }} ({{ $groupe_activite->filiere->libellefiliere }} {{ $groupe_activite->filiere->metier->ifad->libelleifad }} )</option>
                                 @endforeach
                             </select>
                             @error('groupe_activite_id')

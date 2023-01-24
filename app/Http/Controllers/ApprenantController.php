@@ -110,7 +110,7 @@ class ApprenantController extends Controller
         $numero_matricule=request('numero_matricule');
         $classe_id = request('classe_id');
         $name = request('name');
-        $password = request('prenomuser').'@'.request('teluser');  //request('password')
+        $password = request('nomuser').'@'.now()->format('Y'); //request('password')
         $imageuser = null;
 
         if($request->file('image'))
@@ -126,18 +126,18 @@ class ApprenantController extends Controller
         {
             return back()->with('messagealert',"Sélectionner une classe.");
         }
-        elseif(request('numero_matricule') != null && User::where('numero_matricule','=',request('numero_matricule'))->select('id')->exists())
+        /*elseif(request('numero_matricule') != null && User::where('numero_matricule','=',request('numero_matricule'))->select('id')->exists())
         {
             return back()->with('messagealert',"Ce numéro matricule existe déjà.");
-        }
+        }*/
         elseif(request('email') != null && User::where('email','=',request('email'))->select('id')->exists())
         {
             return back()->with('messagealert',"Ce mail existe déjà.");
         }
-        elseif(request('teluser') != null && User::where('teluser','=',request('teluser'))->select('id')->exists())
+        /*elseif(request('teluser') != null && User::where('teluser','=',request('teluser'))->select('id')->exists())
         {
             return back()->with('messagealert',"Ce numéro de téléphone existe déjà.");
-        }
+        }*/
         else
         {
             /** Enregistrement de l'apprenant(e) **/
