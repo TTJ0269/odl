@@ -218,13 +218,13 @@ Route::resource('/apprenants', ApprenantController::class);
 
 /** Referentiel **/
 Route::get('/referentiel', [ReferentielController::class, 'index'])->name('referentiel');
-Route::get('/referentiel_show/{ifad}', [ReferentielController::class, 'show'])->name('referentiel_show');
+Route::get('/referentiel_show/{metier}', [ReferentielController::class, 'show'])->name('referentiel_show');
 
 
-Route::get('/hoho', function () {
+/*Route::get('/hoho', function () {
     return view('hoho');
-});
+});*/
 
-Route::get('/pie', [ChartController::class, 'pie'])->name('chart.pie');
+//Route::get('/pie', [ChartController::class, 'pie'])->name('chart.pie');
 
 //Route::get('/first', [ChartController::class, 'first'])->name('first');

@@ -40,14 +40,14 @@
                                   <hr>
                                 <thead>
                                     <th scope="col">Numero</th>
-                                    <th scope="col">IFAD</th>
+                                    <th scope="col">Métier</th>
                                 </thead>
 
                                     <tbody>
-                                    @foreach($ifads as $key=>$ifad)
+                                    @foreach($metiers as $key=>$metier)
                                     <tr>
                                     <th scope="row"> {{++$key}} </th>
-                                    <td> <a href="{{ route('referentiel_show', ['ifad' => $ifad->id]) }}" style="color:rgb(55, 144, 246);"> {{$ifad->libelleifad}} </a></td>
+                                    <td> <a href="{{ route('referentiel_show', ['metier' => $metier->id]) }}" style="color:rgb(55, 144, 246);"> {{$metier->libellemetier}} </a></td>
                                     </tr>
                                     @endforeach
                                     </tbody>
