@@ -17,7 +17,7 @@ class ImportPhpSpreadsheetController extends Controller
 
         // Boucle sur les lignes et les colonnes pour récupérer les données
         $rows = $worksheet->toArray();
-        
+
         foreach($rows as $row)
         {
             $data_activite = [
@@ -42,6 +42,34 @@ class ImportPhpSpreadsheetController extends Controller
               $tache = Tache::create($data_tache);
             }
         }
-        // ...
+         /** code**/
+        $this->authorize('ad_su', User::class);
+        try
+        {
+
+            $groupe_activite = request('groupe_activite_id');
+            Session::put('groupe_activite_id',$groupe_activite);
+
+            //dd($groupe_activite);
+
+            if($groupe_activite == null)
+            {
+                return back()->with('messagealert',"Sélectionner un groupe d'activité");
+            }
+            if($request->file == null)
+            {
+                return back()->with('messagealert','Sélectionner un fichier');
+            }
+
+            //$valeur = ['file' => $request->file , 'groupe_activite' => $groupe_activite];
+
+            Excel::import(new ActiviteTacheImport, $request->file('file'));
+            return back()->with('message','Importation éffectuée avec succées');
+        }
+        catch(\Exception $exception)
+        {
+            return redirect('erreur')->with('messageerreur',$exception->getMessage());
+        }
+        /** code**/
     }
 }

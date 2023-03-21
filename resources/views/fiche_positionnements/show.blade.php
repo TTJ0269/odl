@@ -129,6 +129,7 @@
 
           <div class="col-12">
             <a href="{{ route('statistique_show', ['fiche_positionnement' => $fiche_positionnement->id]) }}" class="btn btn-primary"> <i class="fas fa-chart-line"></i><span> Radars de positionnement </span> </a>
+            <a href="{{ route('fiche_generale', ['user' => $fiche_positionnement->association->user->id]) }}" class="btn btn-info"> Positionnement Général </a>
             <button onclick="window.print()" class="btn btn-success my-2"><i class="far fa-credit-card"></i> Imprimer</button>
           </div>
       </div>

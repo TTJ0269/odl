@@ -10,9 +10,15 @@ use App\Models\Profil;
 use App\Models\User;
 use App\Models\Ifad;
 use App\Models\GroupeActivite;
+use App\Models\Association;
+use App\Models\Activite;
+use App\Models\Tache;
 use App\Models\Metier;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Illuminate\Support\Facades\Hash;
 
 class ImportController extends Controller
 {
@@ -88,8 +94,9 @@ class ImportController extends Controller
         $this->authorize('ad_su', User::class);
         try
         {
+            $profil = Profil::where('libelleprofil','=','Apprenant')->select('*')->first();
             $classe = request('classe_id');
-            Session::put('classe',$classe);
+            /*Session::put('classe',$classe);*/
 
             if($classe == null)
             {
@@ -100,7 +107,63 @@ class ImportController extends Controller
                 return back()->with('messagealert','Sélectionner un fichier');
             }
 
-            Excel::import(new UserIfadImport, $request->file('file'));
+            // Récupération du fichier Excel
+            $file = $request->file('file');
+            $spreadsheet = IOFactory::load($file);
+
+            // Récupération de la feuille active
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            // Boucle sur les lignes et les colonnes pour récupérer les données
+            $rows = $worksheet->toArray();
+
+            //dd($rows);
+
+            $i = 0;
+            foreach($rows as $row)
+            {
+                $numero_matricule = $row['0'];
+                $name = $row['1'];
+                $nom = $row['2'];
+                $prenom = $row['3'];
+                $email = $row['4'];
+                $telephone = $row['5'];
+
+                if ($i != 0)
+                {
+                    if(User::where('email','=',$email)->select('id')->exists())
+                    {
+                        return back()->with('messagealert',"L'email existe déjà");
+                    }
+
+                    $user = User::create([
+                        'numero_matricule' => $numero_matricule,
+                        'name' => $name,
+                        'nomuser' => $nom,
+                        'prenomuser' => $prenom,
+                        'email' => $email,
+                        'password' => Hash::make($nom.'@'.now()->format('Y')),
+                        'teluser' => $telephone,
+                        'imageuser' => null,
+                        'profil_id' => $profil->id,
+                    ]);
+
+                    if(Association::where('user_id','=',$user->id)->where('classe_id','=',(int)$classe)->select('*')->doesntExist())
+                    {
+                        /** Association d'un apprenant a un ifad **/
+                        Association::create([
+                            'user_id' => $user->id,
+                            'classe_id'=> (int)$classe,
+                            'datedebut'=> now(),
+                            'datefin'=> null,
+                        ]);
+                    }
+                }
+                $i++;
+
+            }
+
+            /*Excel::import(new UserIfadImport, $request->file('file'));*/
             return back()->with('message','Importation éffectuée avec succées');
         }
         catch(\Exception $exception)
@@ -116,7 +179,7 @@ class ImportController extends Controller
         {
 
             $groupe_activite = request('groupe_activite_id');
-            Session::put('groupe_activite_id',$groupe_activite);
+           /* Session::put('groupe_activite_id',$groupe_activite);*/
 
             //dd($groupe_activite);
 
@@ -131,8 +194,63 @@ class ImportController extends Controller
 
             //$valeur = ['file' => $request->file , 'groupe_activite' => $groupe_activite];
 
-            Excel::import(new ActiviteTacheImport, $request->file('file'));
+            // Récupération du fichier Excel
+            $file = $request->file('file');
+            $spreadsheet = IOFactory::load($file);
+
+            // Récupération de la feuille active
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            // Boucle sur les lignes et les colonnes pour récupérer les données
+            $rows = $worksheet->toArray();
+
+            //dd($rows);
+
+            $i = 0;
+            foreach($rows as $row)
+            {
+                $identifiantactivite = $row['0'];
+                $libelleactivite = $row['1'];
+                $identifianttache = $row['2'];
+                $libelletache = $row['3'];
+
+
+                /*if($identifiantactivite == 'identifiant activite' && $libelleactivite == 'activite' &&
+                $identifianttache == 'identifiant tache' && $libelletache == 'tache'){
+                }else{
+                    return back()->with('messagealert',"L'en-tête du fichier Excel non respecté. Veuillez cliquez sur l'icône téléchargé pour voir l'en-tête du fichier Excel");
+                }*/
+
+                if ($i != 0)
+                {
+                    $data_activite = [
+                        'identifiantactivite' => $identifiantactivite,
+                        'libelleactivite' =>  $libelleactivite,
+                        'groupe_activite_id' => (int)$groupe_activite,
+                    ];
+
+                    if($libelleactivite != null)
+                    {
+                        $activite = Activite::create($data_activite);
+                    }
+
+                    $data_tache = [
+                        'identifianttache' => $identifianttache,
+                        'libelletache' => $libelletache,
+                        'activite_id' => $activite->id,
+                    ];
+
+                    if($libelletache != null)
+                    {
+                        $tache = Tache::create($data_tache);
+                    }
+                }
+                $i++;
+
+            }
+            /*Excel::import(new ActiviteTacheImport, $request->file('file'));*/
             return back()->with('message','Importation éffectuée avec succées');
+
         }
         catch(\Exception $exception)
         {

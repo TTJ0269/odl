@@ -273,8 +273,8 @@ class UserController extends Controller
    try
    {
       //dd($user);
-      //$a = 123456789 ;
-      $a = strtotime(now());
+      $a = 123456789 ;
+      //$a = strtotime(now());
       $message = 'Votre nouveau de passe est : ';
 
       $useremail = ['email' => $user->email , 'nomuser' => $user->nomuser , 'prenomuser' => $user->prenomuser, 'password' => $a , 'message' => $message];

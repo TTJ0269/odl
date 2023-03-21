@@ -24,7 +24,7 @@
                     </div>
                     <div class="form-group mt-1">
                         <h2>Login</h2>
-                        <input type="text" class="form-control" name="login" :value="old('email')" placeholder="Login ou Email" required autofocus />
+                        <input type="text" class="form-control" name="email" :value="old('email')" placeholder="Login ou Email" required autofocus />
                     </div>
                     <div class="form-group mt-1">
                         <h2>Mot de passe</h2>

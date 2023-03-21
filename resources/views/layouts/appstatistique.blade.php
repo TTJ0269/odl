@@ -145,14 +145,14 @@ $('.select2bs4').select2({
   });
 </script>
 
-<style type="text/css" media="print"> @page { size: landscape; } </style>
+<!--<style type="text/css" media="print"> @page { size: landscape; } </style> -->
 
 <!-- Debut activites -->
 @foreach ($collections as $collection)
 <script type="text/javascript">
     let labels{{$collection['activite_id']}} = [
                       @foreach ($collection['taches'] as $tache)
-                        splitString(('{{ $tache->libelletache }} "{{round($tache->valeurpost,0) }}"'),3),
+                        splitString(('{{ $tache->identifianttache }} "{{round($tache->valeurpost,0) }}"'),3),
                       @endforeach
                   ];
     let myChart{{$collection['activite_id']}} = document.getElementById("activite{{$collection['activite_id']}}").getContext('2d');

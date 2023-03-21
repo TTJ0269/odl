@@ -21,20 +21,32 @@
    <!-- Main content -->
        <div class="container">
 
-        <div class="text-center">
-            <img src="{{ asset('storage/imageifad/aedsuivi.png') }}" class="img elevation" style="width: 200px; height: 100px;" alt="AED Image">
+        <div class="row">
+            <div class="col-12 col-sm-3">
+                <img src="{{ asset('storage/imageifad/'.$fiche_positionnement->association->classe->metier->ifad->logoifad) }}" class="img elevation" style="width: 100px; height: 50px;" alt="AED Image">
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="text-center">
+                    <h2> <strong> Fiche de positionnement</strong> </h2>
+                    <h5> {{$fiche_positionnement->metier_apprenant}} </h5>
+                    <h6> {{$fiche_positionnement->dateenregistrement}} </h6>
+                </div>
+            </div>
+            <div class="col-12 col-sm-3">
+                <h6 style="font-size:0.9vw"> <strong>(0) Non observé</strong></h6>
+                <h6 style="font-size:0.9vw"> <strong>(1) L'activité a été observée</strong></h6>
+                <h6 style="font-size:0.9vw"> <strong>(2) L'activité a été réalisée avec de l'aide</strong></h6>
+                <h6 style="font-size:0.9vw"> <strong>(3) L'activité a été réalisée en toute autonomie</strong></h6>
+                <h6 style="font-size:0.9vw"> <strong>(4) L'activité a été réalisée et maîtrisée</strong></h6>
+            </div>
         </div>
 
             <br>
             <div class="row">
                 <div class="col-12 col-sm-6">
                   <div class="form-group">
-                    <h6> Fiche de positionnement </h6>
-                    <h6> {{$fiche_positionnement->association->classe->metier->ifad->libelleifad}} </h6>
                     <h6> Classe: {{$fiche_positionnement->association->classe->libelleclasse}} </h6>
-                    <h6> Métier: {{$fiche_positionnement->metier_apprenant}} </h6>
                     <h6> Apprenant(e): {{$fiche_positionnement->association->user->nomuser}} {{$fiche_positionnement->association->user->prenomuser}} </h6>
-                    <h6> Date de l'évaluation: {{$fiche_positionnement->dateenregistrement}} </h6>
                   </div>
                 </div>
 
@@ -58,24 +70,35 @@
                   </div>
            </div>
 
+           <div class="row">
             @foreach ($collections as $collection)
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{$collection['activite_libelle']}}</h3>
+            <div class="col-12 col-sm-6">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <th scope="col"> <h6 style="font-size:0.9vw"> <strong>{{$collection['activite_libelle']}} </strong></h6></th>
+                    </thead>
 
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart">
-                            <canvas id="activite{{$collection['activite_id']}}" width="50" height="25"></canvas>
-                        </div>
+                    <tbody>
+                    <tr>
+                    <th scope="row"> <canvas id="activite{{$collection['activite_id']}}" width="50" height="23"></canvas> </th>
+                    <tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 col-sm-6">
+                <h6><strong>Légende</strong></h6>
+                <hr style="margin-top: 0px; margin-bottom: 10px">
+                @foreach ($collection['taches'] as $tache)
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <h6 style="font-size:0.9vw"> <strong> {{ $tache->identifianttache }}.</strong> {{ $tache->libelletache }} </h6>
                     </div>
                 </div>
+                @endforeach
+            </div>
+            <hr>
             @endforeach
+        </div>
        </div>
 
       <div class="row no-print">

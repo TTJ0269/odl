@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use App\Providers\RouteServiceProvider;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -17,24 +17,38 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        return view('index'); //auth.login
+        return view('index');
     }
 
     /**
      * Handle an incoming authentication request.
      *
-     * @param  \App\Http\Requests\Auth\LoginRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(LoginRequest $request)
+    public function store(Request $request)
     {
         try
-        {
-            $request->authenticate();
+       {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
 
-            $request->session()->regenerate();
+            $credentials = $request->only('email', 'password');
 
-            return redirect()->intended(RouteServiceProvider::HOME);
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+
         }
         catch(\Exception $exception)
         {
@@ -50,7 +64,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
 

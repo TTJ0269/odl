@@ -115,7 +115,7 @@ class StatistiqueController extends Controller
             ->join('taches','taches.id','=','positionnements.tache_id')
             ->where('fiche_positionnements.id','=',$fiche_positionnement->id)
             ->where('taches.activite_id','=',$tab_activite_id[$i])
-            ->select('positionnements.*','taches.libelletache')
+            ->select('positionnements.*','taches.libelletache','taches.identifianttache')
             ->orderBy('taches.id')
             ->get();
 
@@ -183,7 +183,7 @@ class StatistiqueController extends Controller
             ->join('taches','taches.id','=','positionnements.tache_id')
             ->where('fiche_positionnements.id','=',$fiche_positionnement->id)
             ->where('taches.activite_id','=',$tab_activite_id[$i])
-            ->select('positionnements.*','taches.libelletache')
+            ->select('positionnements.*','taches.libelletache','taches.identifianttache')
             ->orderBy('taches.id')
             ->get();
 
@@ -310,7 +310,7 @@ class StatistiqueController extends Controller
                             /** recuperation de tous les positionnements de toutes les fiches d'un apprenant
                              * l'apprenant de peut pas avoir un positionnement inferieur par rapport aux anciens positionnements**/
 
-                                $all_taches = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
+                                $all_taches = Tache::select(DB::raw('0 as valeurpost'),'taches.id','taches.identifianttache','taches.libelletache')->where('activite_id','=',$tab_activite_id[$a])
                                 ->orderBy('id')->distinct('id')->get();
 
                                 $t = 0;
@@ -331,8 +331,8 @@ class StatistiqueController extends Controller
                                         ->where('taches.id','=',$all_tache->id)
                                         ->where('associations.user_id','=',$user->id)
                                         ->where('taches.activite_id','=',$tab_activite_id[$a])
-                                        ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.libelletache')
-                                        ->groupBy('taches.id','taches.libelletache')
+                                        ->select(DB::raw('MAX(positionnements.valeurpost) as valeurpost'),'taches.id','taches.identifianttache','taches.libelletache')
+                                        ->groupBy('taches.id','taches.identifianttache','taches.libelletache')
                                         ->distinct('taches.id')
                                         ->first();
 
@@ -340,8 +340,8 @@ class StatistiqueController extends Controller
                                     }
                                     else
                                     {
-                                        $valeur[$t] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.libelletache')->where('id','=',$all_tache->id)
-                                        ->where('activite_id','=',$tab_activite_id[$a])->orderBy('id')->distinct('id')->first();
+                                        $valeur[$t] = DB::table('taches')->select(DB::raw('0 as valeurpost'),'taches.id','taches.identifianttache','taches.libelletache')->where('id','=',$all_tache->id)
+                                        ->where('activite_id','=',$tab_activite_id[$a])->groupBy('taches.id','taches.identifianttache','taches.libelletache')->distinct('taches.id')->first();
 
                                         $t++;
                                     }

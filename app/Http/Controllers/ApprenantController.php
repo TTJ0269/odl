@@ -39,18 +39,53 @@ class ApprenantController extends Controller
         {
             /** $users = User::with('type_utilisateur')->paginate(5); **/
 
-            $apprenants = DB::table('profils')
-            ->join('users','profils.id','=','users.profil_id')
-            ->join('associations','users.id','=','associations.user_id')
-            ->join('classes','classes.id','=','associations.classe_id')
-            ->join('metiers','metiers.id','=','classes.metier_id')
-            ->join('ifads','ifads.id','=','metiers.ifad_id')
-            ->where('profils.libelleprofil','=','Apprenant')
-            ->select('users.*','ifads.id as ifad_id','ifads.libelleifad','classes.id as id_classe','classes.libelleclasse','metiers.id as id_metier','metiers.libellemetier')
-            ->orderBy('users.id','DESC')
-            ->get();
+            $user_id = (Auth::user()->id);
+            $profil_id = (Auth::user()->profil_id);
 
-            return view('apprenants.index', compact('apprenants'));
+            $profil_libelle = Profil::where('id','=',$profil_id)->select('*')->first()->libelleprofil;
+
+            if($profil_libelle == 'Responsable pédagogique')
+           {
+                if(DB::table('rattachers')->where('rattachers.user_id','=',Auth::user()->id)->select('rattachers.id')->doesntExist())
+                {
+                    return back()->with('messagealert',"Vous n'est pas associé à un IFAD");
+                }
+                else
+                {
+                    $ifad_id = DB::table('rattachers')
+                    ->where('rattachers.user_id','=',Auth::user()->id)
+                    ->select('rattachers.ifad_id')->get()->last()->ifad_id;
+
+                    $apprenants = DB::table('profils')
+                    ->join('users','profils.id','=','users.profil_id')
+                    ->join('associations','users.id','=','associations.user_id')
+                    ->join('classes','classes.id','=','associations.classe_id')
+                    ->join('metiers','metiers.id','=','classes.metier_id')
+                    ->join('ifads','ifads.id','=','metiers.ifad_id')
+                    ->where('profils.libelleprofil','=','Apprenant')
+                    ->where('ifads.id','=',$ifad_id)
+                    ->select('users.*','ifads.id as ifad_id','ifads.libelleifad','classes.id as id_classe','classes.libelleclasse','metiers.id as id_metier','metiers.libellemetier')
+                    ->orderBy('users.id','DESC')
+                    ->get();
+
+                    return view('apprenants.index', compact('apprenants'));
+                }
+            }
+            else
+            {
+                $apprenants = DB::table('profils')
+                ->join('users','profils.id','=','users.profil_id')
+                ->join('associations','users.id','=','associations.user_id')
+                ->join('classes','classes.id','=','associations.classe_id')
+                ->join('metiers','metiers.id','=','classes.metier_id')
+                ->join('ifads','ifads.id','=','metiers.ifad_id')
+                ->where('profils.libelleprofil','=','Apprenant')
+                ->select('users.*','ifads.id as ifad_id','ifads.libelleifad','classes.id as id_classe','classes.libelleclasse','metiers.id as id_metier','metiers.libellemetier')
+                ->orderBy('users.id','DESC')
+                ->get();
+
+                return view('apprenants.index', compact('apprenants'));
+            }
         }
         catch(\Exception $exception)
         {

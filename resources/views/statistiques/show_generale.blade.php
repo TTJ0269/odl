@@ -19,9 +19,7 @@
    </div>
    <!-- /.content-header -->
    <!-- Main content -->
-       <div class="container">
-
-
+    <div class="container">
         <div class="row">
             <div class="col-12 col-sm-3">
                 <img src="{{ asset('storage/imageifad/'.$metiers->ifad->logoifad) }}" class="img elevation" style="width: 100px; height: 50px;" alt="AED Image">
@@ -51,29 +49,40 @@
               </div>
        </div>
 
+       <div class="row">
             @foreach ($collections as $collection)
-               @foreach($collection['groupe_activites'] as $groupe_activite)
-                 @foreach($groupe_activite['activites'] as $activite)
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">{{$activite['activite_libelle']}}</h3>
+                @foreach($collection['groupe_activites'] as $groupe_activite)
+                   @foreach($groupe_activite['activites'] as $activite)
+                        <div class="col-12 col-sm-6">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <th scope="col"> <h6 style="font-size:0.9vw"> <strong>{{$activite['activite_libelle']}} </strong></h6></th>
+                                </thead>
 
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
+                                <tbody>
+                                <tr>
+                                <th scope="row">   <canvas id="activite{{$activite['activite_id']}}" width="50" height="25"></canvas> </th>
+                                <tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="card-body">
-                            <div class="chart">
-                                <canvas id="activite{{$activite['activite_id']}}" width="50" height="25"></canvas>
+                        <div class="col-12 col-sm-6">
+                            <h6><strong>Légende</strong></h6>
+                            <hr style="margin-top: 0px; margin-bottom: 10px">
+                            @foreach ($activite['taches'] as $tache)
+                            <div class="row">
+                                <div class="col-12 col-sm-12">
+                                    <h6 style="font-size:0.9vw"> <strong> {{ $tache->identifianttache }}.</strong> {{ $tache->libelletache }} </h6>
+                                </div>
                             </div>
+                            @endforeach
                         </div>
-                    </div>
+                        <hr>
+                    @endforeach
                  @endforeach
-              @endforeach
             @endforeach
-       </div>
+        </div>
+    </div>
 
       <div class="row no-print">
           <div class="col-12">

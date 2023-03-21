@@ -145,7 +145,7 @@ $('.select2bs4').select2({
   });
 </script>
 
-<style type="text/css" media="print"> @page { size: landscape; } </style>
+<!--<style type="text/css" media="print"> @page { size: landscape; } </style> -->
 
 <!-- Debut activites -->
 
@@ -157,7 +157,7 @@ $('.select2bs4').select2({
     <script type="text/javascript">
         let labels{{$activite['activite_id']}} = [
                         @foreach ($activite['taches'] as $tache)
-                            splitString(('{{ $tache->libelletache }} "{{round($tache->valeurpost,0) }}"'),3),
+                            splitString(('{{ $tache->identifianttache }} "{{round($tache->valeurpost,0) }}"'),3),
                         @endforeach
                     ];
         let myChart{{$activite['activite_id']}} = document.getElementById("activite{{$activite['activite_id']}}").getContext('2d');

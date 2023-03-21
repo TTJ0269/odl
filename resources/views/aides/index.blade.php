@@ -217,9 +217,9 @@
 
                 <h5 class="mt-5 text-muted"> Document de guide</h5>
                 <ul class="list-unstyled">
-                  <li>
+                 <!-- <li>
                     <a href="{{ route('guide_utilisation_docx') }}" class="btn-link text-secondary"><i class="far fa-fw fa-file-word"></i> guide d'utilisation.docx</a>
-                  </li>
+                  </li> -->
                   <li>
                     <a href="{{ route('guide_utilisation_pdf')}} " class="btn-link text-secondary"><i class="far fa-fw fa-file-pdf"></i> guide d'utilisation.pdf</a>
                   </li>

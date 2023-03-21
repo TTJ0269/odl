@@ -8,23 +8,23 @@
         </a>
     </li>
 
-    <!--li class="nav-item">
+   <!-- <li class="nav-item">
         <a href="{{ route('apprenants.index') }}" class="nav-link">
         <i class="nav-icon fas fa-user"></i>
         <p>
             Apprenant
         </p>
         </a>
-    </li-->
+    </li> -->
 
-    <!--li class="nav-item">
+    <li class="nav-item">
         <a href="{{ route('appartenances.index') }}" class="nav-link">
         <i class="nav-icon fas fa-user"></i>
         <p>
             Tuteur/Tutrice
         </p>
         </a>
-    </li-->
+    </li>
 
     <!--li class="nav-item">
         <a href="{{ route('associations.index') }}" class="nav-link">
