@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Events\NotificationEvent;
+use App\Mail\NotificationMail;
 use App\Models\Appartenance;
 use App\Models\Profil;
 use App\Models\User;
@@ -88,7 +90,7 @@ class AppartenanceController extends Controller
             $userprenom=request('prenomuser');
             $entreprise_id = request('entreprise_id');
             $name = request('name');
-            $password = request('prenomuser').'@'.request('teluser');  //request('password')
+            $password = strtotime(now()); //request('prenomuser').'@'.request('teluser');  //request('password')
             $imageuser = null;
 
             if($request->file('image'))
@@ -114,7 +116,7 @@ class AppartenanceController extends Controller
                 $user = User::create([
                     'name'=> $name,
                     'email'=> request('email'),
-                    'password' => Hash::make($password), // si le mail sera envoyé alors ça $password NB: le mot de passe est crypté dans l'envoye du mail,
+                    'password' => $password, //Hash::make($password) si le mail sera envoyé alors ça $password NB: le mot de passe est crypté dans l'envoye du mail,
                     'profil_id'=> $profil_id,
                     'nomuser'=> request('nomuser'),
                     'prenomuser'=> request('prenomuser'),
@@ -134,7 +136,7 @@ class AppartenanceController extends Controller
 
                 $this->historique(request('nomuser').' '.request('prenomuser'), 'Ajout');
 
-                //event(new NotificationEvent($user));
+                event(new NotificationEvent($user));
 
                 return redirect('appartenances')->with('message', 'Tuteur/Tutrice bien ajouté(e).');
             }
@@ -283,6 +285,7 @@ class AppartenanceController extends Controller
        try
        {
             $appartenance->delete();
+            $appartenance->user->delete();
 
             return redirect('appartenances')->with('messagealert','Suppression éffectuée');
       }
