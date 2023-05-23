@@ -34,6 +34,7 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\ReferentielController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AideController;
+use App\Http\Controllers\EtatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -219,6 +220,12 @@ Route::resource('/apprenants', ApprenantController::class);
 /** Referentiel **/
 Route::get('/referentiel', [ReferentielController::class, 'index'])->name('referentiel');
 Route::get('/referentiel_show/{metier}', [ReferentielController::class, 'show'])->name('referentiel_show');
+
+
+/** Etat **/
+Route::get('/etat/list_ifad', [EtatController::class, 'list_ifad'])->name('list_ifad');
+Route::get('/etat/nombre_positionnement/ifad/{ifad}', [EtatController::class, 'index_nombrepositionnement'])->name('index_nombrepositionnement');
+Route::get('/etat/nombre_positionnement/user/{user}', [EtatController::class, 'show_nombrepositionnement'])->name('show_nombrepositionnement');
 
 
 /*Route::get('/hoho', function () {

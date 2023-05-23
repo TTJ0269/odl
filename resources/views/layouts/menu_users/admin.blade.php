@@ -215,6 +215,13 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('list_ifad') }}" class="nav-link">
+            <i class="nav-icon fas fa-chart-line"></i>
+            <p>Etat du positionnement</p>
+            </a>
+        </li>
+
         </ul>
     </li>
 
